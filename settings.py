@@ -3,7 +3,7 @@ import os
 # =================================
 #   DOBIE SETTINGS
 # =================================
-DOBIE_HOST = os.environ.get('DOBIE_HOST', 'localhost')
+DOBIE_HOST = os.environ.get('DOBIE_HOST', 'qualichain.epu.ntua.gr')
 DOBIE_PORT = os.environ.get('DOBIE_PORT', 9006)
 
 
