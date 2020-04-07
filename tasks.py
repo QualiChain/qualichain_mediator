@@ -26,4 +26,4 @@ def query_fuseki_async(message):
 
     fuseki = FusekiServer()
     response = fuseki.query_fuseki_server(sparql_query)
-    print(response.json(), flush=True)
+    print(response)

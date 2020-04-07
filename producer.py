@@ -18,24 +18,11 @@ if __name__ == "__main__":
     #     }
     # }
 
-    data = """
-    @prefix owl: <http://www.w3.org/2002/07/owl#> .
-    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-    @prefix saro: <http://w3id.org/saro#> .
-    @prefix esco: <http://data.europa.eu/esco/model#> .
-
-    saro:netty a saro:Product ;
-    	 saro:icCoreTo saro:ICT ;
-    	 rdfs:label "netty" .
-
-    saro:rdbms a saro:Topic ;
-    	 saro:icCoreTo saro:ICT ;
-    	 rdfs:label "rdbms" .
-
-    saro:rubyOnRails a saro:Tool ;
-    	 saro:icCoreTo saro:ICT ;
-    	 rdfs:label "ruby on rails" ."""
+    data = """SELECT ?subject ?predicate ?object
+WHERE {
+  ?subject ?predicate ?object
+}
+LIMIT 100000"""
 
     payload = {
         "component": "QE",
