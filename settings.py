@@ -6,6 +6,14 @@ import os
 DOBIE_HOST = os.environ.get('DOBIE_HOST', 'localhost')
 DOBIE_PORT = os.environ.get('DOBIE_PORT', 9006)
 
+
+# =================================
+#   FUSEKI SERVER SETTINGS
+# =================================
+FUSEKI_SERVER_HOST = os.environ.get('FUSEKI_SERVER_HOST', 'localhost')
+FUSEKI_SERVER_PORT = os.environ.get('FUSEKI_SERVER_PORT', 3030)
+FUSEKI_SERVER_DATASET = os.environ.get('FUSEKI_SERVER_DATASET', 'saro')
+
 # =================================
 #   RABBITMQ SETTINGS
 # =================================
