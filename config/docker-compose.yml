@@ -21,6 +21,21 @@ services:
         networks:
           - qmediator
 
+    fuseki:
+        hostname: ${FUSEKI_SERVER_HOST}
+        container_name: ${FUSEKI_SERVER_HOST}
+        image: stain/jena-fuseki
+        ports:
+            - 3030:3030
+        environment:
+            ADMIN_PASSWORD: ${FUSEKI_ADMIN_PASSWORD}
+            JVM_ARGS: -Xmx2g
+        command: "./fuseki-server --update --mem /saro"
+        networks:
+            - qmediator
+        depends_on:
+          - rabbitmq
+
     qmediator_consumer:
         hostname: ${QMEDIATOR_CONSUMER_HOST}
         container_name: ${QMEDIATOR_CONSUMER_HOST}
@@ -31,6 +46,7 @@ services:
         environment:
             RABBITMQ_HOST: ${RABBITMQ_HOST}
             DOBIE_HOST: ${DOBIE_HOST}
+            FUSEKI_SERVER_HOST: ${FUSEKI_SERVER_HOST}
         depends_on:
             - rabbitmq
         networks:
@@ -47,6 +63,7 @@ services:
         environment:
             RABBITMQ_HOST: ${RABBITMQ_HOST}
             DOBIE_HOST: ${DOBIE_HOST}
+            FUSEKI_SERVER_HOST: ${FUSEKI_SERVER_HOST}
         depends_on:
             - rabbitmq
         networks:
