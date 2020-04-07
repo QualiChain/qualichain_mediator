@@ -3,7 +3,7 @@ import json
 import pika
 from clients.dobie_client import send_data_to_dobie
 from settings import RABBITMQ_USER, RABBITMQ_PASSWORD, RABBITMQ_HOST, RABBITMQ_PORT, RABBITMQ_VHOST
-from tasks import consume_messages_async
+from tasks import send_dobie_input, query_fuseki_async
 
 
 class RabbitMQClient(object):
@@ -48,9 +48,15 @@ class RabbitMQClient(object):
 
     def on_response_callback(self, ch, method, properties, body):
         """This function is enabled when a message is received on RabbitMQ consumer"""
-        message = json.loads(body)
+        payload = json.loads(body)
 
-        consume_messages_async.delay(message)
+        component = payload['component']
+        message = payload['message']
+
+        if component == "DOBIE":
+            send_dobie_input.delay(message)
+        elif component == "QE":
+            query_fuseki_async.delay(message)
 
     def consumer(self, queue):
         """
