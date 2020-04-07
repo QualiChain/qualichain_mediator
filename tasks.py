@@ -1,6 +1,7 @@
 from celery import Celery
 
 from clients.dobie_client import send_data_to_dobie
+from clients.fuseki_server import FusekiServer
 
 app = Celery('qualichain_mediator')
 app.config_from_object('settings', namespace='CELERY_')
@@ -15,9 +16,14 @@ def send_dobie_input(message):
     print(extracted_skills, flush=True)
     return extracted_skills
 
+
 @app.task()
 def query_fuseki_async(message):
     """
     This function is used to query fuseki server
     """
-    print(message, flush=True)
+    sparql_query = message["query"]
+
+    fuseki = FusekiServer()
+    response = fuseki.query_fuseki_server(sparql_query)
+    print(response.json(), flush=True)

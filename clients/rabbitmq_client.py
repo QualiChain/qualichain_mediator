@@ -57,6 +57,8 @@ class RabbitMQClient(object):
             send_dobie_input.delay(message)
         elif component == "QE":
             query_fuseki_async.delay(message)
+        else:
+            print("this component is not provided from Qualichain", flush=True)
 
     def consumer(self, queue):
         """
