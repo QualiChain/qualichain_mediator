@@ -1,5 +1,7 @@
 from bs4 import BeautifulSoup
 
+from settings import SARO_SKILL, SARO_PREFIXES
+
 
 def my_add(x, y):
     """
@@ -45,16 +47,27 @@ def parse_dobie_response(xml_response):
     extracted_skills = []
 
     for annotation in annotations:
+        saro_skill = {}
+
         features = annotation.select('Feature')
-        skills = dict()
-
         for feature in features:
-            name = feature.Name.text
-            value = feature.Value.text
 
-            if value != 'external':
-                skills['{}'.format(name)] = value
+            name = feature.Name.text.capitalize()
+            value = feature.Value.text.capitalize()
 
-            if skills:
-                extracted_skills.append(skills)
-    return extracted_skills
+            if name == 'String':
+                value = value.lower()
+
+            if name != "Frequencyofmention":
+                saro_skill[name] = value
+
+        features_dict = dict(filter(lambda element: element[1] != 'External', saro_skill.items()))
+
+        if features_dict:
+            extracted_skills.append(SARO_SKILL.format(**features_dict))
+
+    if extracted_skills:
+        extracted_saro_data = SARO_PREFIXES + "".join(extracted_skills)
+    else:
+        extracted_saro_data = []
+    return extracted_saro_data

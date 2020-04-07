@@ -28,6 +28,22 @@ RABBITMQ_PASSWORD = os.environ.get('RABBITMQ_PASSWORD', 'rabbitmq')
 # =================================
 APP_QUEUE = os.environ.get('APP_QUEUE', "mediator_queue")
 
+SARO_SKILL = """saro:{String} a saro:{Kind} ;
+	 saro:icCoreTo saro:ICT ;
+	 rdfs:label "{String}" .
+	 
+	 """
+
+SARO_PREFIXES = """
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix saro: <http://w3id.org/saro#> .
+@prefix esco: <http://data.europa.eu/esco/model#> .
+
+"""
+
+
 # =================================
 #   CELERY SETTINGS
 # =================================
