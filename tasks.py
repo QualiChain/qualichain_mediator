@@ -26,4 +26,8 @@ def query_fuseki_async(message):
 
     fuseki = FusekiServer()
     response = fuseki.query_fuseki_server(sparql_query)
-    print(response)
+
+    if response.status_code == 200:
+        print(response.json(), flush=True)
+    else:
+        print("some error occurred", flush=True)
