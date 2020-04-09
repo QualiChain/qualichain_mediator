@@ -13,6 +13,7 @@ def send_dobie_input(message):
     """
     This task is used to received job posting text and feed DOBIE component
     """
+    print(message['tasks'], flush=True)
     fuseki_server = FusekiServer()
     dobie_response = send_data_to_dobie(message)
 
