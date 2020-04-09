@@ -1,5 +1,4 @@
 import requests
-import json
 
 from settings import DOBIE_HOST, DOBIE_PORT
 
@@ -23,5 +22,4 @@ def send_data_to_dobie(job_description):
     }
 
     response = requests.request("POST", url, data=job_description, headers=headers)
-    print(response.text)
-    return response.text
+    return response

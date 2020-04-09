@@ -1,5 +1,7 @@
 from bs4 import BeautifulSoup
 
+from settings import SARO_SKILL, SARO_PREFIXES
+
 
 def my_add(x, y):
     """
@@ -16,6 +18,31 @@ def my_add(x, y):
         >>> my_add(1,2)
     """
     return x + y
+
+
+def parse_features(annotation):
+    """
+    This function is used to to extract features from a provided annotation object
+
+    :param annotation: provided annotation object
+    :return: extracted features
+    """
+    saro_skill = {}
+
+    features = annotation.select('Feature')
+    for feature in features:
+
+        name = feature.Name.text.capitalize()
+        value = feature.Value.text.capitalize()
+
+        if name == 'String':
+            value = value.lower()
+
+        if name != "Frequencyofmention":
+            saro_skill[name] = value
+
+    features_dict = dict(filter(lambda element: element[1] != 'External', saro_skill.items()))
+    return features_dict
 
 
 def parse_dobie_response(xml_response):
@@ -45,16 +72,13 @@ def parse_dobie_response(xml_response):
     extracted_skills = []
 
     for annotation in annotations:
-        features = annotation.select('Feature')
-        skills = dict()
+        features_dict = parse_features(annotation)
 
-        for feature in features:
-            name = feature.Name.text
-            value = feature.Value.text
+        if features_dict:
+            extracted_skills.append(SARO_SKILL.format(**features_dict))
 
-            if value != 'external':
-                skills['{}'.format(name)] = value
-
-            if skills:
-                extracted_skills.append(skills)
-    return extracted_skills
+    if extracted_skills:
+        extracted_saro_data = SARO_PREFIXES + "".join(extracted_skills)
+    else:
+        extracted_saro_data = []
+    return extracted_saro_data
