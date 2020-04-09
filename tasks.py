@@ -25,7 +25,7 @@ def send_dobie_input(message):
         if saro_data:
             fuseki_response = fuseki_server.update_dataset(saro_data)
 
-            if fuseki_response !=204:
+            if fuseki_response !=201:
                 print("Some problems occurred in Fuseki Server with your request Object", flush=True)
                 print(fuseki_response.reason, flush=True)
     else:
