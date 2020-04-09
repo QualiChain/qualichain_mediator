@@ -23,6 +23,7 @@ def send_dobie_input(message):
         saro_data = parse_dobie_response(extracted_skills_xml)
 
         if saro_data:
+            print(saro_data, flush=True)
             fuseki_response = fuseki_server.update_dataset(saro_data)
 
             if fuseki_response !=200:
