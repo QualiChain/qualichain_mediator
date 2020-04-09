@@ -20,6 +20,31 @@ def my_add(x, y):
     return x + y
 
 
+def parse_features(annotation):
+    """
+    This function is used to to extract features from a provided annotation object
+
+    :param annotation: provided annotation object
+    :return: extracted features
+    """
+    saro_skill = {}
+
+    features = annotation.select('Feature')
+    for feature in features:
+
+        name = feature.Name.text.capitalize()
+        value = feature.Value.text.capitalize()
+
+        if name == 'String':
+            value = value.lower()
+
+        if name != "Frequencyofmention":
+            saro_skill[name] = value
+
+    features_dict = dict(filter(lambda element: element[1] != 'External', saro_skill.items()))
+    return features_dict
+
+
 def parse_dobie_response(xml_response):
     """
     The following function is used to get DOBIE responses and parses annotated tools
@@ -47,21 +72,7 @@ def parse_dobie_response(xml_response):
     extracted_skills = []
 
     for annotation in annotations:
-        saro_skill = {}
-
-        features = annotation.select('Feature')
-        for feature in features:
-
-            name = feature.Name.text.capitalize()
-            value = feature.Value.text.capitalize()
-
-            if name == 'String':
-                value = value.lower()
-
-            if name != "Frequencyofmention":
-                saro_skill[name] = value
-
-        features_dict = dict(filter(lambda element: element[1] != 'External', saro_skill.items()))
+        features_dict = parse_features(annotation)
 
         if features_dict:
             extracted_skills.append(SARO_SKILL.format(**features_dict))
