@@ -1,3 +1,5 @@
+import json
+
 import requests
 
 from settings import DOBIE_HOST, DOBIE_PORT
@@ -21,5 +23,6 @@ def send_data_to_dobie(job_description):
         'Cache-Control': "no-cache"
     }
 
-    response = requests.request("POST", url, data=job_description, headers=headers)
+    jsonified_data = json.dumps(job_description)
+    response = requests.request("POST", url, data=jsonified_data, headers=headers)
     return response
