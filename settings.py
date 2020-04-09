@@ -28,7 +28,7 @@ RABBITMQ_PASSWORD = os.environ.get('RABBITMQ_PASSWORD', 'rabbitmq')
 # =================================
 APP_QUEUE = os.environ.get('APP_QUEUE', "mediator_queue")
 
-SARO_SKILL = """saro:{String} a saro:{Kind} ;
+SARO_SKILL = """saro:{meta_value} a saro:{Kind} ;
 	 saro:icCoreTo saro:ICT ;
 	 rdfs:label "{String}" .
 	 

@@ -34,11 +34,15 @@ def send_data_to_dobie(job_description):
 job_description = {"tasks":
                        [{
                            "label":"95671c903a5b97a9",
-                           "jobDescription": "Moving Mobility Forward Aptiv is making mobility real. We are at the forefront of solving mobility toughest challenges. We have the people, experience, know-how and confidence to turn ideas into solutions. Solutions that move our world from what now to what next, while connecting us like never before. To us, nothing is impossible when you have the people with the passion to make anything possible. Mobility has the power to change the world, and we have the power to change mobility. Join our Innovative Team. Want to do more than just imagine the ways our world will move tomorrow? Here your opportunity. Join the technology company that is transforming the future of mobility today. About Aptiv Aptiv is a global technology company that develops safer, greener and more connected solutions, which enable the future of mobility. Matlab, Python, Linux, C++   "
+                           "jobDescription": "Linux, Matlab, Python, C++, C#, computer science, office365, sql server 2008, .Net"
                        }]
 }
 dobie_extracted_skills = send_data_to_dobie(job_description).text
+
 skills = parse_dobie_response(dobie_extracted_skills)
 
 if skills:
-    fuseki.update_dataset(skills)
+    print(skills)
+    response = fuseki.update_dataset(skills)
+    print(response.reason)
+    print(response.status_code)

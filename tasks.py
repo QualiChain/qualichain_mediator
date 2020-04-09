@@ -23,15 +23,13 @@ def send_dobie_input(message):
         saro_data = parse_dobie_response(extracted_skills_xml)
 
         if saro_data:
-            print(saro_data, flush=True)
             fuseki_response = fuseki_server.update_dataset(saro_data)
 
             if fuseki_response !=200:
-                print(fuseki_response, flush=True)
+                print("Some problems occurred in Fuseki Server with your request Object", flush=True)
                 print(fuseki_response.reason, flush=True)
     else:
         print("Some errors occured with Dobie", flush=True)
-        print(dobie_response, flush=True)
         print(dobie_response.reason, flush=True)
 
 

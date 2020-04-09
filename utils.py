@@ -20,6 +20,26 @@ def my_add(x, y):
     return x + y
 
 
+def create_meta_value(value):
+    """
+    This function is used to to transform the value output of Dobie to meta data value
+
+    :param value: provided Dobie value
+    :return: metadata value
+    """
+    extracted_value = value.replace("+", "plus")
+    split_value = extracted_value.split(" ")
+
+    if len(split_value) > 1:
+        processed_value = list(map(lambda word: word.title() if word != split_value[0] else word, split_value))
+        value_data = "".join(processed_value)
+    else:
+        value_data = extracted_value
+
+    meta_value = "".join(list(map(lambda char: "dot" if char == "." and char == value_data[0] else char, value_data)))
+    return meta_value
+
+
 def parse_features(annotation):
     """
     This function is used to to extract features from a provided annotation object
@@ -37,6 +57,9 @@ def parse_features(annotation):
 
         if name == 'String':
             value = value.lower()
+
+            meta_value = create_meta_value(value)
+            saro_skill["meta_value"] = meta_value
 
         if name != "Frequencyofmention":
             saro_skill[name] = value
