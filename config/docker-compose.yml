@@ -3,6 +3,9 @@ version: '3.3'
 networks:
     qmediator:
         driver: bridge
+        ipam:
+            config:
+                - subnet: ${SUBNET}
 
 services:
     rabbitmq:
@@ -19,7 +22,8 @@ services:
         labels:
             NAME: rabbitmq
         networks:
-          - qmediator
+          - qmediator:
+                ipv4_address: ${RABBITMQ_IP}
 
     fuseki:
         hostname: ${FUSEKI_SERVER_HOST}
@@ -32,7 +36,8 @@ services:
             JVM_ARGS: -Xmx2g
         command: "./fuseki-server --update --mem /saro"
         networks:
-            - qmediator
+          - qmediator:
+                ipv4_address: ${FUSEKI_IP}
         depends_on:
           - rabbitmq
 
