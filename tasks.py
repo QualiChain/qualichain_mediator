@@ -23,6 +23,9 @@ def send_dobie_input(message):
 
         if saro_data:
             fuseki_server.update_dataset(saro_data)
+    else:
+        print(dobie_response, flush=True)
+        print(dobie_response.reason, flush=True)
 
 
 @app.task()
