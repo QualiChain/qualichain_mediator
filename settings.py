@@ -74,6 +74,8 @@ STOP_WORDS = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you"
               "few", "more", "most", "other", "some", "such", "no", "nor", "not", "only", "own", "same", "so", "than",
               "too", "very", "s", "t", "can", "will", "just", "don", "should", "now"]
 
+BATCH_SIZE = 50
+
 # =================================
 #   CELERY SETTINGS
 # =================================
