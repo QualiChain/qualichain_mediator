@@ -27,24 +27,30 @@ class JobPostSkillExtractor:
 
     def __init__(self, job_posts) -> None:
         self.job_posts = job_posts
-        self.tasks = self.create_tasks_from_job_posts()
+        self.tasks = self.create_tasks_from_job_posts(posts_per_task=5)
         self.batches = self.create_batches_of_tasks(tasks_per_batch=5)
         self.skill_annotation_input = [self.create_skill_annontation_input(batch) for batch in self.batches]
         self.skill_annotation_output = [self.send_skill_extraction_request(inp) for inp in self.skill_annotation_input]
         print(self.skill_annotation_output)
 
-    def create_tasks_from_job_posts(self):
+    def create_tasks_from_job_posts(self, posts_per_task=5):
+        num_of_tasks = math.ceil(len(self.job_posts) / posts_per_task)
         label = ""
         tasks = []
-        for p in self.job_posts:
-            task = SkillAnnotationTask(label, p.job_text)
+        for i in range(1, num_of_tasks+1):
+            task_text = ""
+            for p in self.job_posts[(i-1) * posts_per_task: i*posts_per_task]:
+                task_text += " "
+                task_text += p.job_text
+
+            task = SkillAnnotationTask(label, task_text)
             tasks.append(task)
         return tasks
 
     def create_batches_of_tasks(self, tasks_per_batch=5):
         num_of_batches = math.ceil(len(self.tasks)/tasks_per_batch)
         batches = []
-        for i in range(1, num_of_batches):
+        for i in range(1, num_of_batches+1):
             batch = self.tasks[(i-1)*tasks_per_batch: i*tasks_per_batch]
             batches.append(batch)
         return batches
