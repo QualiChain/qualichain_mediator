@@ -41,7 +41,7 @@ ENGINE_STRING = 'postgresql+psycopg2://{}:{}@{}:{}/{}'.format(
     POSTGRES_DB
 )
 
-JOB_POSTS_TABLE = 'job_posts'
+JOB_POSTS_TABLE = 'job_post'
 
 # =================================
 #   APPLICATION SETTINGS
@@ -75,6 +75,7 @@ STOP_WORDS = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you"
               "too", "very", "s", "t", "can", "will", "just", "don", "should", "now"]
 
 BATCH_SIZE = 50
+TIME_BETWEEN_REQUESTS = 10  # in seconds
 
 # =================================
 #   CELERY SETTINGS

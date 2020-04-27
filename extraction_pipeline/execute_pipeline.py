@@ -1,8 +1,9 @@
 import math
+import time
 
 from clients.dobie_client import send_data_to_dobie
 from extraction_pipeline.job_post_extraction_pipeline import JobPostSkillExtractor
-from settings import BATCH_SIZE
+from settings import BATCH_SIZE, TIME_BETWEEN_REQUESTS
 
 
 class Executor(object):
@@ -69,17 +70,20 @@ class Executor(object):
             STOP = index + BATCH_SIZE
 
             print('Execution No: {}'.format(execution))
-            print('Job posts Index Range: {}-{}').format(START, STOP)
+            print('Job posts Index Range: {}-{}'.format(START, STOP))
 
             dobie_response = self.get_fraction_requirements(START, STOP)
             print('Response from Dobie: {}'.format(dobie_response.status_code))
+
+            index = index + BATCH_SIZE
+            time.sleep(TIME_BETWEEN_REQUESTS)
 
         if executions_modulo:
             START = integral_executions
             STOP = job_posts_length
 
             print('Last Execution')
-            print('Job posts Index Range: {}-{}').format(START, STOP)
+            print('Job posts Index Range: {}-{}'.format(START, STOP))
 
             dobie_response = self.get_fraction_requirements(START, STOP)
             print('Response from Dobie: {}'.format(dobie_response.status_code))
