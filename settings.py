@@ -6,7 +6,6 @@ import os
 DOBIE_HOST = os.environ.get('DOBIE_HOST', 'qualichain.epu.ntua.gr')
 DOBIE_PORT = os.environ.get('DOBIE_PORT', 9006)
 
-
 # =================================
 #   FUSEKI SERVER SETTINGS
 # =================================
@@ -22,6 +21,27 @@ RABBITMQ_PORT = os.environ.get('RABBITMQ_PORT', 5672)
 RABBITMQ_VHOST = os.environ.get('RABBITMQ_VHOST', '/')
 RABBITMQ_USER = os.environ.get('RABBITMQ_USER', 'rabbitmq')
 RABBITMQ_PASSWORD = os.environ.get('RABBITMQ_PASSWORD', 'rabbitmq')
+
+# =================================
+#   POSTGRES SETTINGS
+# =================================
+
+POSTGRES_USER = os.environ.get('POSTGRES_USER', 'admin')
+POSTGRES_PASSWORD = os.environ.get('POSTGRES_PASSWORD', 'admin')
+POSTGRES_HOST = os.environ.get('POSTGRES_HOST', 'qualichain.epu.ntua.gr')
+POSTGRES_PORT = os.environ.get('POSTGRES_PORT', 5432)
+POSTGRES_DB = os.environ.get('POSTGRES_DB', 'api_db')
+
+
+ENGINE_STRING = 'postgresql+psycopg2://{}:{}@{}:{}/{}'.format(
+    POSTGRES_USER,
+    POSTGRES_PASSWORD,
+    POSTGRES_HOST,
+    POSTGRES_PORT,
+    POSTGRES_DB
+)
+
+JOB_POSTS_TABLE = 'job_posts'
 
 # =================================
 #   APPLICATION SETTINGS
@@ -43,6 +63,16 @@ SARO_PREFIXES = """
 
 """
 
+STOP_WORDS = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours", "yourself",
+              "yourselves", "he", "him", "his", "himself", "she", "her", "hers", "herself", "it", "its", "itself",
+              "they", "them", "their", "theirs", "themselves", "what", "which", "who", "whom", "this", "that", "these",
+              "those", "am", "is", "are", "was", "were", "be", "been", "being", "have", "has", "had", "having", "do",
+              "does", "did", "doing", "a", "an", "the", "and", "but", "if", "or", "because", "as", "until", "while",
+              "of", "at", "by", "for", "with", "about", "against", "between", "into", "through", "during", "before",
+              "after", "above", "below", "to", "from", "up", "down", "in", "out", "on", "off", "over", "under", "again",
+              "further", "then", "once", "here", "there", "when", "where", "why", "how", "all", "any", "both", "each",
+              "few", "more", "most", "other", "some", "such", "no", "nor", "not", "only", "own", "same", "so", "than",
+              "too", "very", "s", "t", "can", "will", "just", "don", "should", "now"]
 
 # =================================
 #   CELERY SETTINGS

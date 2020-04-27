@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 
-from settings import SARO_SKILL, SARO_PREFIXES
+from settings import SARO_SKILL, SARO_PREFIXES, STOP_WORDS
 
 
 def my_add(x, y):
@@ -105,3 +105,16 @@ def parse_dobie_response(xml_response):
     else:
         extracted_saro_data = []
     return extracted_saro_data
+
+
+def remove_stop_words(job_requirements):
+    """
+    This function is used to remove stop words from job post requirements
+    description
+
+    :param job_requirements: job requirements text
+    :return: job requirements without stopwords
+    """
+    split_txt = job_requirements.split()
+    removed_txt = [word for word in split_txt if word not in STOP_WORDS]
+    return " ".join(removed_txt)

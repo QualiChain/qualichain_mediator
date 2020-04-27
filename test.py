@@ -1,13 +1,28 @@
 import json
+import math
+import re
+import time
 
 import requests
+import pandas as pd
+from sqlalchemy import create_engine
 
-from clients.fuseki_server import FusekiServer
-from settings import DOBIE_HOST, DOBIE_PORT
-from utils import parse_dobie_response
+stop_words = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours", "yourself",
+              "yourselves", "he", "him", "his", "himself", "she", "her", "hers", "herself", "it", "its", "itself",
+              "they", "them", "their", "theirs", "themselves", "what", "which", "who", "whom", "this", "that", "these",
+              "those", "am", "is", "are", "was", "were", "be", "been", "being", "have", "has", "had", "having", "do",
+              "does", "did", "doing", "a", "an", "the", "and", "but", "if", "or", "because", "as", "until", "while",
+              "of", "at", "by", "for", "with", "about", "against", "between", "into", "through", "during", "before",
+              "after", "above", "below", "to", "from", "up", "down", "in", "out", "on", "off", "over", "under", "again",
+              "further", "then", "once", "here", "there", "when", "where", "why", "how", "all", "any", "both", "each",
+              "few", "more", "most", "other", "some", "such", "no", "nor", "not", "only", "own", "same", "so", "than",
+              "too", "very", "s", "t", "can", "will", "just", "don", "should", "now"]
 
-fuseki = FusekiServer()
 
+def remove_stop_words(txt):
+    split_txt = txt.split()
+    removed_txt = [word for word in split_txt if word not in stop_words]
+    return " ".join(removed_txt)
 
 
 def send_data_to_dobie(job_description):
@@ -31,18 +46,39 @@ def send_data_to_dobie(job_description):
     response = requests.request("POST", url, data=json.dumps(job_description), headers=headers)
     return response
 
-job_description = {"tasks":
-                       [{
-                           "label":"95671c903a5b97a9",
-                           "jobDescription": "Linux, Matlab, Python, C++, C#, computer science, office365, sql server 2008, .Net"
-                       }]
-}
-dobie_extracted_skills = send_data_to_dobie(job_description).text
 
-skills = parse_dobie_response(dobie_extracted_skills)
+ENGINE_STRING = 'postgresql+psycopg2://{}:{}@{}:{}/{}'.format('admin', 'admin', 'qualichain.epu.ntua.gr', 5432,
+                                                              'api_db')
+TABLE = 'job_post'
+engine = create_engine(ENGINE_STRING)
 
-if skills:
-    print(skills)
-    response = fuseki.update_dataset(skills)
-    print(response.reason)
-    print(response.status_code)
+job_posts = pd.read_sql_query('SELECT requirements from "job_post"', engine)
+job_posts_length = len(job_posts)
+
+batch_size = 50
+index = 0
+executions = math.floor(job_posts_length / batch_size)
+
+for execution in range(0, executions):
+    print('Execution: {}'.format(execution))
+    print('Job Posts Index: {}-{}'.format(index, index + batch_size))
+
+    job_posts_fraction = job_posts.iloc[index:index + batch_size]
+
+    raw_requirements = job_posts_fraction['requirements'].map(lambda x: re.sub(r"[^a-zA-Z0-9]+", ' ', x)).map(
+        remove_stop_words)
+
+    requirements = " ".join(raw_requirements)
+
+    job_description = {"tasks":
+        [{
+            "label": "95671c903a5b97a9",
+            "jobDescription": requirements
+        }]
+    }
+
+    dobie_response = send_data_to_dobie(job_description)
+    print(dobie_response.text)
+
+    index = index + 50
+    time.sleep(10)
