@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from clients.dobie_client import send_data_to_dobie
 from extraction_pipeline.job_post_extraction_pipeline import JobPostSkillExtractor
 from settings import BATCH_SIZE, TIME_BETWEEN_REQUESTS
+from tasks import extract_skills_async
 from utils import handle_raw_annotation
 
 
@@ -76,7 +77,12 @@ class Executor(object):
             print('Job posts Index Range: {}-{}'.format(START, STOP))
 
             dobie_response = self.get_fraction_requirements(START, STOP)
-            print('Response from Dobie: {}'.format(dobie_response.status_code))
+            dobie_status_code = dobie_response.status_code
+
+            print('Response from Dobie: {}'.format(dobie_status_code))
+            if dobie_status_code == 200:
+                output = dobie_response.text
+                extract_skills_async.delay(output)
 
             index = index + BATCH_SIZE
             time.sleep(TIME_BETWEEN_REQUESTS)
@@ -89,8 +95,9 @@ class Executor(object):
             print('Job posts Index Range: {}-{}'.format(START, STOP))
 
             dobie_response = self.get_fraction_requirements(START, STOP)
-            print('Response from Dobie: {}'.format(dobie_response.status_code))
+            dobie_status_code = dobie_response.status_code
+            print('Response from Dobie: {}'.format(dobie_status_code))
 
-            output = dobie_response.text
-            extracted_skills = handle_raw_annotation(output)
-            print(extracted_skills)
+            if dobie_status_code == 200:
+                output = dobie_response.text
+                extract_skills_async.delay(output)

@@ -2,7 +2,7 @@ from celery import Celery
 
 from clients.dobie_client import send_data_to_dobie
 from clients.fuseki_server import FusekiServer
-from utils import parse_dobie_response
+from utils import parse_dobie_response, handle_raw_annotation
 
 app = Celery('qualichain_mediator')
 app.config_from_object('settings', namespace='CELERY_')
@@ -47,3 +47,12 @@ def query_fuseki_async(message):
         print(response.json(), flush=True)
     else:
         print("some error occurred", flush=True)
+
+
+@app.task()
+def extract_skills_async(dobie_output):
+    """This function is used to receive Dobie Output and process the annotations"""
+
+    extracted_skills = handle_raw_annotation(dobie_output)
+    print(extracted_skills, flush=True)
+
