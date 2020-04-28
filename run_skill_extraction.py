@@ -1,4 +1,6 @@
 from extraction_pipeline.execute_pipeline import Executor
 
-executor = Executor()
-executor.execution_stage()
+
+if __name__ == "__main__":
+    executor = Executor()
+    executor.execution_stage()

@@ -1,9 +1,12 @@
 import math
 import time
 
+from bs4 import BeautifulSoup
+
 from clients.dobie_client import send_data_to_dobie
 from extraction_pipeline.job_post_extraction_pipeline import JobPostSkillExtractor
 from settings import BATCH_SIZE, TIME_BETWEEN_REQUESTS
+from utils import handle_raw_annotation
 
 
 class Executor(object):
@@ -87,3 +90,7 @@ class Executor(object):
 
             dobie_response = self.get_fraction_requirements(START, STOP)
             print('Response from Dobie: {}'.format(dobie_response.status_code))
+
+            output = dobie_response.text
+            extracted_skills = handle_raw_annotation(output)
+            print(extracted_skills)

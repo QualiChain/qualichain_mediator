@@ -105,3 +105,40 @@ def parse_dobie_response(xml_response):
     else:
         extracted_saro_data = []
     return extracted_saro_data
+
+
+def extract_raw_features(annotation):
+    """
+    This function is used to extract raw features from annotations
+
+    :param annotation: annotation object
+    :return: features in dictionary
+    """
+    features = annotation.select('Feature')
+    annotation_features = {}
+    for feature in features:
+        feature_name = feature.Name.text
+        feature_value = feature.Value.text
+
+        annotation_features[feature_name] = feature_value
+    features_dict = dict(filter(lambda element: element[1] != 'external', annotation_features.items()))
+    return features_dict
+
+
+def handle_raw_annotation(dobie_output):
+    """
+    This function is used to extract dobie annotation and return list of extracted skills
+
+    :param dobie_output: dobie response
+    :return: list of extracted skills
+    """
+    soup = BeautifulSoup(dobie_output, "xml")
+    annotations = soup.find_all('Annotation')
+
+    extracted_skills = []
+
+    for annotation in annotations:
+        features_dict = extract_raw_features(annotation)
+        if features_dict:
+            extracted_skills.append(features_dict)
+    return extracted_skills
