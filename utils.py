@@ -1,5 +1,6 @@
 import re
 
+import pandas as pd
 from bs4 import BeautifulSoup
 
 from settings import SARO_SKILL, SARO_PREFIXES
@@ -164,3 +165,15 @@ def handle_raw_annotation(dobie_output):
             features_dict['string'] = split_camel_case(features_dict['string'])
             extracted_skills.append(features_dict)
     return extracted_skills
+
+
+def save_extracted_skills(skills):
+    """
+    This function is used to get extracted skills and save them to a csv
+    :param skills:
+    :return:
+    """
+    skills_df = pd.DataFrame(skills)
+    skills_df['frequencyOfMention'] = pd.to_numeric(skills_df['frequencyOfMention'])
+    sorted_skills = skills_df.sort_values(by='frequencyOfMention', ascending=False)
+    sorted_skills.to_csv('extracted_skills.csv')

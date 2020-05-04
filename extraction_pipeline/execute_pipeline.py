@@ -7,7 +7,7 @@ from clients.dobie_client import send_data_to_dobie
 from extraction_pipeline.job_post_extraction_pipeline import JobPostSkillExtractor
 from settings import BATCH_SIZE, TIME_BETWEEN_REQUESTS
 from tasks import extract_skills_async
-from utils import handle_raw_annotation
+from utils import handle_raw_annotation, save_extracted_skills
 
 
 class Executor(object):
@@ -103,5 +103,6 @@ class Executor(object):
             if dobie_status_code == 200:
                 output = dobie_response.text
                 extracted_skills = handle_raw_annotation(output)
+                save_extracted_skills(extracted_skills)
                 print(extracted_skills)
                 # extract_skills_async.delay(output)
