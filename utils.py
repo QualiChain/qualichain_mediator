@@ -142,3 +142,18 @@ def handle_raw_annotation(dobie_output):
         if features_dict:
             extracted_skills.append(features_dict)
     return extracted_skills
+
+
+def split_camel_case(input_string):
+    """
+    This function is used to transform camel case words to more words
+
+    Args:
+        input_string: camel case string
+
+    Returns: Extracted words from camel case
+
+    """
+    splitted = re.sub('([A-Z][a-z]+)', r' \1', re.sub('([A-Z]+)', r' \1', input_string)).split()
+    joined_string = " ".join(splitted)
+    return splitted

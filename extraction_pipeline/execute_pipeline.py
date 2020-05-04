@@ -82,7 +82,9 @@ class Executor(object):
             print('Response from Dobie: {}'.format(dobie_status_code))
             if dobie_status_code == 200:
                 output = dobie_response.text
-                extract_skills_async.delay(output)
+                extracted_skills = handle_raw_annotation(output)
+                print(extracted_skills)
+                # extract_skills_async.delay(output)
 
             index = index + BATCH_SIZE
             time.sleep(TIME_BETWEEN_REQUESTS)
@@ -100,4 +102,6 @@ class Executor(object):
 
             if dobie_status_code == 200:
                 output = dobie_response.text
-                extract_skills_async.delay(output)
+                extracted_skills = handle_raw_annotation(output)
+                print(extracted_skills)
+                # extract_skills_async.delay(output)

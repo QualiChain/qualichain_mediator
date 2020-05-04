@@ -19,7 +19,7 @@ class JobPostSkillExtractor(object):
 
         :return: job_posts table
         """
-        SELECT_QUERY = 'SELECT requirements from "{}"'.format(JOB_POSTS_TABLE)
+        SELECT_QUERY = 'SELECT requirements from "{}" WHERE id in (1,367,363,369,372,374,376,377,378,420,437,364,366,415,1374,6,7,368,365,371,397,370)'.format(JOB_POSTS_TABLE)
 
         job_posts = pd.read_sql_query(SELECT_QUERY, self.engine)
         return job_posts
@@ -45,9 +45,10 @@ class JobPostSkillExtractor(object):
         :param job_posts_fraction: pandas data frame
         :return: processed requirements
         """
-        raw_requirements = job_posts_fraction['requirements'].map(
-            lambda requirement: re.sub(r"[^a-zA-Z0-9]+", ' ', requirement)
-        )
+        # raw_requirements = job_posts_fraction['requirements'].map(
+        #     lambda requirement: re.sub(r"[^a-zA-Z0-9]+", ' ', requirement)
+        # )
+        raw_requirements = job_posts_fraction['requirements']
         removed_stop_words = raw_requirements.map(self.remove_stop_words)
         stipped_from_whitespaces = removed_stop_words.map(
             lambda requirement: requirement.strip()
