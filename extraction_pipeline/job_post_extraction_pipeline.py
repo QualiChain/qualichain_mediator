@@ -13,15 +13,19 @@ class JobPostSkillExtractor(object):
         self.engine = create_engine(ENGINE_STRING)
         self.index = 0
 
-    def get_job_posts(self):
+    def get_job_posts(self, ids=[]):
         """
         This function is used to get job_posts table from DB
 
         :return: job_posts table
         """
-        SELECT_QUERY = 'SELECT requirements from "{}" WHERE id in (1,367,363,369,372,374,376,377,378,420,437,364,366,415,1374,6,7,368,365,371,397,370)'.format(JOB_POSTS_TABLE)
+        if ids:
+            tuple_ids = tuple(ids)
+            select_query = 'SELECT requirements from "{}" WHERE id in {}'.format(JOB_POSTS_TABLE, tuple_ids)
+        else:
+            select_query = 'SELECT requirements from requirements'
 
-        job_posts = pd.read_sql_query(SELECT_QUERY, self.engine)
+        job_posts = pd.read_sql_query(select_query, self.engine)
         return job_posts
 
     @staticmethod

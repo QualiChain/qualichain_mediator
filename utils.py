@@ -1,3 +1,5 @@
+import re
+
 from bs4 import BeautifulSoup
 
 from settings import SARO_SKILL, SARO_PREFIXES
