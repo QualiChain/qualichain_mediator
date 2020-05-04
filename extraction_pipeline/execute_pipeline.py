@@ -12,10 +12,10 @@ from utils import handle_raw_annotation
 
 class Executor(object):
 
-    def __init__(self):
+    def __init__(self, job_post_ids):
         self.index = 0
         self.extractor = JobPostSkillExtractor()
-        self.job_posts = self.extractor.get_job_posts()
+        self.job_posts = self.extractor.get_job_posts(ids=job_post_ids)
 
     @staticmethod
     def calculate_execution(job_posts_length):

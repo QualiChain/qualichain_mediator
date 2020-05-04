@@ -156,6 +156,10 @@ def split_camel_case(input_string):
     Returns: Extracted words from camel case
 
     """
-    splitted = re.sub('([A-Z][a-z]+)', r' \1', re.sub('([A-Z]+)', r' \1', input_string)).split()
-    joined_string = " ".join(splitted)
-    return splitted
+    if len(input_string) > 5:
+
+        splitted = re.sub('([A-Z][a-z]+)', r' \1', re.sub('([A-Z]+)', r' \1', input_string)).split()
+        joined_string = " ".join(splitted)
+        return joined_string
+    else:
+        return input_string
