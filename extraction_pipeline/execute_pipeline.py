@@ -62,6 +62,23 @@ class Executor(object):
         dobie_response = send_data_to_dobie(dobie_input)
         return dobie_response
 
+    def pipe_dobie_results(self, START, STOP):
+        """
+        This function is used to take job posts fractions and handle Dobie Response output
+        :param START: START index
+        :param STOP: STOP index
+        :return: None
+        """
+        dobie_response = self.get_fraction_requirements(START, STOP)
+        dobie_status_code = dobie_response.status_code
+
+        print('Response from Dobie: {}'.format(dobie_status_code))
+        if dobie_status_code == 200:
+            output = dobie_response.text
+            extracted_skills = handle_raw_annotation(output)
+            print(extracted_skills)
+            # extract_skills_async.delay(output)
+
     def execution_stage(self):
         """This is pipeline's execution stage"""
         index = 0
@@ -75,16 +92,7 @@ class Executor(object):
 
             print('Execution No: {}'.format(execution))
             print('Job posts Index Range: {}-{}'.format(START, STOP))
-
-            dobie_response = self.get_fraction_requirements(START, STOP)
-            dobie_status_code = dobie_response.status_code
-
-            print('Response from Dobie: {}'.format(dobie_status_code))
-            if dobie_status_code == 200:
-                output = dobie_response.text
-                extracted_skills = handle_raw_annotation(output)
-                print(extracted_skills)
-                # extract_skills_async.delay(output)
+            self.pipe_dobie_results(START, STOP)
 
             index = index + BATCH_SIZE
             time.sleep(TIME_BETWEEN_REQUESTS)
@@ -95,14 +103,4 @@ class Executor(object):
 
             print('Last Execution')
             print('Job posts Index Range: {}-{}'.format(START, STOP))
-
-            dobie_response = self.get_fraction_requirements(START, STOP)
-            dobie_status_code = dobie_response.status_code
-            print('Response from Dobie: {}'.format(dobie_status_code))
-
-            if dobie_status_code == 200:
-                output = dobie_response.text
-                extracted_skills = handle_raw_annotation(output)
-                save_extracted_skills(extracted_skills)
-                print(extracted_skills)
-                # extract_skills_async.delay(output)
+            self.pipe_dobie_results(START, STOP)
