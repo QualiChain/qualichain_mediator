@@ -109,6 +109,25 @@ def parse_dobie_response(xml_response):
     return extracted_saro_data
 
 
+def split_camel_case(input_string):
+    """
+    This function is used to transform camel case words to more words
+
+    Args:
+        input_string: camel case string
+
+    Returns: Extracted words from camel case
+
+    """
+    if len(input_string) > 5:
+
+        splitted = re.sub('([A-Z][a-z]+)', r' \1', re.sub('([A-Z]+)', r' \1', input_string)).split()
+        joined_string = " ".join(splitted)
+        return joined_string
+    else:
+        return input_string
+
+
 def extract_raw_features(annotation):
     """
     This function is used to extract raw features from annotations
@@ -142,24 +161,6 @@ def handle_raw_annotation(dobie_output):
     for annotation in annotations:
         features_dict = extract_raw_features(annotation)
         if features_dict:
+            features_dict['string'] = split_camel_case(features_dict['string'])
             extracted_skills.append(features_dict)
     return extracted_skills
-
-
-def split_camel_case(input_string):
-    """
-    This function is used to transform camel case words to more words
-
-    Args:
-        input_string: camel case string
-
-    Returns: Extracted words from camel case
-
-    """
-    if len(input_string) > 5:
-
-        splitted = re.sub('([A-Z][a-z]+)', r' \1', re.sub('([A-Z]+)', r' \1', input_string)).split()
-        joined_string = " ".join(splitted)
-        return joined_string
-    else:
-        return input_string
