@@ -76,6 +76,7 @@ class Executor(object):
         if dobie_status_code == 200:
             output = dobie_response.text
             extracted_skills = handle_raw_annotation(output)
+            save_extracted_skills(extracted_skills)
             print(extracted_skills)
             # extract_skills_async.delay(output)
 
