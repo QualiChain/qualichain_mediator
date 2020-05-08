@@ -62,11 +62,13 @@ class Executor(object):
         dobie_response = send_data_to_dobie(dobie_input)
         return dobie_response
 
-    def pipe_dobie_results(self, START, STOP):
+    def pipe_dobie_results(self, START, STOP, save=False, filename='results'):
         """
         This function is used to take job posts fractions and handle Dobie Response output
         :param START: START index
         :param STOP: STOP index
+        :param save: if True save file in CSV format
+        :param filename: filename to save results
         :return: None
         """
         dobie_response = self.get_fraction_requirements(START, STOP)
@@ -76,8 +78,10 @@ class Executor(object):
         if dobie_status_code == 200:
             output = dobie_response.text
             extracted_skills = handle_raw_annotation(output)
-            save_extracted_skills(extracted_skills)
             print(extracted_skills)
+
+            if save:
+                save_extracted_skills(extracted_skills, filename)
             # extract_skills_async.delay(output)
 
     def execution_stage(self):
@@ -93,7 +97,7 @@ class Executor(object):
 
             print('Execution No: {}'.format(execution))
             print('Job posts Index Range: {}-{}'.format(START, STOP))
-            self.pipe_dobie_results(START, STOP)
+            self.pipe_dobie_results(START, STOP, save=True)
 
             index = index + BATCH_SIZE
             time.sleep(TIME_BETWEEN_REQUESTS)
@@ -104,4 +108,4 @@ class Executor(object):
 
             print('Last Execution')
             print('Job posts Index Range: {}-{}'.format(START, STOP))
-            self.pipe_dobie_results(START, STOP)
+            self.pipe_dobie_results(START, STOP, save=True)

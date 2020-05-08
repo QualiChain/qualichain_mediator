@@ -1,4 +1,5 @@
 import re
+from os import path
 
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -167,13 +168,22 @@ def handle_raw_annotation(dobie_output):
     return extracted_skills
 
 
-def save_extracted_skills(skills):
+def save_extracted_skills(skills, filename):
     """
     This function is used to get extracted skills and save them to a csv
-    :param skills:
+
+    :param skills: provided skills
+    :param filename: given file name
     :return:
     """
+    file_name = '{}.csv'.format(filename)
     skills_df = pd.DataFrame(skills)
     skills_df['frequencyOfMention'] = pd.to_numeric(skills_df['frequencyOfMention'])
+
     sorted_skills = skills_df.sort_values(by='frequencyOfMention', ascending=False)
-    sorted_skills.to_csv('extracted_skills.csv')
+    check_if_file_exists = path.isfile(file_name)
+
+    if check_if_file_exists:
+        sorted_skills.to_csv(file_name, mode='a', header=False)
+    else:
+        sorted_skills.to_csv(file_name)

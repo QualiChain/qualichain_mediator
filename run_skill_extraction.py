@@ -12,13 +12,13 @@ if __name__ == "__main__":
         "_source": ["id"],
         "should": [
             {"multi_match": {
-                "query": "backend engineer",
+                "query": "ui/ux",
                 "fields": ["title", "requirements"],
                 "type": "phrase",
                 "slop": 2}
             },
             {"multi_match": {
-                "query": "backend developer",
+                "query": "ux/ui",
                 "fields": ["title", "requirements"],
                 "type": "phrase",
                 "slop": 2}
