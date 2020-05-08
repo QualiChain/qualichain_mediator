@@ -192,7 +192,15 @@ def save_extracted_skills(skills, filename):
     else:
         sorted_skills.to_csv(file_name)
 
+
 def query_creator(job_attributes, key):
+    """
+    This function is used to query Analyzer for job posts
+
+    :param job_attributes: provided job attributes
+    :param key: provided key
+    :return: returned job post ids
+    """
     data = {
         "query": "bool_query",
         "index": "my_index",
@@ -215,4 +223,3 @@ def query_creator(job_attributes, key):
     job_post_ids = [res['_source']['id'] for res in response.json()]
 
     return job_post_ids
-

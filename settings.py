@@ -32,7 +32,6 @@ POSTGRES_HOST = os.environ.get('POSTGRES_HOST', 'qualichain.epu.ntua.gr')
 POSTGRES_PORT = os.environ.get('POSTGRES_PORT', 5432)
 POSTGRES_DB = os.environ.get('POSTGRES_DB', 'api_db')
 
-
 ENGINE_STRING = 'postgresql+psycopg2://{}:{}@{}:{}/{}'.format(
     POSTGRES_USER,
     POSTGRES_PASSWORD,
@@ -90,7 +89,7 @@ CELERY_TASK_ACKS_LATE = True
 
 JOB_NAMES = {
     "backend_developer": {'queries': ['backend developer', 'backend engineer'], 'min_score': 3},
-    "frontend_developer": {'queries':['frontend developer', 'frontend engineer'], 'min_score': 3},
+    "frontend_developer": {'queries': ['frontend developer', 'frontend engineer'], 'min_score': 3},
     "database_developer": {'queries': ['database developer', 'database engineer'], 'min_score': 3},
     "hardware_engineer": {'queries': ['hardware', 'hardware engineer'], 'min_score': 3},
     "data_analyst": {'queries': ['data analyst', 'data scientist'], 'min_score': 3},
@@ -102,10 +101,15 @@ JOB_NAMES = {
     "web_developer": {'queries': ['web engineer', 'web developer'], 'min_score': 4},
     "mobile_developer": {'queries': ['android developer', 'ios developer'], 'min_score': 4},
     "qa_engineer": {'queries': ['quality assurance', 'qa engineer'], 'min_score': 4},
-    "business_analyst": {'queries': ['business analyst', 'business development', 'business intelligence'], 'min_score': 4},
+    "business_analyst": {'queries': ['business analyst', 'business development', 'business intelligence'],
+                         'min_score': 4},
     "ui_ux_designer": {'queries': ['ui/ux', 'ux/ui'], 'min_score': 7},
     "project_manager": {'queries': ['project manager', 'technical manager'], 'min_score': 4},
     "test_developer": {'queries': ['test developer', 'test engineer', 'software engineer in test'], 'min_score': 4}
 }
 
-QUERY_EXECUTOR_URL = 'http://127.0.0.1:5000/ask/storage'
+# AnalEyeZer Settings
+ANALEYEZER_HOST = os.environ.get('ANALEYEZER_HOST', '127.0.0.1')
+ANALEYEZER_PORT = os.environ.get('ANALEYEZER_PORT', 5000)
+
+QUERY_EXECUTOR_URL = 'http://{}:{}/ask/storage'.format(ANALEYEZER_HOST, ANALEYEZER_PORT)
