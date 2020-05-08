@@ -62,7 +62,7 @@ class Executor(object):
         dobie_response = send_data_to_dobie(dobie_input)
         return dobie_response
 
-    def pipe_dobie_results(self, START, STOP, save=False, job_name='results'):
+    def pipe_dobie_results(self, START, STOP, save=False, job_name='sample_job_name'):
         """
         This function is used to take job posts fractions and handle Dobie Response output
         :param START: START index
