@@ -8,6 +8,7 @@ import json
 
 import requests
 
+from clients.postgres_client import PostgresClient
 from settings import SARO_SKILL, SARO_PREFIXES, QUERY_EXECUTOR_URL
 
 
@@ -152,13 +153,16 @@ def extract_raw_features(annotation):
     return features_dict
 
 
-def handle_raw_annotation(dobie_output):
+def handle_raw_annotation(dobie_output, job_name):
     """
     This function is used to extract dobie annotation and return list of extracted skills
 
     :param dobie_output: dobie response
+    :param job_name: provided job_name
     :return: list of extracted skills
     """
+    postgres_client = PostgresClient()
+
     soup = BeautifulSoup(dobie_output, "xml")
     annotations = soup.find_all('Annotation')
 
@@ -168,6 +172,14 @@ def handle_raw_annotation(dobie_output):
         features_dict = extract_raw_features(annotation)
         if features_dict:
             features_dict['string'] = split_camel_case(features_dict['string'])
+
+            postgres_client.upsert_new_skill(
+                job_name=job_name,
+                skill=features_dict['string'],
+                frequencyOfMention=features_dict['frequencyOfMention'],
+                kind=features_dict['kind']
+            )
+
             extracted_skills.append(features_dict)
     return extracted_skills
 

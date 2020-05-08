@@ -1,9 +1,14 @@
+from clients.postgres_client import PostgresClient
 from extraction_pipeline.execute_pipeline import Executor
 from settings import JOB_NAMES
 from utils import query_creator
 
 if __name__ == "__main__":
     try:
+        print("Initialize Table extracted_skill", flush=True)
+
+        pg_client = PostgresClient()
+        pg_client.initialize_extracted_skills_model()
 
         save_in_file = False
         for key in JOB_NAMES.keys():
