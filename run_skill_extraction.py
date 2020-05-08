@@ -30,9 +30,10 @@ if __name__ == "__main__":
     }
     response = requests.post(url='http://127.0.0.1:5000/ask/storage', headers=headers, data=json.dumps(data))
     job_post_ids = [res['_source']['id'] for res in response.json()]
+    job_name = 'ui/ux designer'
 
 
     # job_post_ids = [1, 367, 363, 369, 372, 374, 376, 377, 378, 420, 437, 364, 366, 415, 1374, 6, 7, 368, 365, 371, 397,
     #                 370]
     executor = Executor(job_post_ids)
-    executor.execution_stage()
+    executor.execution_stage(job_name=job_name)

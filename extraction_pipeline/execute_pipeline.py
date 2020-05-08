@@ -84,7 +84,7 @@ class Executor(object):
                 save_extracted_skills(extracted_skills, filename)
             # extract_skills_async.delay(output)
 
-    def execution_stage(self):
+    def execution_stage(self, job_name, save_in_file=False):
         """This is pipeline's execution stage"""
         index = 0
 
@@ -97,7 +97,7 @@ class Executor(object):
 
             print('Execution No: {}'.format(execution))
             print('Job posts Index Range: {}-{}'.format(START, STOP))
-            self.pipe_dobie_results(START, STOP, save=True)
+            self.pipe_dobie_results(START, STOP, save=save_in_file, filename=job_name)
 
             index = index + BATCH_SIZE
             time.sleep(TIME_BETWEEN_REQUESTS)
@@ -108,4 +108,4 @@ class Executor(object):
 
             print('Last Execution')
             print('Job posts Index Range: {}-{}'.format(START, STOP))
-            self.pipe_dobie_results(START, STOP, save=True)
+            self.pipe_dobie_results(START, STOP, save=save_in_file, filename=job_name)
