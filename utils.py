@@ -170,7 +170,8 @@ def handle_raw_annotation(dobie_output, job_name):
 
     for annotation in annotations:
         features_dict = extract_raw_features(annotation)
-        if features_dict:
+
+        if features_dict and 'type' not in features_dict.keys():
             features_dict['string'] = split_camel_case(features_dict['string'])
 
             postgres_client.upsert_new_skill(

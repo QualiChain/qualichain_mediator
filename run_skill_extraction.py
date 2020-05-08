@@ -5,6 +5,7 @@ from utils import query_creator
 
 if __name__ == "__main__":
     try:
+
         print("Initialize Table extracted_skill", flush=True)
 
         pg_client = PostgresClient()
