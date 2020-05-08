@@ -187,3 +187,25 @@ def save_extracted_skills(skills, filename):
         sorted_skills.to_csv(file_name, mode='a', header=False)
     else:
         sorted_skills.to_csv(file_name)
+
+def query_creator(job_attributes):
+    data = {
+        "query": "bool_query",
+        "index": "my_index",
+        "min_score": job_attributes['min_score'],
+        "_source": ["id"],
+        "should": [
+            {"multi_match": {
+                "query": query,
+                "fields": ["title", "requirements"],
+                "type": "phrase",
+                "slop": 2}
+            } for query in job_attributes['queries']
+        ]
+    }
+    headers = {
+        'Content-Type': 'application/json'
+    }
+
+    return data, headers
+

@@ -87,3 +87,25 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 # CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
 CELERY_TASK_ACKS_LATE = True
+
+JOB_NAMES = {
+    "backend_developer": {'queries': ['backend developer', 'backend engineer'], 'min_score': 3},
+    "frontend_developer": {'queries':['frontend developer', 'frontend engineer'], 'min_score': 3},
+    "database_developer": {'queries': ['database developer', 'database engineer'], 'min_score': 3},
+    "hardware_engineer": {'queries': ['hardware', 'hardware engineer'], 'min_score': 3},
+    "data_analyst": {'queries': ['data analyst', 'data scientist'], 'min_score': 3},
+    "data_engineer": {'queries': ['data engineer', 'big data'], 'min_score': 4},
+    "machine_learning_engineer": {'queries': ['machine learning engineer', 'machine learning'], 'min_score': 4},
+    "network_architect": {'queries': ['network engineer', 'network architect'], 'min_score': 4},
+    "dev_ops_engineer": {'queries': ['DevOps engineer'], 'min_score': 8},
+    "security_engineer": {'queries': ['security engineer', 'security'], 'min_score': 3},
+    "web_developer": {'queries': ['web engineer', 'web developer'], 'min_score': 4},
+    "mobile_developer": {'queries': ['android developer', 'ios developer'], 'min_score': 4},
+    "qa_engineer": {'queries': ['quality assurance', 'qa engineer'], 'min_score': 4},
+    "business_analyst": {'queries': ['business analyst', 'business development', 'business intelligence'], 'min_score': 4},
+    "ui_ux_designer": {'queries': ['ui/ux', 'ux/ui'], 'min_score': 7},
+    "project_manager": {'queries': ['project manager', 'technical manager'], 'min_score': 4},
+    "test_developer": {'queries': ['test developer', 'test engineer', 'software engineer in test'], 'min_score': 4}
+}
+
+QUERY_EXECUTOR_URL = 'http://127.0.0.1:5000/ask/storage'
