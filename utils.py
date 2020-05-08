@@ -4,7 +4,11 @@ from os import path
 import pandas as pd
 from bs4 import BeautifulSoup
 
-from settings import SARO_SKILL, SARO_PREFIXES
+import json
+
+import requests
+
+from settings import SARO_SKILL, SARO_PREFIXES, QUERY_EXECUTOR_URL
 
 
 def my_add(x, y):
@@ -188,7 +192,7 @@ def save_extracted_skills(skills, filename):
     else:
         sorted_skills.to_csv(file_name)
 
-def query_creator(job_attributes):
+def query_creator(job_attributes, key):
     data = {
         "query": "bool_query",
         "index": "my_index",
@@ -207,5 +211,8 @@ def query_creator(job_attributes):
         'Content-Type': 'application/json'
     }
 
-    return data, headers
+    response = requests.post(url=QUERY_EXECUTOR_URL, headers=headers, data=json.dumps(data))
+    job_post_ids = [res['_source']['id'] for res in response.json()]
+
+    return job_post_ids
 
