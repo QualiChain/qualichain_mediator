@@ -97,7 +97,7 @@ JOB_NAMES = {
     "data_engineer": {'queries': ['data engineer', 'big data'], 'min_score': 4},
     "machine_learning_engineer": {'queries': ['machine learning engineer', 'machine learning'], 'min_score': 4},
     "network_architect": {'queries': ['network engineer', 'network architect'], 'min_score': 4},
-    "dev_ops_engineer": {'queries': ['DevOps engineer'], 'min_score': 8},
+    "dev_ops_engineer": {'queries': ['DevOps engineer'], 'min_score': 4},
     "security_engineer": {'queries': ['security engineer', 'security'], 'min_score': 3},
     "web_developer": {'queries': ['web engineer', 'web developer'], 'min_score': 4},
     "mobile_developer": {'queries': ['android developer', 'ios developer'], 'min_score': 4},
