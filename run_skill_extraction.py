@@ -1,6 +1,6 @@
 from clients.postgres_client import PostgresClient
 from extraction_pipeline.execute_pipeline import Executor
-from settings import JOB_NAMES
+from settings import JOB_NAMES, SAVE_IN_FILE
 from utils import query_creator
 
 if __name__ == "__main__":
@@ -11,7 +11,6 @@ if __name__ == "__main__":
         pg_client = PostgresClient()
         pg_client.initialize_extracted_skills_model()
 
-        save_in_file = False
         for key in JOB_NAMES.keys():
 
             print("Extract skills for: {}".format(key), flush=True)
@@ -19,7 +18,7 @@ if __name__ == "__main__":
 
             if job_post_ids:
                 executor = Executor(job_post_ids)
-                executor.execution_stage(job_name=key, save_in_file=save_in_file)
+                executor.execution_stage(job_name=key, save_in_file=SAVE_IN_FILE)
 
     except Exception as ex:
         print(ex, flush=True)

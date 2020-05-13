@@ -76,17 +76,6 @@ STOP_WORDS = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you"
 BATCH_SIZE = 50
 TIME_BETWEEN_REQUESTS = 10  # in seconds
 
-# =================================
-#   CELERY SETTINGS
-# =================================
-CELERY_BROKER_URL = 'pyamqp://{}:{}@{}:{}/{}'.format(
-    RABBITMQ_USER, RABBITMQ_PASSWORD, RABBITMQ_HOST, RABBITMQ_PORT, RABBITMQ_VHOST)
-
-CELERY_ACCEPT_CONTENT = ['application/json']
-# CELERY_TASK_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'UTC'
-CELERY_TASK_ACKS_LATE = True
-
 JOB_NAMES = {
     "backend_developer": {'queries': ['backend developer', 'backend engineer'], 'min_score': 3},
     "frontend_developer": {'queries': ['frontend developer', 'frontend engineer'], 'min_score': 3},
@@ -112,4 +101,18 @@ JOB_NAMES = {
 ANALEYEZER_HOST = os.environ.get('ANALEYEZER_HOST', '127.0.0.1')
 ANALEYEZER_PORT = os.environ.get('ANALEYEZER_PORT', 5000)
 
+# Extraction Pipeline Settings
+SAVE_IN_FILE = False
+
 QUERY_EXECUTOR_URL = 'http://{}:{}/ask/storage'.format(ANALEYEZER_HOST, ANALEYEZER_PORT)
+
+# =================================
+#   CELERY SETTINGS
+# =================================
+CELERY_BROKER_URL = 'pyamqp://{}:{}@{}:{}/{}'.format(
+    RABBITMQ_USER, RABBITMQ_PASSWORD, RABBITMQ_HOST, RABBITMQ_PORT, RABBITMQ_VHOST)
+
+CELERY_ACCEPT_CONTENT = ['application/json']
+# CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+CELERY_TASK_ACKS_LATE = True
