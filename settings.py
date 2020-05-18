@@ -32,7 +32,6 @@ POSTGRES_HOST = os.environ.get('POSTGRES_HOST', 'qualichain.epu.ntua.gr')
 POSTGRES_PORT = os.environ.get('POSTGRES_PORT', 5432)
 POSTGRES_DB = os.environ.get('POSTGRES_DB', 'api_db')
 
-
 ENGINE_STRING = 'postgresql+psycopg2://{}:{}@{}:{}/{}'.format(
     POSTGRES_USER,
     POSTGRES_PASSWORD,
@@ -41,7 +40,7 @@ ENGINE_STRING = 'postgresql+psycopg2://{}:{}@{}:{}/{}'.format(
     POSTGRES_DB
 )
 
-JOB_POSTS_TABLE = 'job_posts'
+JOB_POSTS_TABLE = 'job_post'
 
 # =================================
 #   APPLICATION SETTINGS
@@ -73,6 +72,38 @@ STOP_WORDS = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you"
               "further", "then", "once", "here", "there", "when", "where", "why", "how", "all", "any", "both", "each",
               "few", "more", "most", "other", "some", "such", "no", "nor", "not", "only", "own", "same", "so", "than",
               "too", "very", "s", "t", "can", "will", "just", "don", "should", "now"]
+
+BATCH_SIZE = 50
+TIME_BETWEEN_REQUESTS = 10  # in seconds
+
+JOB_NAMES = {
+    "backend_developer": {'queries': ['backend developer', 'backend engineer'], 'min_score': 3},
+    "frontend_developer": {'queries': ['frontend developer', 'frontend engineer'], 'min_score': 3},
+    "database_developer": {'queries': ['database developer', 'database engineer'], 'min_score': 3},
+    "hardware_engineer": {'queries': ['hardware', 'hardware engineer'], 'min_score': 3},
+    "data_analyst": {'queries': ['data analyst', 'data scientist'], 'min_score': 3},
+    "data_engineer": {'queries': ['data engineer', 'big data'], 'min_score': 4},
+    "machine_learning_engineer": {'queries': ['machine learning engineer', 'machine learning'], 'min_score': 4},
+    "network_architect": {'queries': ['network engineer', 'network architect'], 'min_score': 4},
+    "dev_ops_engineer": {'queries': ['DevOps engineer'], 'min_score': 4},
+    "security_engineer": {'queries': ['security engineer', 'security'], 'min_score': 3},
+    "web_developer": {'queries': ['web engineer', 'web developer'], 'min_score': 4},
+    "mobile_developer": {'queries': ['android developer', 'ios developer'], 'min_score': 4},
+    "qa_engineer": {'queries': ['quality assurance', 'qa engineer'], 'min_score': 4},
+    "business_analyst": {'queries': ['business analyst', 'business development', 'business intelligence'],
+                         'min_score': 4},
+    "ui_ux_designer": {'queries': ['ui/ux', 'ux/ui'], 'min_score': 7},
+    "project_manager": {'queries': ['project manager', 'technical manager'], 'min_score': 4},
+    "test_developer": {'queries': ['test developer', 'test engineer', 'software engineer in test'], 'min_score': 4}
+}
+
+# AnalEyeZer Settings
+ANALEYEZER_HOST = os.environ.get('ANALEYEZER_HOST', 'qualichain.epu.ntua.gr')
+ANALEYEZER_PORT = os.environ.get('ANALEYEZER_PORT', 5000)
+QUERY_EXECUTOR_URL = 'http://{}:{}/ask/storage'.format(ANALEYEZER_HOST, ANALEYEZER_PORT)
+
+# Extraction Pipeline Settings
+SAVE_IN_FILE = False
 
 # =================================
 #   CELERY SETTINGS

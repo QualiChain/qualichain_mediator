@@ -1,6 +1,15 @@
+import re
+from os import path
+
+import pandas as pd
 from bs4 import BeautifulSoup
 
-from settings import SARO_SKILL, SARO_PREFIXES, STOP_WORDS
+import json
+
+import requests
+
+from clients.postgres_client import PostgresClient
+from settings import SARO_SKILL, SARO_PREFIXES, QUERY_EXECUTOR_URL
 
 
 def my_add(x, y):
@@ -107,14 +116,123 @@ def parse_dobie_response(xml_response):
     return extracted_saro_data
 
 
-def remove_stop_words(job_requirements):
+def split_camel_case(input_string):
     """
-    This function is used to remove stop words from job post requirements
-    description
+    This function is used to transform camel case words to more words
 
-    :param job_requirements: job requirements text
-    :return: job requirements without stopwords
+    Args:
+        input_string: camel case string
+
+    Returns: Extracted words from camel case
+
     """
-    split_txt = job_requirements.split()
-    removed_txt = [word for word in split_txt if word not in STOP_WORDS]
-    return " ".join(removed_txt)
+    if len(input_string) > 5:
+
+        splitted = re.sub('([A-Z][a-z]+)', r' \1', re.sub('([A-Z]+)', r' \1', input_string)).split()
+        joined_string = " ".join(splitted)
+        return joined_string
+    else:
+        return input_string
+
+
+def extract_raw_features(annotation):
+    """
+    This function is used to extract raw features from annotations
+
+    :param annotation: annotation object
+    :return: features in dictionary
+    """
+    features = annotation.select('Feature')
+    annotation_features = {}
+    for feature in features:
+        feature_name = feature.Name.text
+        feature_value = feature.Value.text
+
+        annotation_features[feature_name] = feature_value
+    features_dict = dict(filter(lambda element: element[1] != 'external', annotation_features.items()))
+    return features_dict
+
+
+def handle_raw_annotation(dobie_output, job_name):
+    """
+    This function is used to extract dobie annotation and return list of extracted skills
+
+    :param dobie_output: dobie response
+    :param job_name: provided job_name
+    :return: list of extracted skills
+    """
+    postgres_client = PostgresClient()
+
+    soup = BeautifulSoup(dobie_output, "xml")
+    annotations = soup.find_all('Annotation')
+
+    extracted_skills = []
+
+    for annotation in annotations:
+        features_dict = extract_raw_features(annotation)
+
+        if features_dict and 'type' not in features_dict.keys():
+            features_dict['string'] = split_camel_case(features_dict['string'])
+
+            postgres_client.upsert_new_skill(
+                job_name=job_name,
+                skill=features_dict['string'],
+                frequencyOfMention=features_dict['frequencyOfMention'],
+                kind=features_dict['kind']
+            )
+
+            extracted_skills.append(features_dict)
+    return extracted_skills
+
+
+def save_extracted_skills(skills, filename):
+    """
+    This function is used to get extracted skills and save them to a csv
+
+    :param skills: provided skills
+    :param filename: given file name
+    :return:
+    """
+    file_name = '{}.csv'.format(filename)
+    skills_df = pd.DataFrame(skills)
+    skills_df['frequencyOfMention'] = pd.to_numeric(skills_df['frequencyOfMention'])
+
+    sorted_skills = skills_df.sort_values(by='frequencyOfMention', ascending=False)
+    check_if_file_exists = path.isfile(file_name)
+
+    if check_if_file_exists:
+        sorted_skills.to_csv(file_name, mode='a', header=False)
+    else:
+        sorted_skills.to_csv(file_name)
+
+
+def query_creator(job_attributes, key):
+    """
+    This function is used to query Analyzer for job posts
+
+    :param job_attributes: provided job attributes
+    :param key: provided key
+    :return: returned job post ids
+    """
+    data = {
+        "query": "bool_query",
+        "index": "my_index",
+        "min_score": job_attributes['min_score'],
+        "_source": ["id"],
+        "should": [
+            {"multi_match": {
+                "query": query,
+                "fields": ["title", "requirements"],
+                "type": "phrase",
+                "slop": 2}
+            } for query in job_attributes['queries']
+        ]
+    }
+    headers = {
+        'Content-Type': 'application/json'
+    }
+
+    response = requests.post(url=QUERY_EXECUTOR_URL, headers=headers, data=json.dumps(data))
+    job_post_ids = [res['_source']['id'] for res in response.json()]
+
+    return job_post_ids
