@@ -23,7 +23,7 @@ class JobPostSkillExtractor(object):
             tuple_ids = tuple(ids)
             select_query = 'SELECT requirements from "{}" WHERE id in {}'.format(JOB_POSTS_TABLE, tuple_ids)
         else:
-            select_query = 'SELECT requirements from requirements'
+            select_query = 'SELECT requirements from {}'.format(JOB_POSTS_TABLE)
 
         job_posts = pd.read_sql_query(select_query, self.engine)
         return job_posts
