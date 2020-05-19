@@ -9,7 +9,7 @@ import json
 import requests
 
 from clients.postgres_client import PostgresClient
-from settings import SARO_SKILL, SARO_PREFIXES, QUERY_EXECUTOR_URL
+from settings import SARO_SKILL, SARO_PREFIXES, QUERY_EXECUTOR_URL, INDEX
 
 
 def my_add(x, y):
@@ -216,7 +216,7 @@ def query_creator(job_attributes, key):
     """
     data = {
         "query": "bool_query",
-        "index": "my_index",
+        "index": INDEX,
         "min_score": job_attributes['min_score'],
         "_source": ["id"],
         "should": [

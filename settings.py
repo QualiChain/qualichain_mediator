@@ -99,7 +99,8 @@ JOB_NAMES = {
 
 # AnalEyeZer Settings
 ANALEYEZER_HOST = os.environ.get('ANALEYEZER_HOST', 'qualichain.epu.ntua.gr')
-ANALEYEZER_PORT = os.environ.get('ANALEYEZER_PORT', 5000)
+ANALEYEZER_PORT = os.environ.get('ANALEYEZER_PORT', 5002)
+INDEX = "job_post_index"
 QUERY_EXECUTOR_URL = 'http://{}:{}/ask/storage'.format(ANALEYEZER_HOST, ANALEYEZER_PORT)
 
 # Extraction Pipeline Settings
