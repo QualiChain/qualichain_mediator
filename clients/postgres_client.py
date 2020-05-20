@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, create_engine, MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+import pandas as pd
 
 from settings import ENGINE_STRING
 
@@ -53,3 +54,13 @@ class PostgresClient(object):
             new_skill = ExtractedSkill(**kwargs)
             self.session.add(new_skill)
             self.session.commit()
+
+    def insert_job_post(self, **kwargs):
+        """This function is used to insert a CSV file that contains information about job posts"""
+        file_path = kwargs['file_path']
+        table_name = 'job_post'
+
+        jobs_df = pd.read_csv(file_path)
+        jobs_df.requirements.fillna(jobs_df.full_text, inplace=True)
+
+        jobs_df.to_sql(table_name, con=self.engine, index=False)
