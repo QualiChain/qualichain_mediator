@@ -1,0 +1,571 @@
+[   {
+      "string":"TDD",
+      "frequencyOfMention":"1",
+      "kind":"topic"
+
+},
+   {
+      "string":"WebApplications",
+      "frequencyOfMention":"1",
+      "kind":"topic"
+
+},
+   {
+      "string":"DataEngineer",
+      "frequencyOfMention":"2",
+      "kind":"topic"
+
+},
+   {
+      "string":"Developer",
+      "frequencyOfMention":"6",
+      "kind":"topic"
+
+},
+   {
+      "string":"DevOps",
+      "frequencyOfMention":"5",
+      "kind":"topic"
+
+},
+   {
+      "string":"Development",
+      "frequencyOfMention":"10",
+      "kind":"topic"
+
+},
+   {
+      "string":"CAD",
+      "frequencyOfMention":"1",
+      "kind":"topic"
+
+},
+   {
+      "string":"Analysis",
+      "frequencyOfMention":"1",
+      "kind":"topic"
+
+},
+   {
+      "string":"Visualization",
+      "frequencyOfMention":"1",
+      "kind":"topic"
+
+},
+   {
+      "string":"Design",
+      "frequencyOfMention":"6",
+      "kind":"topic"
+
+},
+   {
+      "string":"SoftwareEngineering",
+      "frequencyOfMention":"1",
+      "kind":"topic"
+
+},
+   {
+      "string":"VersionControl",
+      "frequencyOfMention":"3",
+      "kind":"topic"
+
+},
+   {
+      "string":"BuildAutomation",
+      "frequencyOfMention":"1",
+      "kind":"topic"
+
+},
+   {
+      "string":"FrontEnd",
+      "frequencyOfMention":"1",
+      "kind":"topic"
+
+},
+   {
+      "string":"Microservices",
+      "frequencyOfMention":"1",
+      "kind":"topic"
+
+},
+   {
+      "string":"Orchestration",
+      "frequencyOfMention":"1",
+      "kind":"topic"
+
+},
+   {
+      "string":"RelationalDatabase",
+      "frequencyOfMention":"1",
+      "kind":"topic"
+
+},
+   {
+      "string":"Storage",
+      "frequencyOfMention":"1",
+      "kind":"topic"
+
+},
+   {
+      "string":"ContinuousIntegration",
+      "frequencyOfMention":"1",
+      "kind":"topic"
+
+},
+   {
+      "string":"Marketing",
+      "frequencyOfMention":"1",
+      "kind":"topic"
+
+},
+   {
+      "string":"Tools",
+      "frequencyOfMention":"1",
+      "kind":"topic"
+
+},
+   {
+      "string":"WebServices",
+      "frequencyOfMention":"1",
+      "kind":"topic"
+
+},
+   {
+      "string":"Backend",
+      "frequencyOfMention":"1",
+      "kind":"topic"
+
+},
+   {
+      "string":"GO",
+      "frequencyOfMention":"2",
+      "kind":"product"
+
+},
+   {
+      "string":"IIS",
+      "frequencyOfMention":"1",
+      "kind":"product"
+
+},
+   {
+      "string":"Android",
+      "frequencyOfMention":"7",
+      "kind":"product"
+
+},
+   {
+      "string":"Cassandra",
+      "frequencyOfMention":"1",
+      "kind":"product"
+
+},
+   {
+      "string":"Unix",
+      "frequencyOfMention":"1",
+      "kind":"product"
+
+},
+   {
+      "string":"Linux",
+      "frequencyOfMention":"3",
+      "kind":"product"
+
+},
+   {
+      "string":"Windows",
+      "frequencyOfMention":"1",
+      "kind":"product"
+
+},
+   {
+      "string":"Docker",
+      "frequencyOfMention":"4",
+      "kind":"product"
+
+},
+   {
+      "string":"MsOffice",
+      "frequencyOfMention":"1",
+      "kind":"product"
+
+},
+   {
+      "string":"Debian",
+      "frequencyOfMention":"1",
+      "kind":"product"
+
+},
+   {
+      "string":"IOS",
+      "frequencyOfMention":"1",
+      "kind":"product"
+
+},
+   {
+      "string":"ERP",
+      "frequencyOfMention":"1",
+      "kind":"product"
+
+},
+   {
+      "string":"Angular",
+      "frequencyOfMention":"1",
+      "kind":"product"
+
+},
+   {
+      "string":"JSON",
+      "frequencyOfMention":"1",
+      "kind":"product"
+
+},
+   {
+      "string":"Jira",
+      "frequencyOfMention":"2",
+      "kind":"tool"
+
+},
+   {
+      "string":"SQL",
+      "frequencyOfMention":"4",
+      "kind":"tool"
+
+},
+   {
+      "string":"ETL",
+      "frequencyOfMention":"1",
+      "kind":"tool"
+
+},
+   {
+      "string":"AWS",
+      "frequencyOfMention":"1",
+      "kind":"tool"
+
+},
+   {
+      "string":"Azure",
+      "frequencyOfMention":"3",
+      "kind":"tool"
+
+},
+   {
+      "string":"JavaScript",
+      "frequencyOfMention":"3",
+      "kind":"tool"
+
+},
+   {
+      "string":"React",
+      "frequencyOfMention":"3",
+      "kind":"tool"
+
+},
+   {
+      "string":"Scripting",
+      "frequencyOfMention":"1",
+      "kind":"tool"
+
+},
+   {
+      "string":"Bash",
+      "frequencyOfMention":"1",
+      "kind":"tool"
+
+},
+   {
+      "string":"PHP",
+      "frequencyOfMention":"3",
+      "kind":"tool"
+
+},
+   {
+      "string":"Python",
+      "frequencyOfMention":"2",
+      "kind":"tool"
+
+},
+   {
+      "string":"Akka",
+      "frequencyOfMention":"3",
+      "kind":"tool"
+
+},
+   {
+      "string":"Perl",
+      "frequencyOfMention":"1",
+      "kind":"tool"
+
+},
+   {
+      "string":"Java",
+      "frequencyOfMention":"4",
+      "kind":"tool"
+
+},
+   {
+      "string":"UX",
+      "frequencyOfMention":"2",
+      "kind":"tool"
+
+},
+   {
+      "string":"C",
+      "frequencyOfMention":"4",
+      "kind":"tool"
+
+},
+   {
+      "string":"Selenium",
+      "frequencyOfMention":"3",
+      "kind":"tool"
+
+},
+   {
+      "string":"HTTP",
+      "frequencyOfMention":"2",
+      "kind":"tool"
+
+},
+   {
+      "string":"TCP",
+      "frequencyOfMention":"1",
+      "kind":"tool"
+
+},
+   {
+      "string":"HTML",
+      "frequencyOfMention":"1",
+      "kind":"tool"
+
+},
+   {
+      "string":"Git",
+      "frequencyOfMention":"6",
+      "kind":"tool"
+
+},
+   {
+      "string":"CSS",
+      "frequencyOfMention":"1",
+      "kind":"tool"
+
+},
+   {
+      "string":"Jenkins",
+      "frequencyOfMention":"3",
+      "kind":"tool"
+
+},
+   {
+      "string":"Maven",
+      "frequencyOfMention":"2",
+      "kind":"tool"
+
+},
+   {
+      "string":"Gradle",
+      "frequencyOfMention":"2",
+      "kind":"tool"
+
+},
+   {
+      "string":"PostgreSQL",
+      "frequencyOfMention":"1",
+      "kind":"tool"
+
+},
+   {
+      "string":"CSS3",
+      "frequencyOfMention":"1",
+      "kind":"tool"
+
+},
+   {
+      "string":"HTML5",
+      "frequencyOfMention":"1",
+      "kind":"tool"
+
+},
+   {
+      "string":"TypeScript",
+      "frequencyOfMention":"2",
+      "kind":"tool"
+
+},
+   {
+      "string":"R",
+      "frequencyOfMention":"1",
+      "kind":"tool"
+
+},
+   {
+      "string":"Ansible",
+      "frequencyOfMention":"1",
+      "kind":"tool"
+
+},
+   {
+      "string":"Ruby",
+      "frequencyOfMention":"1",
+      "kind":"tool"
+
+},
+   {
+      "string":"Kafka",
+      "frequencyOfMention":"1",
+      "kind":"tool"
+
+},
+   {
+      "string":"Scala",
+      "frequencyOfMention":"1",
+      "kind":"tool"
+
+},
+   {
+      "string":"NoSQL",
+      "frequencyOfMention":"1",
+      "kind":"tool"
+
+},
+   {
+      "string":"API",
+      "frequencyOfMention":"1",
+      "kind":"tool"
+
+},
+   {
+      "string":"REST",
+      "frequencyOfMention":"2",
+      "kind":"tool"
+
+},
+   {
+      "string":"ABAP",
+      "frequencyOfMention":"1",
+      "kind":"tool"
+
+},
+   {
+      "string":"Xcode",
+      "frequencyOfMention":"1",
+      "kind":"tool"
+
+},
+   {
+      "string":"Swift",
+      "frequencyOfMention":"1",
+      "kind":"tool"
+
+},
+   {
+      "string":"Protractor",
+      "frequencyOfMention":"1",
+      "kind":"tool"
+
+},
+   {
+      "string":"Cucumber",
+      "frequencyOfMention":"1",
+      "kind":"tool"
+
+},
+   {
+      "string":"jMeter",
+      "frequencyOfMention":"1",
+      "kind":"tool"
+
+},
+   {
+      "string":"Security",
+      "frequencyOfMention":"3",
+      "kind":"topic"
+
+},
+   {
+      "string":"Hardware",
+      "frequencyOfMention":"2",
+      "kind":"topic"
+
+},
+   {
+      "string":"Automation",
+      "frequencyOfMention":"7",
+      "kind":"topic"
+
+},
+   {
+      "string":"SoftwareDevelopment",
+      "frequencyOfMention":"2",
+      "kind":"topic"
+
+},
+   {
+      "string":"Agile",
+      "frequencyOfMention":"2",
+      "kind":"topic"
+
+},
+   {
+      "string":"Cloud",
+      "frequencyOfMention":"1",
+      "kind":"topic"
+
+},
+   {
+      "string":"Assurance",
+      "frequencyOfMention":"1",
+      "kind":"topic"
+
+},
+   {
+      "string":"RegressionTesting",
+      "frequencyOfMention":"1",
+      "kind":"topic"
+
+},
+   {
+      "string":"Testing",
+      "frequencyOfMention":"6",
+      "kind":"topic"
+
+},
+   {
+      "string":"Programming",
+      "frequencyOfMention":"5",
+      "kind":"topic"
+
+},
+   {
+      "string":"ComputerScience",
+      "frequencyOfMention":"2",
+      "kind":"topic"
+
+},
+   {
+      "string":"UI",
+      "frequencyOfMention":"4",
+      "kind":"topic"
+
+},
+   {
+      "string":"Database",
+      "frequencyOfMention":"5",
+      "kind":"topic"
+
+},
+   {
+      "string":"OOP",
+      "frequencyOfMention":"1",
+      "kind":"topic"
+
+},
+   {
+      "string":"DesignPatterns",
+      "frequencyOfMention":"4",
+      "kind":"topic"
+
+}
+]
