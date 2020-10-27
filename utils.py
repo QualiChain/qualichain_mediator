@@ -185,6 +185,24 @@ def handle_raw_annotation(dobie_output, job_name):
     return extracted_skills
 
 
+def handle_raw_output(dobie_output):
+    """
+    This function is used to receive raw dobie output
+    """
+
+    soup = BeautifulSoup(dobie_output, "xml")
+    annotations = soup.find_all('Annotation')
+
+    extracted_skills = []
+
+    for annotation in annotations:
+        features_dict = extract_raw_features(annotation)
+
+        if features_dict and 'type' not in features_dict.keys():
+            extracted_skills.append(features_dict['string'])
+    return extracted_skills
+
+
 def save_extracted_skills(skills, filename):
     """
     This function is used to get extracted skills and save them to a csv
