@@ -163,8 +163,6 @@ def handle_course_skill_annotation(dobie_output, course_name):
        """
     postgres_client = PostgresClient()
 
-    # soup = BeautifulSoup(testing_response.text, "turtle")
-    # print(soup.find_all())
     g = Graph()
     g.parse(data=dobie_output.text, format='turtle')
     skill_list = []
@@ -179,6 +177,7 @@ def handle_course_skill_annotation(dobie_output, course_name):
         )
     skill_list = remove_common_skills(skill_list)
 
+    postgres_client.session.close()
     return skill_list
 
 def remove_common_skills(skill_list):

@@ -67,6 +67,8 @@ class PostgresClient(object):
             self.session.commit()
 
 
+
+
     def upsert_new_skill(self, **kwargs):
         """
         This function is used to append a new skill per job name
