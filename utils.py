@@ -1,6 +1,6 @@
 import re
 from os import path
-
+from rdflib import Graph
 import pandas as pd
 from bs4 import BeautifulSoup
 
@@ -152,6 +152,41 @@ def extract_raw_features(annotation):
     features_dict = dict(filter(lambda element: element[1] != 'external', annotation_features.items()))
     return features_dict
 
+
+def handle_course_skill_annotation(dobie_output, course_name):
+    """
+       This function is used to extract dobie annotation and return list of extracted skills
+
+       :param dobie_output: dobie response
+       :param course_name: provided course_name
+       :return: list of extracted skills
+       """
+    postgres_client = PostgresClient()
+
+    # soup = BeautifulSoup(testing_response.text, "turtle")
+    # print(soup.find_all())
+    g = Graph()
+    g.parse(data=dobie_output.text, format='turtle')
+    skill_list = []
+    for row in g.query("SELECT ?s WHERE { [] saro:requiresSkill ?s .}"):
+        skill_list.append(row['s'].replace('http://w3id.org/saro/', ''))
+        print(row['s'].replace('http://w3id.org/saro/', ''))
+
+    for skill in skill_list:
+        postgres_client.upsert_new_skill_per_course(
+            course_title=course_name,
+            skill=skill
+        )
+    skill_list = remove_common_skills(skill_list)
+
+    return skill_list
+
+def remove_common_skills(skill_list):
+    common_list = ['tools', 'design', 'analysis']
+    for el in skill_list:
+        if el in common_list:
+            skill_list.pop(el)
+    return skill_list
 
 def handle_raw_annotation(dobie_output, job_name):
     """

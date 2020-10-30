@@ -3,8 +3,10 @@ import os
 # =================================
 #   DOBIE SETTINGS
 # =================================
-DOBIE_HOST = os.environ.get('DOBIE_HOST', 'qualichain.epu.ntua.gr')
-DOBIE_PORT = os.environ.get('DOBIE_PORT', 9006)
+DOBIE_HOST = os.environ.get('DOBIE_HOST', 'demo.iais.fraunhofer.de')
+# DOBIE_PORT = os.environ.get('DOBIE_PORT', 9006)
+DOBIE_USERNAME = os.environ.get('DOBIE_USERNAME', 'user')
+DOBIE_PASS = os.environ.get('DOBIE_PASS', '5UxLtwaeJ8fK')
 
 # =================================
 #   FUSEKI SERVER SETTINGS
@@ -41,6 +43,7 @@ ENGINE_STRING = 'postgresql+psycopg2://{}:{}@{}:{}/{}'.format(
 )
 
 JOB_POSTS_TABLE = 'job_post'
+COURSES_TABLE = 'curriculum_designer_course'
 
 # =================================
 #   APPLICATION SETTINGS
@@ -74,7 +77,7 @@ STOP_WORDS = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you"
               "too", "very", "s", "t", "can", "will", "just", "don", "should", "now"]
 
 BATCH_SIZE = 50
-TIME_BETWEEN_REQUESTS = 10  # in seconds
+TIME_BETWEEN_REQUESTS = 5  # in seconds
 
 JOB_NAMES = {
     "backend_developer": {'queries': ['backend developer', 'backend engineer'], 'min_score': 3},

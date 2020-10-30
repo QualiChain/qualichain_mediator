@@ -1,8 +1,9 @@
 import json
 
 import requests
+from requests.auth import HTTPBasicAuth
 
-from settings import DOBIE_HOST, DOBIE_PORT
+from settings import DOBIE_HOST, DOBIE_PASS, DOBIE_USERNAME
 
 
 def send_data_to_dobie(job_description):
@@ -15,14 +16,13 @@ def send_data_to_dobie(job_description):
     >>>send_data_to_dobie({"tasks":[{"label":"95671c903a5b97a9", "jobDescription":"job_text"}]})
 
     """
-    url = "http://{}:{}/annotate".format(DOBIE_HOST, DOBIE_PORT)
+    url = "https://{}/dobie/jsonData/jobPostNTUA".format(DOBIE_HOST)
 
     headers = {
-        'Content-Type': "application/json",
-        'Postman-Token': "53181693-dfea-47df-8a4e-2d7124aeb47a",
-        'Cache-Control': "no-cache"
+        'Authorization': 'Basic dXNlcjo1VXhMdHdhZUo4Zks=',
+        'Content-Type': 'application/json'
     }
-
+    print(job_description)
     jsonified_data = json.dumps(job_description)
-    response = requests.request("POST", url, data=jsonified_data, headers=headers)
+    response = requests.request('POST', url, headers=headers, data=jsonified_data)
     return response

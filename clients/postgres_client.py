@@ -22,6 +22,18 @@ class ExtractedSkill(Base):
         return '<ExtractedSkill name: {}, job_name: {}>'.format(self.skill, self.job_name)
 
 
+class ExtractedCourseSkill(Base):
+    """Extracted Course Skills Table"""
+    __tablename__ = 'extracted_course_skill'
+
+    id = Column(Integer, primary_key=True, nullable=False)
+    course_title = Column(String(1024), nullable=True)
+    skill = Column(String(1024), nullable=True)
+
+    def __repr__(self):
+        return '<ExtractedSkill name: {}, course_title: {}>'.format(self.skill, self.course_title)
+
+
 class PostgresClient(object):
     """This is a Python Object that handles Postgres DB using SQLAlchemy"""
 
@@ -35,6 +47,25 @@ class PostgresClient(object):
         """This function is used to initialize ExtractedSkill Table"""
         Base.metadata.create_all(self.engine)
         print('ExtractedSkill Initiated Successfully')
+
+
+    def upsert_new_skill_per_course(self,**kwargs):
+        """
+                This function is used to append a new skill per course
+                :param kwargs: provided kwargs
+                :return: None
+                """
+        this_skill = self.session.query(ExtractedCourseSkill).filter_by(
+            course_title=kwargs['course_title'],
+            skill=kwargs['skill']
+        )
+        if this_skill.count():
+            pass
+        else:
+            new_skill = ExtractedCourseSkill(**kwargs)
+            self.session.add(new_skill)
+            self.session.commit()
+
 
     def upsert_new_skill(self, **kwargs):
         """
