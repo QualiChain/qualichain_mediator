@@ -6,6 +6,12 @@ import os
 DOBIE_HOST = os.environ.get('DOBIE_HOST', 'qualichain.epu.ntua.gr')
 DOBIE_PORT = os.environ.get('DOBIE_PORT', 9006)
 
+DOBIE_V2_SETTINGS = {
+    'endpoint': "https://demo.iais.fraunhofer.de/dobie/jsonData/jobPostNTUA",
+    'user': 'user',
+    'password': '5UxLtwaeJ8fK'
+}
+
 # =================================
 #   FUSEKI SERVER SETTINGS
 # =================================
@@ -41,6 +47,16 @@ ENGINE_STRING = 'postgresql+psycopg2://{}:{}@{}:{}/{}'.format(
 )
 
 JOB_POSTS_TABLE = 'job_post'
+
+QUALICHAIN_DB_ENGINE_STRING = 'postgresql+psycopg2://{username}:{password}@{host}:{port}/{db}'.format(
+    **{
+        'username': 'admin',
+        'password': 'admin',
+        'host': 'localhost',
+        'port': 5435,
+        'db': 'qualichain_db'
+    }
+)
 
 # =================================
 #   APPLICATION SETTINGS

@@ -15,10 +15,12 @@ if __name__ == "__main__":
 
         print("Extract skills for: {}".format(key), flush=True)
         job_post_ids = query_creator(JOB_NAMES[key], key)
+        print(job_post_ids)
 
         if job_post_ids:
             executor = Executor(job_post_ids)
             executor.execution_stage(job_name=key, save_in_file=SAVE_IN_FILE)
+        break
 
     # except Exception as ex:
     #     print(ex, flush=True)

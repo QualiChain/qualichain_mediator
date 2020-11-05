@@ -1,13 +1,14 @@
 import math
 import time
 
+import pandas
 from bs4 import BeautifulSoup
 
-from clients.dobie_client import send_data_to_dobie
+from clients.dobie_client import send_data_to_dobie, dobie_second_version
 from extraction_pipeline.job_post_extraction_pipeline import JobPostSkillExtractor
-from settings import BATCH_SIZE, TIME_BETWEEN_REQUESTS
+from settings import BATCH_SIZE, TIME_BETWEEN_REQUESTS, QUALICHAIN_DB_ENGINE_STRING
 from tasks import extract_skills_async
-from utils import handle_raw_annotation, save_extracted_skills
+from utils import handle_raw_annotation, save_extracted_skills, translate_v2dobie_output
 
 
 class Executor(object):
@@ -16,6 +17,7 @@ class Executor(object):
         self.index = 0
         self.extractor = JobPostSkillExtractor()
         self.job_posts = self.extractor.get_job_posts(ids=job_post_ids)
+        self.qualichain_skills = pandas.read_sql_table('skills', QUALICHAIN_DB_ENGINE_STRING)
 
     @staticmethod
     def calculate_execution(job_posts_length):
@@ -59,7 +61,8 @@ class Executor(object):
         processed_requirements = self.extractor.process_job_requirements(job_posts_fraction)
 
         dobie_input = self.prepare_dobie_input(processed_requirements)
-        dobie_response = send_data_to_dobie(dobie_input)
+        dobie_response = dobie_second_version(dobie_input)
+        # dobie_response = send_data_to_dobie(dobie_input)
         return dobie_response
 
     def pipe_dobie_results(self, START, STOP, save=False, job_name='sample_job_name'):
@@ -77,11 +80,14 @@ class Executor(object):
         print('Response from Dobie: {}'.format(dobie_status_code))
         if dobie_status_code == 200:
             output = dobie_response.text
-            extracted_skills = handle_raw_annotation(output, job_name)
+            skill_results = translate_v2dobie_output(output, job_name)
+            print(skill_results)
+        else:
+            print("Dobie status code: {}".format(dobie_status_code))
+            # extracted_skills = handle_raw_annotation(output, job_name)
 
-            if save:
-                save_extracted_skills(extracted_skills, job_name)
-
+            # if save:
+            #     save_extracted_skills(extracted_skills, job_name)
 
     def execution_stage(self, job_name, save_in_file=False):
         """This is pipeline's execution stage"""
@@ -100,6 +106,7 @@ class Executor(object):
 
             index = index + BATCH_SIZE
             time.sleep(TIME_BETWEEN_REQUESTS)
+            break
 
         if executions_modulo:
             START = integral_executions
