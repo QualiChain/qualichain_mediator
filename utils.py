@@ -153,7 +153,7 @@ def extract_raw_features(annotation):
     return features_dict
 
 
-def handle_course_skill_annotation(dobie_output, course_name):
+def handle_course_skill_annotation(dobie_output, course_id):
     """
        This function is used to extract dobie annotation and return list of extracted skills
 
@@ -164,24 +164,33 @@ def handle_course_skill_annotation(dobie_output, course_name):
     postgres_client = PostgresClient()
 
     g = Graph()
-    g.parse(data=dobie_output.text, format='turtle')
+    g.parse(data=dobie_output, format='turtle')
+    SELECT_SPARQL_QUERY = """
+            SELECT ?skill ?label ?frequency ?type 
+            WHERE { 
+                ?skill rdfs:label ?label .
+                ?skill saro:frequencyOfMention ?frequency.
+                ?skill rdf:type ?type.
+            }"""
+    results = g.query(SELECT_SPARQL_QUERY)
     skill_list = []
-    for row in g.query("SELECT ?s WHERE { [] saro:requiresSkill ?s .}"):
-        skill_list.append(row['s'].replace('http://w3id.org/saro/', ''))
-        print(row['s'].replace('http://w3id.org/saro/', ''))
+    for row in results:
+        skill_list.append(row['label'].title())
+        print(row['label'].title())
+
+    skill_list = remove_common_skills(skill_list)
 
     for skill in skill_list:
         postgres_client.upsert_new_skill_per_course(
-            course_title=course_name,
-            skill=skill
+            course_id=course_id,
+            skill_id=skill_id
         )
-    skill_list = remove_common_skills(skill_list)
 
     postgres_client.session.close()
     return skill_list
 
 def remove_common_skills(skill_list):
-    common_list = ['tools', 'design', 'analysis']
+    common_list = ['tools', 'design', 'analysis', 'development', 'programming' ]
     for el in skill_list:
         if el in common_list:
             skill_list.pop(el)

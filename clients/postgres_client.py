@@ -24,14 +24,14 @@ class ExtractedSkill(Base):
 
 class ExtractedCourseSkill(Base):
     """Extracted Course Skills Table"""
-    __tablename__ = 'extracted_course_skill'
+    __tablename__ = 'skill_courses'
 
     id = Column(Integer, primary_key=True, nullable=False)
-    course_title = Column(String(1024), nullable=True)
-    skill = Column(String(1024), nullable=True)
+    skill_id = Column(Integer, nullable=True)
+    course_id = Column(Integer, nullable=True)
 
     def __repr__(self):
-        return '<ExtractedSkill name: {}, course_title: {}>'.format(self.skill, self.course_title)
+        return '<ExtractedSkill id: {}, course_id: {}>'.format(self.skill_id, self.course_id)
 
 
 class PostgresClient(object):
@@ -56,8 +56,8 @@ class PostgresClient(object):
                 :return: None
                 """
         this_skill = self.session.query(ExtractedCourseSkill).filter_by(
-            course_title=kwargs['course_title'],
-            skill=kwargs['skill']
+            course_id=kwargs['course_id'],
+            skill_id=kwargs['skill_id']
         )
         if this_skill.count():
             pass

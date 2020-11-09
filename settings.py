@@ -31,8 +31,8 @@ RABBITMQ_PASSWORD = os.environ.get('RABBITMQ_PASSWORD', 'rabbitmq')
 POSTGRES_USER = os.environ.get('POSTGRES_USER', 'admin')
 POSTGRES_PASSWORD = os.environ.get('POSTGRES_PASSWORD', 'admin')
 POSTGRES_HOST = os.environ.get('POSTGRES_HOST', 'qualichain.epu.ntua.gr')
-POSTGRES_PORT = os.environ.get('POSTGRES_PORT', 5432)
-POSTGRES_DB = os.environ.get('POSTGRES_DB', 'api_db')
+POSTGRES_PORT = os.environ.get('POSTGRES_PORT', 5435)
+POSTGRES_DB = os.environ.get('POSTGRES_DB', 'qualichain_db')
 
 ENGINE_STRING = 'postgresql+psycopg2://{}:{}@{}:{}/{}'.format(
     POSTGRES_USER,
@@ -43,7 +43,8 @@ ENGINE_STRING = 'postgresql+psycopg2://{}:{}@{}:{}/{}'.format(
 )
 
 JOB_POSTS_TABLE = 'job_post'
-COURSES_TABLE = 'curriculum_designer_course'
+COURSES_TABLE = 'courses'
+SKILLS_TABLE = 'skills'
 
 # =================================
 #   APPLICATION SETTINGS

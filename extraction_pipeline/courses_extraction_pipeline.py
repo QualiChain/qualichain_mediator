@@ -3,7 +3,7 @@ import re
 import pandas as pd
 from sqlalchemy import create_engine
 
-from settings import ENGINE_STRING, STOP_WORDS, COURSES_TABLE
+from settings import ENGINE_STRING, STOP_WORDS, COURSES_TABLE, SKILLS_TABLE
 
 
 class CourseSkillExtractor(object):
@@ -21,13 +21,37 @@ class CourseSkillExtractor(object):
         """
         if ids:
             tuple_ids = tuple(ids)
-            select_query = 'SELECT course_description, course_title from "{}" WHERE id in {}'.format(COURSES_TABLE,
+            select_query = 'SELECT id, name, description from "{}" WHERE id in {}'.format(COURSES_TABLE,
                                                                                                      tuple_ids)
         else:
-            select_query = 'SELECT course_description, course_title from {}'.format(COURSES_TABLE)
+            select_query = 'SELECT id, name, description from {}'.format(COURSES_TABLE)
 
         courses = pd.read_sql_query(select_query, self.engine)
         return courses
+
+    class SkillExtractor(object):
+        """This Class is used to take skills from db"""
+
+        def __init__(self):
+            self.engine = create_engine(ENGINE_STRING)
+            self.index = 0
+
+        def get_skills(self, ids=[]):
+            """
+            This function is used to get skills table from DB
+
+            :return: courses table
+            """
+            if ids:
+                tuple_ids = tuple(ids)
+                select_query = 'SELECT id, name  from "{}" WHERE id in {}'.format(
+                    SKILLS_TABLE,
+                    tuple_ids)
+            else:
+                select_query = 'SELECT id, name from {}'.format(SKILLS_TABLE)
+
+            skills = pd.read_sql_query(select_query, self.engine)
+            return skills
 
     @staticmethod
     def remove_stop_words(course_description):
