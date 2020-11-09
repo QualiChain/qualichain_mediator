@@ -1,6 +1,8 @@
 import logging
 import sys
 
+sys.path.append('../')
+
 from clients.rabbitmq_client import RabbitMQClient
 from settings import RABBITMQ_HOST, RABBITMQ_PORT, RABBITMQ_USER, RABBITMQ_PASSWORD, RABBITMQ_VHOST, APP_QUEUE
 from workers.cv_handler import CVHandler
@@ -39,4 +41,4 @@ def cv_consumer(queue):
 
 
 if __name__ == "__main__":
-    cv_consumer(queue=APP_QUEUE)
+    cv_consumer(queue='haha')

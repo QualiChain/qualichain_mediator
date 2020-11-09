@@ -1,6 +1,12 @@
 import json
+import logging
+import sys
 
 from schema_validator import CValidator
+
+logging.basicConfig(stream=sys.stdout, level=logging.INFO,
+                    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+log = logging.getLogger(__name__)
 
 
 class CVHandler(object):
@@ -13,4 +19,4 @@ class CVHandler(object):
         """This function is enabled when a message is received from CV Consumer"""
         cv_instance = json.loads(body)
         is_valid = self.validator.evaluate(cv_instance)
-        print(is_valid)
+        log.info(is_valid)
