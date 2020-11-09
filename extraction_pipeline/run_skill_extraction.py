@@ -1,4 +1,7 @@
+import sys
 import time
+
+sys.path.append('../')
 
 from clients.postgres_client import PostgresClient
 from extraction_pipeline.execute_pipeline import Executor
