@@ -198,29 +198,33 @@ def find_qualichain_skills(qualichain_skills, dobie_skill):
     return skill_name
 
 
-def translate_v2dobie_output(dobie_response, job_name, qualichain_skills):
+def translate_v2dobie_output(dobie_response, job_name):
     """This function is used to translate dobie output"""
     g = Graph()
     postgres_client = PostgresClient()
 
     g.parse(data=dobie_response, format='turtle')
-    SELECT_SPARQL_QUERY = """SELECT ?x ?y WHERE { ?x saro:frequencyOfMention ?y }"""
+    SELECT_SPARQL_QUERY = """
+        SELECT ?skill ?label ?frequency ?type 
+        WHERE { 
+            ?skill rdfs:label ?label .
+            ?skill saro:frequencyOfMention ?frequency.
+            ?skill rdf:type ?type.
+        }"""
     results = g.query(SELECT_SPARQL_QUERY)
 
     for row in results:
-        skill = row['x'].replace('http://w3id.org/saro/', '')
-        frequency_of_mention = int(row['y'].title())
-        skill_name = find_qualichain_skills(
-            qualichain_skills,
-            skill
+        # skill = row['skill'].replace('http://w3id.org/saro/', '')
+        skill_label = row['label'].title()
+        frequency_of_mention = int(row['frequency'].title())
+        kind = row['type'].title().replace('Http://W3Id.Org/Saro/', '')
+
+        postgres_client.upsert_new_skill(
+            job_name=job_name,
+            skill=skill_label,
+            frequencyOfMention=frequency_of_mention,
+            kind=kind
         )
-        if skill_name:
-            postgres_client.upsert_new_skill(
-                job_name=job_name,
-                skill=skill_name,
-                frequencyOfMention=frequency_of_mention,
-                kind="some kind"
-            )
     postgres_client.session.close()
 
 

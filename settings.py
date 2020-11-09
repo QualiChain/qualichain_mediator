@@ -105,12 +105,12 @@ JOB_NAMES = {
     "security_engineer": {'queries': ['security engineer', 'security'], 'min_score': 3},
     "web_developer": {'queries': ['web engineer', 'web developer'], 'min_score': 4},
     "mobile_developer": {'queries': ['android developer', 'ios developer'], 'min_score': 4},
-    "qa_engineer": {'queries': ['quality assurance', 'qa engineer'], 'min_score': 4},
+    # "qa_engineer": {'queries': ['quality assurance', 'qa engineer'], 'min_score': 7},
     "business_analyst": {'queries': ['business analyst', 'business development', 'business intelligence'],
                          'min_score': 4},
     "ui_ux_designer": {'queries': ['ui/ux', 'ux/ui'], 'min_score': 7},
     "project_manager": {'queries': ['project manager', 'technical manager'], 'min_score': 4},
-    "test_developer": {'queries': ['test developer', 'test engineer', 'software engineer in test'], 'min_score': 4}
+    # "test_developer": {'queries': ['test developer', 'test engineer', 'software engineer in test'], 'min_score': 5}
 }
 
 # AnalEyeZer Settings

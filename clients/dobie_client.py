@@ -33,8 +33,8 @@ def send_data_to_dobie(job_description):
 def dobie_second_version(job_description):
     """This function implements a call to Dobie V2"""
 
-    dobie_v2_url = DOBIE_V2_SETTINGS['endpoint']
-    password = DOBIE_V2_SETTINGS['password']
+    dobie_v2_url = 'https://demo.iais.fraunhofer.de/dobie/jsonData/jobPostNTUA'
+    password = '5UxLtwaeJ8fK'
     user = DOBIE_V2_SETTINGS['user']
 
     headers = {
@@ -47,6 +47,6 @@ def dobie_second_version(job_description):
         dobie_v2_url,
         data=jsonified_data,
         headers=headers,
-        auth=HTTPBasicAuth(user, password)
+        auth=HTTPBasicAuth('user', '5UxLtwaeJ8fK')
     )
     return response

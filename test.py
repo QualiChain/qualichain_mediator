@@ -20,10 +20,17 @@ testing_response = dobie_second_version(job_description)
 g = Graph()
 g.parse(data=testing_response.text, format='turtle')
 # ttl_grapg.serialize(output_path, format='xml')
-SELECT_SPARQL_QUERY = """SELECT ?x ?y WHERE { ?x saro:frequencyOfMention ?y }"""
+SELECT_SPARQL_QUERY = """SELECT ?skill ?label ?frequency ?type WHERE { 
+?skill rdfs:label ?label .
+?skill saro:frequencyOfMention ?frequency.
+?skill rdf:type ?type.
+}"""
 results = g.query(SELECT_SPARQL_QUERY)
-list_of_saro_skills = [{row['x'].replace('http://w3id.org/saro/', ''): int(row['y'].title())} for row in results]
-print(list_of_saro_skills)
-# for row in g.query("SELECT ?x ?y WHERE { ?x saro:frequencyOfMention ?y }"):
-#     print(row['y'].title())
-#     break
+# list_of_saro_skills = [{row['x'].replace('http://w3id.org/saro/', ''): int(row['y'].title())} for row in results]
+# print(list_of_saro_skills)
+for row in results:
+    print(row['skill'].replace('http://w3id.org/saro/', ''))
+    print(row['label'].title())
+    print(row['frequency'].title())
+    print(row['type'].replace('http://w3id.org/saro/', ''))
+    break

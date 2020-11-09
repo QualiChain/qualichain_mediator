@@ -17,7 +17,6 @@ class Executor(object):
         self.index = 0
         self.extractor = JobPostSkillExtractor()
         self.job_posts = self.extractor.get_job_posts(ids=job_post_ids)
-        self.qualichain_skills = pandas.read_sql_table('skills', QUALICHAIN_DB_ENGINE_STRING)
 
     @staticmethod
     def calculate_execution(job_posts_length):
@@ -42,7 +41,7 @@ class Executor(object):
         """
         job_description = {"tasks":
             [{
-                "label": "95671c903a5b97a9",
+                "label": "95671c903a5b97a8",
                 "jobDescription": processed_requirements
             }]
         }
@@ -61,6 +60,7 @@ class Executor(object):
         processed_requirements = self.extractor.process_job_requirements(job_posts_fraction)
 
         dobie_input = self.prepare_dobie_input(processed_requirements)
+        print(dobie_input)
         dobie_response = dobie_second_version(dobie_input)
         # dobie_response = send_data_to_dobie(dobie_input)
         return dobie_response
@@ -75,6 +75,7 @@ class Executor(object):
         :return: None
         """
         dobie_response = self.get_fraction_requirements(START, STOP)
+        print(dobie_response)
         dobie_status_code = dobie_response.status_code
 
         print('Response from Dobie: {}'.format(dobie_status_code))
@@ -84,6 +85,7 @@ class Executor(object):
             print(skill_results)
         else:
             print("Dobie status code: {}".format(dobie_status_code))
+            print("Reason: {}".format(dobie_response.reason))
             # extracted_skills = handle_raw_annotation(output, job_name)
 
             # if save:
@@ -106,7 +108,6 @@ class Executor(object):
 
             index = index + BATCH_SIZE
             time.sleep(TIME_BETWEEN_REQUESTS)
-            break
 
         if executions_modulo:
             START = integral_executions

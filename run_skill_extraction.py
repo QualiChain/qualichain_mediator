@@ -1,3 +1,5 @@
+import time
+
 from clients.postgres_client import PostgresClient
 from extraction_pipeline.execute_pipeline import Executor
 from settings import JOB_NAMES, SAVE_IN_FILE
@@ -20,7 +22,8 @@ if __name__ == "__main__":
         if job_post_ids:
             executor = Executor(job_post_ids)
             executor.execution_stage(job_name=key, save_in_file=SAVE_IN_FILE)
-        break
+
+        time.sleep(15)
 
     # except Exception as ex:
     #     print(ex, flush=True)
