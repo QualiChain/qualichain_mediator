@@ -15,6 +15,6 @@ if __name__ == "__main__":
     # courses = pd.read_sql_query(select_query, engine)
     #
     # for ind in courses.index:
-    executor = CourseSkillExtractionExecutor([])
+    executor = CourseSkillExtractionExecutor(14)
     executor.execution_stage(save_in_file=SAVE_IN_FILE)
 

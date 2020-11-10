@@ -24,7 +24,7 @@ class ExtractedSkill(Base):
 
 class ExtractedCourseSkill(Base):
     """Extracted Course Skills Table"""
-    __tablename__ = 'skill_courses'
+    __tablename__ = 'skills_courses'
 
     id = Column(Integer, primary_key=True, nullable=False)
     skill_id = Column(Integer, nullable=True)
@@ -56,9 +56,11 @@ class PostgresClient(object):
                 :return: None
                 """
         this_skill = self.session.query(ExtractedCourseSkill).filter_by(
-            course_id=kwargs['course_id'],
-            skill_id=kwargs['skill_id']
+            course_id=int(kwargs['course_id']),
+            skill_id=int(kwargs['skill_id'])
         )
+
+
         if this_skill.count():
             pass
         else:

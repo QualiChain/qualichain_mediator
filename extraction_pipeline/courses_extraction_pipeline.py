@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 from settings import ENGINE_STRING, STOP_WORDS, COURSES_TABLE, SKILLS_TABLE
 
 
-class CourseSkillExtractor(object):
+class CourseExtractor(object):
     """This Class is used to take courses and feed them to Dobie"""
 
     def __init__(self):
@@ -20,38 +20,15 @@ class CourseSkillExtractor(object):
         :return: courses table
         """
         if ids:
-            tuple_ids = tuple(ids)
-            select_query = 'SELECT id, name, description from "{}" WHERE id in {}'.format(COURSES_TABLE,
-                                                                                                     tuple_ids)
+            # tuple_ids = tuple(ids)
+            select_query = 'SELECT id, name, description from "{}" WHERE id >= {}'.format(COURSES_TABLE,
+                                                                                                     ids)
         else:
             select_query = 'SELECT id, name, description from {}'.format(COURSES_TABLE)
 
         courses = pd.read_sql_query(select_query, self.engine)
         return courses
 
-    class SkillExtractor(object):
-        """This Class is used to take skills from db"""
-
-        def __init__(self):
-            self.engine = create_engine(ENGINE_STRING)
-            self.index = 0
-
-        def get_skills(self, ids=[]):
-            """
-            This function is used to get skills table from DB
-
-            :return: courses table
-            """
-            if ids:
-                tuple_ids = tuple(ids)
-                select_query = 'SELECT id, name  from "{}" WHERE id in {}'.format(
-                    SKILLS_TABLE,
-                    tuple_ids)
-            else:
-                select_query = 'SELECT id, name from {}'.format(SKILLS_TABLE)
-
-            skills = pd.read_sql_query(select_query, self.engine)
-            return skills
 
     @staticmethod
     def remove_stop_words(course_description):
@@ -75,9 +52,34 @@ class CourseSkillExtractor(object):
         :return: processed descriptions
         """
 
-        raw_description = course_descriptions_fraction['course_description'] + ' ' + course_descriptions_fraction[
-            'course_title']
+        raw_description = course_descriptions_fraction['description'] + ' ' + course_descriptions_fraction[
+            'name']
         removed_stop_words = self.remove_stop_words(raw_description)
         stripped_from_whitespaces = removed_stop_words.strip()
+        stripped_from_whitespaces = stripped_from_whitespaces.replace('\u200b\u200b', '')
 
         return stripped_from_whitespaces
+
+
+class SkillExtractor(object):
+    """This Class is used to take skills from db"""
+
+    def __init__(self):
+        self.engine = create_engine(ENGINE_STRING)
+        self.index = 0
+
+    def get_skills(self, names):
+        """
+        This function is used to get skills table from DB
+
+        :return: courses table
+        """
+        if names:
+            select_query = "SELECT id, name  from {} WHERE name='{}'".format(
+                SKILLS_TABLE,
+                names)
+        else:
+            select_query = 'SELECT id, name from {}'.format(SKILLS_TABLE)
+
+        skills = pd.read_sql_query(select_query, self.engine)
+        return skills

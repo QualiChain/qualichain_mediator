@@ -2,7 +2,7 @@ import time
 
 
 from clients.dobie_client import send_data_to_dobie
-from extraction_pipeline.courses_extraction_pipeline import CourseSkillExtractor
+from extraction_pipeline.courses_extraction_pipeline import CourseExtractor
 from settings import TIME_BETWEEN_REQUESTS
 from utils import save_extracted_skills, handle_course_skill_annotation
 
@@ -11,7 +11,7 @@ class CourseSkillExtractionExecutor(object):
 
     def __init__(self, courses_ids):
         self.index = 0
-        self.extractor = CourseSkillExtractor()
+        self.extractor = CourseExtractor()
         self.courses = self.extractor.get_courses(ids=courses_ids)
 
     @staticmethod
@@ -42,7 +42,7 @@ class CourseSkillExtractionExecutor(object):
         dobie_response = send_data_to_dobie(dobie_input)
         return dobie_response
 
-    def pipe_dobie_results(self, idx, save=False, course_name='sample_course_name'):
+    def pipe_dobie_results(self, idx, save=False, course_id='0'):
         """
         This function is used to take job posts fractions and handle Dobie Response output
         :param save: if True save file in CSV format
@@ -55,10 +55,10 @@ class CourseSkillExtractionExecutor(object):
         print('Response from Dobie: {}'.format(dobie_status_code))
         if dobie_status_code == 200:
             output = dobie_response
-            extracted_skills = handle_course_skill_annotation(output, course_name)
+            extracted_skills = handle_course_skill_annotation(output, course_id)
 
             if save:
-                save_extracted_skills(extracted_skills, course_name)
+                save_extracted_skills(extracted_skills, course_id)
 
     def execution_stage(self, save_in_file=False):
         """This is pipeline's execution stage"""
@@ -66,7 +66,6 @@ class CourseSkillExtractionExecutor(object):
         courses_length = len(self.courses)
 
         for execution in range(0, courses_length-1):
-            print('Course Index: {} '.format(execution))
-            self.pipe_dobie_results(execution, save=save_in_file, course_name=self.courses['course_title'][execution])
-
+            print('Course Id: {} '.format(self.courses.iloc[execution]['id']))
+            self.pipe_dobie_results(execution, save=save_in_file, course_id=self.courses.iloc[execution]['id'])
             time.sleep(TIME_BETWEEN_REQUESTS)

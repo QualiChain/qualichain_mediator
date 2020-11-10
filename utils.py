@@ -10,6 +10,7 @@ import requests
 
 from clients.postgres_client import PostgresClient
 from settings import SARO_SKILL, SARO_PREFIXES, QUERY_EXECUTOR_URL, INDEX
+from extraction_pipeline.courses_extraction_pipeline import SkillExtractor
 
 
 def my_add(x, y):
@@ -164,7 +165,7 @@ def handle_course_skill_annotation(dobie_output, course_id):
     postgres_client = PostgresClient()
 
     g = Graph()
-    g.parse(data=dobie_output, format='turtle')
+    g.parse(data=dobie_output.text, format='turtle')
     SELECT_SPARQL_QUERY = """
             SELECT ?skill ?label ?frequency ?type 
             WHERE { 
@@ -175,26 +176,27 @@ def handle_course_skill_annotation(dobie_output, course_id):
     results = g.query(SELECT_SPARQL_QUERY)
     skill_list = []
     for row in results:
-        skill_list.append(row['label'].title())
+        skill_list.append(row['label'].toPython())
         print(row['label'].title())
 
     skill_list = remove_common_skills(skill_list)
-
+    skill_extractor_obj = SkillExtractor()
     for skill in skill_list:
-        postgres_client.upsert_new_skill_per_course(
-            course_id=course_id,
-            skill_id=skill_id
-        )
+        skill_obj = skill_extractor_obj.get_skills(skill)
+        if not skill_obj.empty:
+            skill_id = skill_obj.iloc[0]['id']
+            postgres_client.upsert_new_skill_per_course(
+                course_id=int(course_id),
+                skill_id=int(skill_id)
+            )
 
     postgres_client.session.close()
     return skill_list
 
 def remove_common_skills(skill_list):
-    common_list = ['tools', 'design', 'analysis', 'development', 'programming' ]
-    for el in skill_list:
-        if el in common_list:
-            skill_list.pop(el)
-    return skill_list
+    common_list = ['tools', 'design', 'analysis', 'development', 'programming']
+    filtered_skill_list = [skill for skill in skill_list if skill not in common_list]
+    return filtered_skill_list
 
 def handle_raw_annotation(dobie_output, job_name):
     """
