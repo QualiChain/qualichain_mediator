@@ -21,10 +21,10 @@ class CourseExtractor(object):
         """
         if ids:
             # tuple_ids = tuple(ids)
-            select_query = 'SELECT id, name, description from "{}" WHERE id >= {}'.format(COURSES_TABLE,
+            select_query = 'SELECT id, name, description from "{}" WHERE id >= {} ORDER BY id'.format(COURSES_TABLE,
                                                                                                      ids)
         else:
-            select_query = 'SELECT id, name, description from {}'.format(COURSES_TABLE)
+            select_query = 'SELECT id, name, description from {} ORDER BY id'.format(COURSES_TABLE)
 
         courses = pd.read_sql_query(select_query, self.engine)
         return courses
