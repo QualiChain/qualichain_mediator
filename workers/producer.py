@@ -9,7 +9,7 @@ from settings import APP_QUEUE
 if __name__ == "__main__":
     rabbit_mq = RabbitMQClient()
 
-    payload = {
+    cv_payload = {
         "label": "Test CV 5",
         "comment": "Comment 5",
         "title": "CV Title 5",
@@ -93,5 +93,6 @@ if __name__ == "__main__":
         "uri": "cv:id5",
         "id": "id5"
     }
+    payload = {'cv': cv_payload}
 
     rabbit_mq.producer(queue='haha', message=json.dumps(payload))
