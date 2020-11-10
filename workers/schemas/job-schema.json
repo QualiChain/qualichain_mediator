@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {
+    "application": {
+      "$id": "#application",
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "comment": {
+          "type": ["string", "null"]
+        },
+        "proficiencyLevel": {
+          "type": "string"
+        },
+        "priorityLevel": {
+          "type": "string"
+        },
+        "coreTo": {
+          "type": ["string", "null"]
+        },
+        "isFrom": {
+          "type": ["string", "null"]
+        },
+        "skillType": {
+          "type": ["string", "null"]
+        },
+        "uri": {
+          "type": ["string", "null"]
+        },
+        "id": {
+          "type": ["string", "null"]
+        }
+      },
+      "required": [
+        "label",
+        "proficiencyLevel",
+        "priorityLevel"
+      ]
+    }
+  }
+}

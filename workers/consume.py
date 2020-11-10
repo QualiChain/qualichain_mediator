@@ -5,7 +5,7 @@ sys.path.append('../')
 
 from clients.rabbitmq_client import RabbitMQClient
 from settings import RABBITMQ_HOST, RABBITMQ_PORT, RABBITMQ_USER, RABBITMQ_PASSWORD, RABBITMQ_VHOST, APP_QUEUE
-from workers.cv_handler import CVHandler
+from workers.data_handler import DataHandler
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO,
                     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -17,10 +17,10 @@ def cv_consumer(queue):
     rabbitmq_client = RabbitMQClient()
     channel = rabbitmq_client.connection.channel()
 
-    cv_handler = CVHandler()
+    cv_handler = DataHandler()
 
     channel.basic_consume(
-        queue=queue, on_message_callback=cv_handler.receive_cv_data, auto_ack=True)
+        queue=queue, on_message_callback=cv_handler.receive_data, auto_ack=True)
     log.info(
         """
         RABBITMQ HOST: {host}
