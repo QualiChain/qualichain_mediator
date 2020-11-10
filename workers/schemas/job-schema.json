@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "definitions": {
-    "application": {
-      "$id": "#application",
+    "job": {
+      "$id": "#job",
       "type": "object",
       "properties": {
         "label": {
@@ -11,32 +11,45 @@
         "comment": {
           "type": ["string", "null"]
         },
-        "proficiencyLevel": {
+        "jobDescription": {
+          "type": ["string", "null"]
+        },
+        "contractType": {
+          "type": ["string", "null"]
+        },
+        "sector": {
+          "type": ["string", "null"]
+        },
+        "job_location": {
           "type": "string"
         },
-        "priorityLevel": {
-          "type": "string"
+        "creator_id": {
+          "type": "integer"
         },
-        "coreTo": {
+        "occupation": {
           "type": ["string", "null"]
         },
-        "isFrom": {
+        "startDate": {
           "type": ["string", "null"]
         },
-        "skillType": {
+        "endDate": {
           "type": ["string", "null"]
         },
-        "uri": {
+        "seniorityLevel": {
           "type": ["string", "null"]
         },
-        "id": {
+        "expectedSalary": {
+          "type": ["string", "number"]
+        },
+        "salaryCurrency": {
           "type": ["string", "null"]
         }
       },
       "required": [
         "label",
-        "proficiencyLevel",
-        "priorityLevel"
+        "job_location",
+        "creator_id",
+        "expectedSalary"
       ]
     }
   }
