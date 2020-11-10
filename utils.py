@@ -215,9 +215,9 @@ def translate_v2dobie_output(dobie_response, job_name):
 
     for row in results:
         # skill = row['skill'].replace('http://w3id.org/saro/', '')
-        skill_label = row['label'].title()
+        skill_label = row['label'].toPython()
         frequency_of_mention = int(row['frequency'].title())
-        kind = row['type'].title().replace('Http://W3Id.Org/Saro/', '')
+        kind = row['type'].toPython().replace('http://w3id.org/saro/', '')
 
         postgres_client.upsert_new_skill(
             job_name=job_name,

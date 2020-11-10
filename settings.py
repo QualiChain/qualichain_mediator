@@ -89,8 +89,8 @@ STOP_WORDS = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you"
               "few", "more", "most", "other", "some", "such", "no", "nor", "not", "only", "own", "same", "so", "than",
               "too", "very", "s", "t", "can", "will", "just", "don", "should", "now"]
 
-BATCH_SIZE = 50
-TIME_BETWEEN_REQUESTS = 10  # in seconds
+BATCH_SIZE = 100
+TIME_BETWEEN_REQUESTS = 20  # in seconds
 
 JOB_NAMES = {
     "backend_developer": {'queries': ['backend developer', 'backend engineer'], 'min_score': 3},
@@ -105,12 +105,12 @@ JOB_NAMES = {
     "security_engineer": {'queries': ['security engineer', 'security'], 'min_score': 3},
     "web_developer": {'queries': ['web engineer', 'web developer'], 'min_score': 4},
     "mobile_developer": {'queries': ['android developer', 'ios developer'], 'min_score': 4},
-    # "qa_engineer": {'queries': ['quality assurance', 'qa engineer'], 'min_score': 7},
+    "qa_engineer": {'queries': ['quality assurance', 'qa engineer'], 'min_score': 7},
     "business_analyst": {'queries': ['business analyst', 'business development', 'business intelligence'],
                          'min_score': 4},
     "ui_ux_designer": {'queries': ['ui/ux', 'ux/ui'], 'min_score': 7},
     "project_manager": {'queries': ['project manager', 'technical manager'], 'min_score': 4},
-    # "test_developer": {'queries': ['test developer', 'test engineer', 'software engineer in test'], 'min_score': 5}
+    "test_developer": {'queries': ['test developer', 'test engineer', 'software engineer in test'], 'min_score': 5}
 }
 
 # AnalEyeZer Settings
