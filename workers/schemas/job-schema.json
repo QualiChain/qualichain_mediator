@@ -43,6 +43,10 @@
         },
         "salaryCurrency": {
           "type": ["string", "null"]
+        },
+        "skills": {
+          "type": "array",
+          "items": {"$ref": "skill-schema.json#/definitions/skill"}
         }
       },
       "required": [

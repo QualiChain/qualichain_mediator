@@ -18,5 +18,5 @@ class DataHandler(object):
     def receive_data(self, ch, method, properties, body):
         """This function is enabled when a message is received from CV Consumer"""
         cv_instance = json.loads(body)
-        is_valid = self.validator.evaluate(cv_instance)
+        is_valid = self.validator.evaluate(cv_instance, instance_category='cv')
         log.info(is_valid)

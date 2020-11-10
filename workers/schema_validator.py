@@ -15,23 +15,40 @@ class CValidator(object):
 
     def __init__(self):
         self.cv_schema_json = 'schemas/cv-schema.json'
+        self.job_schema_json = 'schemas/job-schema.json'
+
         self.schema_dir = 'file:///{0}/'.format(
             os.path.dirname(os.path.realpath(self.cv_schema_json)).replace("\\", "/")
         )
 
-    def _schema(self):
+    @staticmethod
+    def file_loader(path):
+        """This function is used to load files"""
+        with open(path, 'r') as file:
+            content = file.read()
+        loaded_file = json.loads(content)
+        return loaded_file
+
+    def _cv_schema(self):
         """This function loads cv schema"""
-        with open(self.cv_schema_json, 'r') as file:
-            cv_schema_data = file.read()
-        cv_schema = json.loads(cv_schema_data)
+        cv_schema = self.file_loader(path=self.cv_schema_json)
         return cv_schema
 
-    def evaluate(self, instance):
+    def _job_schema(self):
+        """This function is used to load job schema"""
+        job_schema = self.file_loader(path=self.job_schema_json)
+        return job_schema
+
+    def evaluate(self, instance, instance_category):
         """This function is used to evaluate provided json instance"""
-        cv_schema = self._schema()
-        resolver = RefResolver(self.schema_dir, cv_schema)
+        if instance_category == 'cv':
+            this_schema = self._cv_schema()
+        else:
+            this_schema = self._job_schema()
+
+        resolver = RefResolver(self.schema_dir, this_schema)
         try:
-            validate(instance, cv_schema, resolver=resolver)
+            validate(instance, this_schema, resolver=resolver)
             return True
         except Exception as ex:
             log.error(ex)
