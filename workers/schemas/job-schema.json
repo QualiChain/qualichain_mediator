@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {
+    "job": {
+      "$id": "#job",
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "comment": {
+          "type": ["string", "null"]
+        },
+        "jobDescription": {
+          "type": ["string", "null"]
+        },
+        "contractType": {
+          "type": ["string", "null"]
+        },
+        "sector": {
+          "type": ["string", "null"]
+        },
+        "job_location": {
+          "type": "string"
+        },
+        "creator_id": {
+          "type": "integer"
+        },
+        "occupation": {
+          "type": ["string", "null"]
+        },
+        "startDate": {
+          "type": ["string", "null"]
+        },
+        "endDate": {
+          "type": ["string", "null"]
+        },
+        "seniorityLevel": {
+          "type": ["string", "null"]
+        },
+        "expectedSalary": {
+          "type": ["string", "number"]
+        },
+        "salaryCurrency": {
+          "type": ["string", "null"]
+        },
+        "skills": {
+          "type": "array",
+          "items": {"$ref": "skill-schema.json#/definitions/skill"}
+        }
+      },
+      "required": [
+        "label",
+        "job_location",
+        "creator_id",
+        "expectedSalary"
+      ]
+    }
+  }
+}

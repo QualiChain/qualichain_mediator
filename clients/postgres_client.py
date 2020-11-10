@@ -10,7 +10,7 @@ Base = declarative_base()
 
 class ExtractedSkill(Base):
     """Extracted Skills Table"""
-    __tablename__ = 'extracted_skill'
+    __tablename__ = 'extracted_skill_temp'
 
     id = Column(Integer, primary_key=True, nullable=False)
     job_name = Column(String(1024), nullable=True)

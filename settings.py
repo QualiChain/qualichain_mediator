@@ -8,6 +8,12 @@ DOBIE_HOST = os.environ.get('DOBIE_HOST', 'demo.iais.fraunhofer.de')
 DOBIE_USERNAME = os.environ.get('DOBIE_USERNAME', 'user')
 DOBIE_PASS = os.environ.get('DOBIE_PASS', '5UxLtwaeJ8fK')
 
+DOBIE_V2_SETTINGS = {
+    'endpoint': "https://demo.iais.fraunhofer.de/dobie/jsonData/jobPostNTUA",
+    'user': 'user',
+    'password': '5UxLtwaeJ8fK'
+}
+
 # =================================
 #   FUSEKI SERVER SETTINGS
 # =================================
@@ -18,7 +24,7 @@ FUSEKI_SERVER_DATASET = os.environ.get('FUSEKI_SERVER_DATASET', 'saro')
 # =================================
 #   RABBITMQ SETTINGS
 # =================================
-RABBITMQ_HOST = os.environ.get('RABBITMQ_HOST', 'qualichain.epu.ntua.gr')
+RABBITMQ_HOST = os.environ.get('RABBITMQ_HOST', 'localhost')
 RABBITMQ_PORT = os.environ.get('RABBITMQ_PORT', 5672)
 RABBITMQ_VHOST = os.environ.get('RABBITMQ_VHOST', '/')
 RABBITMQ_USER = os.environ.get('RABBITMQ_USER', 'rabbitmq')
@@ -45,6 +51,16 @@ ENGINE_STRING = 'postgresql+psycopg2://{}:{}@{}:{}/{}'.format(
 JOB_POSTS_TABLE = 'job_post'
 COURSES_TABLE = 'courses'
 SKILLS_TABLE = 'skills'
+
+QUALICHAIN_DB_ENGINE_STRING = 'postgresql+psycopg2://{username}:{password}@{host}:{port}/{db}'.format(
+    **{
+        'username': 'admin',
+        'password': 'admin',
+        'host': 'localhost',
+        'port': 5435,
+        'db': 'qualichain_db'
+    }
+)
 
 # =================================
 #   APPLICATION SETTINGS
@@ -77,8 +93,8 @@ STOP_WORDS = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you"
               "few", "more", "most", "other", "some", "such", "no", "nor", "not", "only", "own", "same", "so", "than",
               "too", "very", "s", "t", "can", "will", "just", "don", "should", "now"]
 
-BATCH_SIZE = 50
-TIME_BETWEEN_REQUESTS = 5  # in seconds
+BATCH_SIZE = 100
+TIME_BETWEEN_REQUESTS = 20  # in seconds
 
 JOB_NAMES = {
     "backend_developer": {'queries': ['backend developer', 'backend engineer'], 'min_score': 3},
@@ -93,12 +109,12 @@ JOB_NAMES = {
     "security_engineer": {'queries': ['security engineer', 'security'], 'min_score': 3},
     "web_developer": {'queries': ['web engineer', 'web developer'], 'min_score': 4},
     "mobile_developer": {'queries': ['android developer', 'ios developer'], 'min_score': 4},
-    "qa_engineer": {'queries': ['quality assurance', 'qa engineer'], 'min_score': 4},
+    "qa_engineer": {'queries': ['quality assurance', 'qa engineer'], 'min_score': 7},
     "business_analyst": {'queries': ['business analyst', 'business development', 'business intelligence'],
                          'min_score': 4},
     "ui_ux_designer": {'queries': ['ui/ux', 'ux/ui'], 'min_score': 7},
     "project_manager": {'queries': ['project manager', 'technical manager'], 'min_score': 4},
-    "test_developer": {'queries': ['test developer', 'test engineer', 'software engineer in test'], 'min_score': 4}
+    "test_developer": {'queries': ['test developer', 'test engineer', 'software engineer in test'], 'min_score': 5}
 }
 
 # AnalEyeZer Settings

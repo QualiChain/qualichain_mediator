@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 import json
 
 import requests
+from rdflib import Graph
 
 from clients.postgres_client import PostgresClient
 from settings import SARO_SKILL, SARO_PREFIXES, QUERY_EXECUTOR_URL, INDEX
@@ -227,7 +228,49 @@ def handle_raw_annotation(dobie_output, job_name):
             )
 
             extracted_skills.append(features_dict)
+    postgres_client.session.close()
     return extracted_skills
+
+
+def find_qualichain_skills(qualichain_skills, dobie_skill):
+    """This function finds a match for skill extracted from qualichain"""
+    match_skill_row = qualichain_skills[qualichain_skills['alt_label'] == dobie_skill]
+    if_skill_exists = len(match_skill_row)
+    if if_skill_exists:
+        skill_name = match_skill_row['name'].values[0]
+    else:
+        skill_name = None
+    return skill_name
+
+
+def translate_v2dobie_output(dobie_response, job_name):
+    """This function is used to translate dobie output"""
+    g = Graph()
+    postgres_client = PostgresClient()
+
+    g.parse(data=dobie_response, format='turtle')
+    SELECT_SPARQL_QUERY = """
+        SELECT ?skill ?label ?frequency ?type 
+        WHERE { 
+            ?skill rdfs:label ?label .
+            ?skill saro:frequencyOfMention ?frequency.
+            ?skill rdf:type ?type.
+        }"""
+    results = g.query(SELECT_SPARQL_QUERY)
+
+    for row in results:
+        # skill = row['skill'].replace('http://w3id.org/saro/', '')
+        skill_label = row['label'].toPython()
+        frequency_of_mention = int(row['frequency'].title())
+        kind = row['type'].toPython().replace('http://w3id.org/saro/', '')
+
+        postgres_client.upsert_new_skill(
+            job_name=job_name,
+            skill=skill_label,
+            frequencyOfMention=frequency_of_mention,
+            kind=kind
+        )
+    postgres_client.session.close()
 
 
 def handle_raw_output(dobie_output):
