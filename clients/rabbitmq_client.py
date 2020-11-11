@@ -1,9 +1,7 @@
 import json
 
 import pika
-from clients.dobie_client import send_data_to_dobie
 from settings import RABBITMQ_USER, RABBITMQ_PASSWORD, RABBITMQ_HOST, RABBITMQ_PORT, RABBITMQ_VHOST
-from tasks import send_dobie_input, query_fuseki_async
 
 
 class RabbitMQClient(object):
@@ -45,33 +43,3 @@ class RabbitMQClient(object):
         channel.basic_publish(exchange='', routing_key=queue, body=message)
 
         self.connection.close()
-
-    def on_response_callback(self, ch, method, properties, body):
-        """This function is enabled when a message is received on RabbitMQ consumer"""
-        payload = json.loads(body)
-
-        component = payload['component']
-        message = payload['message']
-
-        if component == "DOBIE":
-            send_dobie_input.delay(message)
-        elif component == "QE":
-            query_fuseki_async.delay(message)
-        else:
-            print("this component is not provided from Qualichain", flush=True)
-
-    def consumer(self, queue):
-        """
-        This function is a RabbitMQ Consumer and consumes messages from provided queue
-
-        Args:
-            queue: provided queue
-        """
-        channel = self.connection.channel()
-
-        channel.queue_declare(queue=queue)
-        channel.basic_consume(
-            queue=queue, on_message_callback=self.on_response_callback, auto_ack=True)
-
-        print(' [*] Waiting for messages. To exit press CTRL+C', flush=True)
-        channel.start_consuming()
