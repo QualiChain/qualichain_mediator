@@ -4,7 +4,7 @@ import os
 #   DOBIE SETTINGS
 # =================================
 DOBIE_HOST = os.environ.get('DOBIE_HOST', 'demo.iais.fraunhofer.de')
-# DOBIE_PORT = os.environ.get('DOBIE_PORT', 9006)
+DOBIE_PORT = os.environ.get('DOBIE_PORT', 9006)
 DOBIE_USERNAME = os.environ.get('DOBIE_USERNAME', 'user')
 DOBIE_PASS = os.environ.get('DOBIE_PASS', '5UxLtwaeJ8fK')
 

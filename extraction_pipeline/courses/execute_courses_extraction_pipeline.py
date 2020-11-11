@@ -67,5 +67,9 @@ class CourseSkillExtractionExecutor(object):
 
         for execution in range(0, courses_length-1):
             print('Course Id: {} '.format(self.courses.iloc[execution]['id']))
-            self.pipe_dobie_results(execution, save=save_in_file, course_id=self.courses.iloc[execution]['id'])
-            time.sleep(TIME_BETWEEN_REQUESTS)
+            course = self.courses.iloc['execution']
+            course_id = course['id']
+            print(course)
+            break
+            # self.pipe_dobie_results(execution, save=save_in_file, course_id=self.courses.iloc[execution]['id'])
+            # time.sleep(TIME_BETWEEN_REQUESTS)
