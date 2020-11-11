@@ -1,7 +1,7 @@
 import sys
 
 sys.path.append('../')
-from extraction_pipeline.execute_courses_extraction_pipeline import CourseSkillExtractionExecutor
+from extraction_pipeline.courses.execute_courses_extraction_pipeline import CourseSkillExtractionExecutor
 
 from settings import SAVE_IN_FILE
 

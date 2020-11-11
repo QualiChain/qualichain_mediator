@@ -2,7 +2,7 @@ import time
 
 
 from clients.dobie_client import send_data_to_dobie
-from extraction_pipeline.courses_extraction_pipeline import CourseExtractor
+from extraction_pipeline.courses.courses_extraction_pipeline import CourseExtractor
 from settings import TIME_BETWEEN_REQUESTS
 from utils import save_extracted_skills, handle_course_skill_annotation
 

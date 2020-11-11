@@ -1,6 +1,5 @@
 import re
 from os import path
-from rdflib import Graph
 import pandas as pd
 from bs4 import BeautifulSoup
 
@@ -11,7 +10,7 @@ from rdflib import Graph
 
 from clients.postgres_client import PostgresClient
 from settings import SARO_SKILL, SARO_PREFIXES, QUERY_EXECUTOR_URL, INDEX
-from extraction_pipeline.courses_extraction_pipeline import SkillExtractor
+from extraction_pipeline.courses.courses_extraction_pipeline import SkillExtractor
 
 
 def my_add(x, y):

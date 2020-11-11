@@ -1,14 +1,10 @@
 import math
 import time
 
-import pandas
-from bs4 import BeautifulSoup
-
-from clients.dobie_client import send_data_to_dobie, dobie_second_version
-from extraction_pipeline.job_post_extraction_pipeline import JobPostSkillExtractor
-from settings import BATCH_SIZE, TIME_BETWEEN_REQUESTS, QUALICHAIN_DB_ENGINE_STRING
-from tasks import extract_skills_async
-from utils import handle_raw_annotation, save_extracted_skills, translate_v2dobie_output
+from clients.dobie_client import dobie_second_version
+from extraction_pipeline.job_posts.job_post_extraction_pipeline import JobPostSkillExtractor
+from settings import BATCH_SIZE, TIME_BETWEEN_REQUESTS
+from utils import translate_v2dobie_output
 
 
 class Executor(object):

@@ -4,7 +4,7 @@ import time
 sys.path.append('../')
 
 from clients.postgres_client import PostgresClient
-from extraction_pipeline.execute_pipeline import Executor
+from extraction_pipeline.job_posts.execute_pipeline import Executor
 from settings import JOB_NAMES, SAVE_IN_FILE
 from utils import query_creator
 
