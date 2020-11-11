@@ -68,57 +68,16 @@ class CourseSkillExtractionExecutor(object):
 
     @retry(exception=Exception, n_tries=4, delay=15)
     def iterate(self, execution):
+
         course = self.courses.iloc[execution]
         course_id = course['id']
         course_name = course['name']
         print('Course Id: {} '.format(course_id))
+
         sentences = tokenize.sent_tokenize(course['description'])
         chunks = chunkify(sentences, 4)
         for chunk in chunks:
             joined_chunk = " ".join(chunk)
             self.pipe_dobie_results(joined_chunk, course_name, course_id=course_id)
             time.sleep(5)
-        #
-        #     sentences = tokenize.sent_tokenize(course['description'])
-        #     chunks = chunkify(sentences, 4)
-        #     for chunk in chunks:
-        #         joined_chunk = " ".join(chunk)
-        #         self.pipe_dobie_results(joined_chunk, course_name, save=save_in_file, course_id=course_id)
-        #         time.sleep(5)
-
         time.sleep(TIME_BETWEEN_REQUESTS)
-
-    def execution_stage(self, save_in_file=False):
-        """This is pipeline's execution stage"""
-
-        courses_length = len(self.courses)
-
-        for execution in range(0, courses_length - 1):
-            self.iterate(execution)
-
-            # course = self.courses.iloc[execution]
-            # course_id = course['id']
-            # course_name = course['name']
-            # print('Course Id: {} '.format(course_id))
-            #
-            # # try:
-            #
-            # sentences = tokenize.sent_tokenize(course['description'])
-            # chunks = chunkify(sentences, 4)
-            # for chunk in chunks:
-            #     joined_chunk = " ".join(chunk)
-            #     self.pipe_dobie_results(joined_chunk, course_name, save=save_in_file, course_id=course_id)
-            #     time.sleep(5)
-            #
-            # # except Exception as ex:
-            # #     print(ex)
-            # #     time.sleep(30)
-            # #
-            # #     sentences = tokenize.sent_tokenize(course['description'])
-            # #     chunks = chunkify(sentences, 4)
-            # #     for chunk in chunks:
-            # #         joined_chunk = " ".join(chunk)
-            # #         self.pipe_dobie_results(joined_chunk, course_name, save=save_in_file, course_id=course_id)
-            # #         time.sleep(5)
-            #
-            # time.sleep(TIME_BETWEEN_REQUESTS)

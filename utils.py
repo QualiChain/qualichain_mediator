@@ -154,6 +154,22 @@ def extract_raw_features(annotation):
     return features_dict
 
 
+def transform_to_graph(ttl):
+    """This function is used to transform a ttl response to graph"""
+    g = Graph()
+    g.parse(data=ttl, format='turtle')
+
+    SELECT_SPARQL_QUERY = """
+        SELECT ?skill ?label ?frequency ?type 
+        WHERE { 
+            ?skill rdfs:label ?label .
+            ?skill saro:frequencyOfMention ?frequency.
+            ?skill rdf:type ?type.
+        }"""
+    results = g.query(SELECT_SPARQL_QUERY)
+    return results
+
+
 def handle_course_skill_annotation(dobie_output, course_id):
     """
        This function is used to extract dobie annotation and return list of extracted skills
@@ -163,17 +179,7 @@ def handle_course_skill_annotation(dobie_output, course_id):
        :return: list of extracted skills
        """
     # postgres_client = PostgresClient()
-
-    g = Graph()
-    g.parse(data=dobie_output.text, format='turtle')
-    SELECT_SPARQL_QUERY = """
-            SELECT ?skill ?label ?frequency ?type 
-            WHERE { 
-                ?skill rdfs:label ?label .
-                ?skill saro:frequencyOfMention ?frequency.
-                ?skill rdf:type ?type.
-            }"""
-    results = g.query(SELECT_SPARQL_QUERY)
+    results = transform_to_graph(ttl=dobie_output.text)
     skill_list = []
     for row in results:
         skill_list.append(row['label'].toPython())
@@ -247,18 +253,8 @@ def find_qualichain_skills(qualichain_skills, dobie_skill):
 
 def translate_v2dobie_output(dobie_response, job_name):
     """This function is used to translate dobie output"""
-    g = Graph()
     postgres_client = PostgresClient()
-
-    g.parse(data=dobie_response, format='turtle')
-    SELECT_SPARQL_QUERY = """
-        SELECT ?skill ?label ?frequency ?type 
-        WHERE { 
-            ?skill rdfs:label ?label .
-            ?skill saro:frequencyOfMention ?frequency.
-            ?skill rdf:type ?type.
-        }"""
-    results = g.query(SELECT_SPARQL_QUERY)
+    results = transform_to_graph(ttl=dobie_response)
 
     for row in results:
         # skill = row['skill'].replace('http://w3id.org/saro/', '')

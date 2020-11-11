@@ -8,5 +8,9 @@ from settings import SAVE_IN_FILE
 
 if __name__ == "__main__":
     executor = CourseSkillExtractionExecutor([])
-    executor.execution_stage(save_in_file=SAVE_IN_FILE)
+    courses = executor.courses
+    courses_length = len(courses)
+
+    for execution in range(0, courses_length - 1):
+        executor.iterate(execution)
 
