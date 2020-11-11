@@ -15,13 +15,6 @@ DOBIE_V2_SETTINGS = {
 }
 
 # =================================
-#   FUSEKI SERVER SETTINGS
-# =================================
-FUSEKI_SERVER_HOST = os.environ.get('FUSEKI_SERVER_HOST', 'localhost')
-FUSEKI_SERVER_PORT = os.environ.get('FUSEKI_SERVER_PORT', 3030)
-FUSEKI_SERVER_DATASET = os.environ.get('FUSEKI_SERVER_DATASET', 'saro')
-
-# =================================
 #   RABBITMQ SETTINGS
 # =================================
 RABBITMQ_HOST = os.environ.get('RABBITMQ_HOST', 'localhost')
@@ -52,6 +45,25 @@ JOB_POSTS_TABLE = 'job_post'
 COURSES_TABLE = 'courses'
 SKILLS_TABLE = 'skills'
 
+# =================================
+#   CELERY SETTINGS
+# =================================
+CELERY_BROKER_URL = 'pyamqp://{}:{}@{}:{}/{}'.format(
+    RABBITMQ_USER, RABBITMQ_PASSWORD, RABBITMQ_HOST, RABBITMQ_PORT, RABBITMQ_VHOST)
+
+CELERY_ACCEPT_CONTENT = ['application/json']
+# CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+CELERY_TASK_ACKS_LATE = True
+
+# =================================
+#   AnalEyeZer SETTINGS
+# =================================
+ANALEYEZER_HOST = os.environ.get('ANALEYEZER_HOST', 'qualichain.epu.ntua.gr')
+ANALEYEZER_PORT = os.environ.get('ANALEYEZER_PORT', 5002)
+INDEX = "job_post_index"
+QUERY_EXECUTOR_URL = 'http://{}:{}/ask/storage'.format(ANALEYEZER_HOST, ANALEYEZER_PORT)
+
 QUALICHAIN_DB_ENGINE_STRING = 'postgresql+psycopg2://{username}:{password}@{host}:{port}/{db}'.format(
     **{
         'username': 'admin',
@@ -66,35 +78,11 @@ QUALICHAIN_DB_ENGINE_STRING = 'postgresql+psycopg2://{username}:{password}@{host
 #   APPLICATION SETTINGS
 # =================================
 APP_QUEUE = os.environ.get('APP_QUEUE', "mediator_queue")
-
-SARO_SKILL = """saro:{meta_value} a saro:{Kind} ;
-	 saro:icCoreTo saro:ICT ;
-	 rdfs:label "{String}" .
-	 
-	 """
-
-SARO_PREFIXES = """
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix saro: <http://w3id.org/saro#> .
-@prefix esco: <http://data.europa.eu/esco/model#> .
-
-"""
-
-STOP_WORDS = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours", "yourself",
-              "yourselves", "he", "him", "his", "himself", "she", "her", "hers", "herself", "it", "its", "itself",
-              "they", "them", "their", "theirs", "themselves", "what", "which", "who", "whom", "this", "that", "these",
-              "those", "am", "is", "are", "was", "were", "be", "been", "being", "have", "has", "had", "having", "do",
-              "does", "did", "doing", "a", "an", "the", "and", "but", "if", "or", "because", "as", "until", "while",
-              "of", "at", "by", "for", "with", "about", "against", "between", "into", "through", "during", "before",
-              "after", "above", "below", "to", "from", "up", "down", "in", "out", "on", "off", "over", "under", "again",
-              "further", "then", "once", "here", "there", "when", "where", "why", "how", "all", "any", "both", "each",
-              "few", "more", "most", "other", "some", "such", "no", "nor", "not", "only", "own", "same", "so", "than",
-              "too", "very", "s", "t", "can", "will", "just", "don", "should", "now"]
-
 BATCH_SIZE = 100
 TIME_BETWEEN_REQUESTS = 20  # in seconds
+TIME_BETWEEN_CHUNKS = 5
+SAVE_IN_FILE = False
+NUM_OF_CHUKS = 4
 
 JOB_NAMES = {
     "backend_developer": {'queries': ['backend developer', 'backend engineer'], 'min_score': 3},
@@ -117,22 +105,13 @@ JOB_NAMES = {
     "test_developer": {'queries': ['test developer', 'test engineer', 'software engineer in test'], 'min_score': 5}
 }
 
-# AnalEyeZer Settings
-ANALEYEZER_HOST = os.environ.get('ANALEYEZER_HOST', 'qualichain.epu.ntua.gr')
-ANALEYEZER_PORT = os.environ.get('ANALEYEZER_PORT', 5002)
-INDEX = "job_post_index"
-QUERY_EXECUTOR_URL = 'http://{}:{}/ask/storage'.format(ANALEYEZER_HOST, ANALEYEZER_PORT)
-
-# Extraction Pipeline Settings
-SAVE_IN_FILE = False
-
-# =================================
-#   CELERY SETTINGS
-# =================================
-CELERY_BROKER_URL = 'pyamqp://{}:{}@{}:{}/{}'.format(
-    RABBITMQ_USER, RABBITMQ_PASSWORD, RABBITMQ_HOST, RABBITMQ_PORT, RABBITMQ_VHOST)
-
-CELERY_ACCEPT_CONTENT = ['application/json']
-# CELERY_TASK_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'UTC'
-CELERY_TASK_ACKS_LATE = True
+STOP_WORDS = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours", "yourself",
+              "yourselves", "he", "him", "his", "himself", "she", "her", "hers", "herself", "it", "its", "itself",
+              "they", "them", "their", "theirs", "themselves", "what", "which", "who", "whom", "this", "that", "these",
+              "those", "am", "is", "are", "was", "were", "be", "been", "being", "have", "has", "had", "having", "do",
+              "does", "did", "doing", "a", "an", "the", "and", "but", "if", "or", "because", "as", "until", "while",
+              "of", "at", "by", "for", "with", "about", "against", "between", "into", "through", "during", "before",
+              "after", "above", "below", "to", "from", "up", "down", "in", "out", "on", "off", "over", "under", "again",
+              "further", "then", "once", "here", "there", "when", "where", "why", "how", "all", "any", "both", "each",
+              "few", "more", "most", "other", "some", "such", "no", "nor", "not", "only", "own", "same", "so", "than",
+              "too", "very", "s", "t", "can", "will", "just", "don", "should", "now"]

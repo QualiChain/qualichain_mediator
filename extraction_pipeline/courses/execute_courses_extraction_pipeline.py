@@ -7,9 +7,9 @@ from decorators import retry
 
 nltk.download('punkt')
 
-from clients.dobie_client import send_data_to_dobie, dobie_second_version
+from clients.dobie_client import dobie_second_version
 from extraction_pipeline.courses.courses_extraction_pipeline import CourseExtractor
-from settings import TIME_BETWEEN_REQUESTS
+from settings import TIME_BETWEEN_REQUESTS, NUM_OF_CHUKS, TIME_BETWEEN_CHUNKS
 from utils import save_extracted_skills, handle_course_skill_annotation, chunkify
 
 
@@ -75,9 +75,9 @@ class CourseSkillExtractionExecutor(object):
         print('Course Id: {} '.format(course_id))
 
         sentences = tokenize.sent_tokenize(course['description'])
-        chunks = chunkify(sentences, 4)
+        chunks = chunkify(sentences, NUM_OF_CHUKS)
         for chunk in chunks:
             joined_chunk = " ".join(chunk)
             self.pipe_dobie_results(joined_chunk, course_name, course_id=course_id)
-            time.sleep(5)
+            time.sleep(TIME_BETWEEN_CHUNKS)
         time.sleep(TIME_BETWEEN_REQUESTS)
