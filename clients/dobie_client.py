@@ -42,13 +42,14 @@ def dobie_second_version(job_description):
         "Content-Type": "application/json"
     }
     jsonified_data = json.dumps(job_description)
+    print(job_description)
 
     response = requests.request(
         "POST",
         dobie_v2_url,
         data=jsonified_data,
         headers=headers,
-        auth=HTTPBasicAuth('user', '5UxLtwaeJ8fK')
+        auth=HTTPBasicAuth(user, password)
     )
     return response
 

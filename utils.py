@@ -162,7 +162,7 @@ def handle_course_skill_annotation(dobie_output, course_id):
        :param course_name: provided course_name
        :return: list of extracted skills
        """
-    postgres_client = PostgresClient()
+    # postgres_client = PostgresClient()
 
     g = Graph()
     g.parse(data=dobie_output.text, format='turtle')
@@ -180,23 +180,26 @@ def handle_course_skill_annotation(dobie_output, course_id):
         print(row['label'].title())
 
     skill_list = remove_common_skills(skill_list)
-    skill_extractor_obj = SkillExtractor()
-    for skill in skill_list:
-        skill_obj = skill_extractor_obj.get_skills(skill)
-        if not skill_obj.empty:
-            skill_id = skill_obj.iloc[0]['id']
-            postgres_client.upsert_new_skill_per_course(
-                course_id=int(course_id),
-                skill_id=int(skill_id)
-            )
-
-    postgres_client.session.close()
+    print(skill_list)
+    # skill_extractor_obj = SkillExtractor()
+    # for skill in skill_list:
+    #     skill_obj = skill_extractor_obj.get_skills(skill)
+    #     if not skill_obj.empty:
+    #         skill_id = skill_obj.iloc[0]['id']
+    #         postgres_client.upsert_new_skill_per_course(
+    #             course_id=int(course_id),
+    #             skill_id=int(skill_id)
+    #         )
+    #
+    # postgres_client.session.close()
     return skill_list
+
 
 def remove_common_skills(skill_list):
     common_list = ['tools', 'design', 'analysis', 'development', 'programming']
     filtered_skill_list = [skill for skill in skill_list if skill not in common_list]
     return filtered_skill_list
+
 
 def handle_raw_annotation(dobie_output, job_name):
     """
@@ -341,3 +344,9 @@ def query_creator(job_attributes, key):
     job_post_ids = [res['_source']['id'] for res in response.json()]
 
     return job_post_ids
+
+
+def chunkify(a, n):
+    """This method is used to split list to n parts"""
+    k, m = divmod(len(a), n)
+    return list((a[i * k + min(i, m):(i + 1) * k + min(i + 1, m)] for i in range(n)))

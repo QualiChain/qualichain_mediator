@@ -43,7 +43,7 @@ class CourseExtractor(object):
         removed_txt = [word for word in split_txt if word not in STOP_WORDS]
         return " ".join(removed_txt)
 
-    def process_course_description(self, course_descriptions_fraction):
+    def process_course_description(self, course_descriptions_fraction, course_name):
         """
         This function receives a courses data frame, which is a part of the original table
         and preprocess the stored descriptions
@@ -52,8 +52,7 @@ class CourseExtractor(object):
         :return: processed descriptions
         """
 
-        raw_description = course_descriptions_fraction['description'] + ' ' + course_descriptions_fraction[
-            'name']
+        raw_description = course_descriptions_fraction + ' ' + course_name
         removed_stop_words = self.remove_stop_words(raw_description)
         stripped_from_whitespaces = removed_stop_words.strip()
         stripped_from_whitespaces = stripped_from_whitespaces.replace('\u200b\u200b', '')

@@ -24,7 +24,7 @@ class ExtractedSkill(Base):
 
 class ExtractedCourseSkill(Base):
     """Extracted Course Skills Table"""
-    __tablename__ = 'skills_courses'
+    __tablename__ = 'skills_courses_temp'
 
     id = Column(Integer, primary_key=True, nullable=False)
     skill_id = Column(Integer, nullable=True)
@@ -48,8 +48,7 @@ class PostgresClient(object):
         Base.metadata.create_all(self.engine)
         print('ExtractedSkill Initiated Successfully')
 
-
-    def upsert_new_skill_per_course(self,**kwargs):
+    def upsert_new_skill_per_course(self, **kwargs):
         """
                 This function is used to append a new skill per course
                 :param kwargs: provided kwargs
@@ -60,16 +59,12 @@ class PostgresClient(object):
             skill_id=int(kwargs['skill_id'])
         )
 
-
         if this_skill.count():
             pass
         else:
             new_skill = ExtractedCourseSkill(**kwargs)
             self.session.add(new_skill)
             self.session.commit()
-
-
-
 
     def upsert_new_skill(self, **kwargs):
         """
