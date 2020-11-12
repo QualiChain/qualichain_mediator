@@ -88,7 +88,7 @@ class CourseSkillExtractionExecutor(object):
 
         postgres_client.session.close()
 
-    @retry(exception=Exception, n_tries=20, delay=15)
+    @retry(exception=Exception, n_tries=100, delay=20)
     def iterate(self, execution):
 
         course = self.courses.iloc[execution]

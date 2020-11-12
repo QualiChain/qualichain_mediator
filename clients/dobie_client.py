@@ -49,6 +49,6 @@ def dobie_second_version(job_description):
         dobie_v2_url,
         data=jsonified_data,
         headers=headers,
-        auth=HTTPBasicAuth(user, password)
+        auth=HTTPBasicAuth('user', '5UxLtwaeJ8fK')
     )
     return response
