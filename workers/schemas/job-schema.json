@@ -56,6 +56,10 @@
         "skills": {
           "type": "array",
           "items": {"$ref": "skill-schema.json#/definitions/skill"}
+        },
+        "applications": {
+          "type": "array",
+          "items": {"$ref": "application-schema.json#/definitions/application"}
         }
       },
       "required": [

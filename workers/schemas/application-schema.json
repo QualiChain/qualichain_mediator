@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {
+    "application": {
+      "$id": "#application",
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": ["string", "null"]
+        },
+        "comment": {
+          "type": ["string", "null"]
+        },
+        "personURI": {
+          "type": "string"
+        },
+        "jobURI": {
+          "type": "string"
+        },
+        "expectedSalary": {
+          "type": ["string", "number", "integer"]
+        },
+        "salaryCurrency": {
+          "type": ["string", "null"]
+        },
+        "availability": {
+          "type": "string"
+        },
+        "uri": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "personURI",
+        "jobURI",
+        "expectedSalary",
+        "id",
+        "uri"
+      ]
+    }
+  }
+}
