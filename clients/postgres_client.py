@@ -24,7 +24,7 @@ class ExtractedSkill(Base):
 
 class ExtractedCourseSkill(Base):
     """Extracted Course Skills Table"""
-    __tablename__ = 'skills_courses_temp'
+    __tablename__ = 'skills_courses'
 
     id = Column(Integer, primary_key=True, nullable=False)
     skill_id = Column(Integer, nullable=True)

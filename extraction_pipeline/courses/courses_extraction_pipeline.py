@@ -74,7 +74,7 @@ class SkillExtractor(object):
         :return: courses table
         """
         if names:
-            select_query = "SELECT id, name  from {} WHERE name='{}'".format(
+            select_query = "SELECT id, name  from {} WHERE lower(name)='{}'".format(
                 SKILLS_TABLE,
                 names)
         else:

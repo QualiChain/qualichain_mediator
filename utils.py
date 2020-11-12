@@ -9,25 +9,7 @@ import requests
 from rdflib import Graph
 
 from clients.postgres_client import PostgresClient
-from settings import SARO_SKILL, SARO_PREFIXES, QUERY_EXECUTOR_URL, INDEX
-from extraction_pipeline.courses.courses_extraction_pipeline import SkillExtractor
-
-
-def my_add(x, y):
-    """
-    This functions adds x and y args
-
-    Args:
-        x: x parameter
-        y: y parameter
-
-    Returns:
-        x+y
-
-    Examples:
-        >>> my_add(1,2)
-    """
-    return x + y
+from settings import QUERY_EXECUTOR_URL, INDEX
 
 
 def create_meta_value(value):
@@ -187,17 +169,6 @@ def handle_course_skill_annotation(dobie_output, course_id):
 
     skill_list = remove_common_skills(skill_list)
     print(skill_list)
-    # skill_extractor_obj = SkillExtractor()
-    # for skill in skill_list:
-    #     skill_obj = skill_extractor_obj.get_skills(skill)
-    #     if not skill_obj.empty:
-    #         skill_id = skill_obj.iloc[0]['id']
-    #         postgres_client.upsert_new_skill_per_course(
-    #             course_id=int(course_id),
-    #             skill_id=int(skill_id)
-    #         )
-    #
-    # postgres_client.session.close()
     return skill_list
 
 
