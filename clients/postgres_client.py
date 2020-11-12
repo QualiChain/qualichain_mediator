@@ -66,6 +66,12 @@ class PostgresClient(object):
             self.session.add(new_skill)
             self.session.commit()
 
+    def delete_job_skill(self, job):
+        """This function is used to delete skills related with a job from table"""
+        job_skills = self.session.query(ExtractedSkill).filter_by(job_name=job)
+        job_skills.delete()
+        self.session.commit()
+
     def upsert_new_skill(self, **kwargs):
         """
         This function is used to append a new skill per job name
