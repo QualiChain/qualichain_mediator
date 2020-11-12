@@ -29,7 +29,7 @@ RABBITMQ_PASSWORD = os.environ.get('RABBITMQ_PASSWORD', 'rabbitmq')
 
 POSTGRES_USER = os.environ.get('POSTGRES_USER', 'admin')
 POSTGRES_PASSWORD = os.environ.get('POSTGRES_PASSWORD', 'admin')
-POSTGRES_HOST = os.environ.get('POSTGRES_HOST', 'localhost')
+POSTGRES_HOST = os.environ.get('POSTGRES_HOST', 'qualichain.epu.ntua.gr')
 POSTGRES_PORT = os.environ.get('POSTGRES_PORT', 5435)
 POSTGRES_DB = os.environ.get('POSTGRES_DB', 'qualichain_db')
 
