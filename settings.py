@@ -68,8 +68,8 @@ QUALICHAIN_DB_ENGINE_STRING = 'postgresql+psycopg2://{username}:{password}@{host
     **{
         'username': 'admin',
         'password': 'admin',
-        'host': 'localhost',
-        'port': 5435,
+        'host': POSTGRES_HOST,
+        'port': POSTGRES_PORT,
         'db': 'qualichain_db'
     }
 )
