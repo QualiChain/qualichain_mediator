@@ -20,6 +20,15 @@
         "sector": {
           "type": ["string", "null"]
         },
+        "country": {
+          "type": ["string", "null"]
+        },
+        "state": {
+          "type": ["string", "null"]
+        },
+        "hiringOrg": {
+          "type": "string"
+        },
         "job_location": {
           "type": "string"
         },
@@ -53,7 +62,8 @@
         "label",
         "job_location",
         "creator_id",
-        "expectedSalary"
+        "expectedSalary",
+        "hiringOrg"
       ]
     }
   }
