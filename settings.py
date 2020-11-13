@@ -84,6 +84,12 @@ TIME_BETWEEN_CHUNKS = 5
 SAVE_IN_FILE = False
 NUM_OF_CHUKS = 4
 
+SKILL_LEVEl_MAPPING = {
+    'basic': 5,
+    'advanced': 8,
+    'expert': 10
+}
+
 JOB_NAMES = {
     "backend_developer": {'queries': ['backend developer', 'backend engineer'], 'min_score': 3},
     "frontend_developer": {'queries': ['frontend developer', 'frontend engineer'], 'min_score': 3},
