@@ -30,6 +30,8 @@ class DataHandler(object):
         self.cvs = self.Base.classes.CVs
         self.skills = self.Base.classes.skills
         self.cv_skills = self.Base.classes.cv_skills
+        self.jobs = self.Base.classes.jobs
+        self.job_skills = self.Base.classes.job_skills
 
     def receive_data(self, ch, method, properties, body):
         """This function is enabled when a message is received from CV Consumer"""
@@ -42,11 +44,15 @@ class DataHandler(object):
                 log.info("The CV instance is valid")
                 self.add_cv(**instance)
             else:
-                log.info("The CV instance is not valid -- Abort")
+                log.info("The CV instance is not valid -- Abort!")
         elif 'job' in data_payload.keys():
             instance = data_payload['job']
             is_valid = self.validator.evaluate(instance, instance_category='job')
-            log.info(is_valid)
+            if is_valid:
+                log.info("The Job instance is valid")
+                self.add_job(**instance)
+            else:
+                log.info("The Job instance is not valid -- Abort!")
         else:
             log.info("Not valid payload send")
 
@@ -99,5 +105,59 @@ class DataHandler(object):
                     log.info("No skills for current CV")
             else:
                 log.info("CV for user with ID: {} already exists".format(user_id))
+        except Exception as ex:
+            log.error(ex)
+
+    def store_job_skills(self, skills, job_id):
+        """This function is used to store skills job information"""
+        for skill_obj in skills:
+            skill_name = skill_obj['label']
+
+            if_skill_exists = self.session.query(self.skills).filter(
+                func.lower(self.skills.name) == skill_name.lower()
+            )
+            if if_skill_exists.scalar():
+                qualichain_skill = if_skill_exists.first()
+
+                new_job_skill_relation = self.job_skills(
+                    skill_id=qualichain_skill.id,
+                    job_id=job_id,
+                )
+                self.session.add(new_job_skill_relation)
+        self.session.commit()
+
+    def add_job(self, **kwargs):
+        """This function is used to add a new job to QualiChain DB"""
+        try:
+            data = kwargs
+            job_id = int(data['id'].replace('saro:Job', ''))
+            job_skills = data['skillReq']
+
+            check_if_job_exists = self.session.query(self.jobs).filter_by(id=job_id)
+            if not check_if_job_exists.scalar():
+                log.info("Insert job")
+                new_job = self.jobs(
+                    id=job_id,
+                    title=data['label'],
+                    creator_id=int(data['creator_id']),  # kbiz use user ids that already exist in QC DB
+                    job_description=data['jobDescription'],
+                    level_value=data['seniorityLevel'],  # seniority level in QC DB is different
+                    country=data['jobLocation'],  # add country to Job schema
+                    state=data['jobLocation'],  # add stare to Job schema
+                    city=data['jobLocation'],  # add city to job schema
+                    employer="is missing",  # add employer to job schema
+                    date=data['startDate'],
+                    start_date=data['startDate'],
+                    end_date=data['endDate'],
+                    employment_value=data['contractType'],  # this field should me aligned with our data model
+                    specialization_id=1  # sector value should be aligned with our specialization info
+                )
+                self.session.add(new_job)
+                self.session.commit()
+
+                if job_skills:
+                    self.store_job_skills(job_skills, job_id)
+            else:
+                log.info("Job with ID: {} already exists".format(job_id))
         except Exception as ex:
             log.error(ex)
