@@ -4,18 +4,27 @@
   "type": "object",
   "properties": {
     "label": {
+      "type": ["string", "null"]
+    },
+    "uri": {
+      "type": "string"
+    },
+    "id": {
       "type": "string"
     },
     "comment": {
       "type": ["string", "null"]
     },
     "title": {
-      "type": "string"
+      "type": ["string", "null"]
     },
     "personURI": {
       "type": "string"
     },
     "targetSector": {
+      "type": ["string", "null"]
+    },
+    "description": {
       "type": ["string", "null"]
     },
     "skills": {
@@ -25,7 +34,11 @@
     "applications": {
       "type": "array",
       "items": {"$ref": "application-schema.json#/definitions/application"}
+    },
+    "workHistory": {
+      "type": "array",
+      "items": {"$ref": "workHistory-schema.json#/definitions/workHistory"}
     }
   },
-  "required": ["label", "title", "personURI"]
+  "required": ["personURI", "uri", "id"]
 }

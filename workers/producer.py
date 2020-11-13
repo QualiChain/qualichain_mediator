@@ -13,7 +13,7 @@ if __name__ == "__main__":
         "label": "Test CV 5",
         "comment": "Comment 5",
         "title": "CV Title 5",
-        "personURI": "qc:5",
+        "personURI": "qc:3",
         "description": "Description 5",
         "targetSector": "Sector 2",
         "otherInfo": None,
@@ -95,4 +95,4 @@ if __name__ == "__main__":
     }
     payload = {'cv': cv_payload}
 
-    rabbit_mq.producer(queue='haha', message=json.dumps(payload))
+    rabbit_mq.producer(queue=APP_QUEUE, message=json.dumps(payload))

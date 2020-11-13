@@ -41,4 +41,4 @@ def cv_consumer(queue):
 
 
 if __name__ == "__main__":
-    cv_consumer(queue='haha')
+    cv_consumer(queue=APP_QUEUE)

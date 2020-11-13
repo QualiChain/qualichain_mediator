@@ -29,7 +29,7 @@ RABBITMQ_PASSWORD = os.environ.get('RABBITMQ_PASSWORD', 'rabbitmq')
 
 POSTGRES_USER = os.environ.get('POSTGRES_USER', 'admin')
 POSTGRES_PASSWORD = os.environ.get('POSTGRES_PASSWORD', 'admin')
-POSTGRES_HOST = os.environ.get('POSTGRES_HOST', 'localhost')
+POSTGRES_HOST = os.environ.get('POSTGRES_HOST', 'qualichain.epu.ntua.gr')
 POSTGRES_PORT = os.environ.get('POSTGRES_PORT', 5435)
 POSTGRES_DB = os.environ.get('POSTGRES_DB', 'qualichain_db')
 
@@ -77,7 +77,7 @@ QUALICHAIN_DB_ENGINE_STRING = 'postgresql+psycopg2://{username}:{password}@{host
 # =================================
 #   APPLICATION SETTINGS
 # =================================
-APP_QUEUE = os.environ.get('APP_QUEUE', "mediator_queue")
+APP_QUEUE = os.environ.get('APP_QUEUE', "hahas")
 BATCH_SIZE = 100
 TIME_BETWEEN_REQUESTS = 20  # in seconds
 TIME_BETWEEN_CHUNKS = 5
