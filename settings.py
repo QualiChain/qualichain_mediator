@@ -61,7 +61,9 @@ CELERY_TASK_ACKS_LATE = True
 # =================================
 ANALEYEZER_HOST = os.environ.get('ANALEYEZER_HOST', 'qualichain.epu.ntua.gr')
 ANALEYEZER_PORT = os.environ.get('ANALEYEZER_PORT', 5002)
-INDEX = "job_post_index"
+ANALYZER_ENDPOINT = os.environ.get('ANALYZER_ENDPOINT', 'ask/storage')
+INDEX = "qc_job_index"
+ASK_ANALEYEZER = "http://{}:{}/{}".format(ANALEYEZER_HOST, ANALEYEZER_PORT, ANALYZER_ENDPOINT)
 QUERY_EXECUTOR_URL = 'http://{}:{}/ask/storage'.format(ANALEYEZER_HOST, ANALEYEZER_PORT)
 
 QUALICHAIN_DB_ENGINE_STRING = 'postgresql+psycopg2://{username}:{password}@{host}:{port}/{db}'.format(

@@ -9,7 +9,7 @@ import requests
 from rdflib import Graph
 
 from clients.postgres_client import PostgresClient
-from settings import QUERY_EXECUTOR_URL, INDEX
+from settings import QUERY_EXECUTOR_URL, INDEX, ASK_ANALEYEZER
 
 
 def create_meta_value(value):
@@ -317,3 +317,22 @@ def chunkify(a, n):
     """This method is used to split list to n parts"""
     k, m = divmod(len(a), n)
     return list((a[i * k + min(i, m):(i + 1) * k + min(i + 1, m)] for i in range(n)))
+
+
+def store_job_to_elk(**kwargs):
+    """This function is used to store jobs to ElasticSearch"""
+    payload = kwargs
+
+    payload['index'] = INDEX
+    payload['query'] = 'create_document'
+
+    headers = {
+        'Content-Type': 'application/json'
+    }
+
+    response = requests.post(
+        url=ASK_ANALEYEZER,
+        data=json.dumps(payload),
+        headers=headers
+    )
+    return response

@@ -8,6 +8,7 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import sessionmaker
 
 from settings import ENGINE_STRING, SKILL_LEVEl_MAPPING
+from utils import store_job_to_elk
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO,
                     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -169,12 +170,37 @@ class DataHandler(object):
 
                     if job_skills:
                         self.store_job_skills(job_skills, job_id)
+                    self.transform_job_data(data)
                 else:
                     log.info("Specialization : {} does not exists".format(job_sector))
             else:
                 log.info("Job with ID: {} already exists".format(job_id))
         except Exception as ex:
             log.error(ex)
+
+    @staticmethod
+    def transform_job_data(data):
+        """This function is used to transform job data for elk storage"""
+        job_skills = data['skillReq']
+        payload = {
+            'title': data['label'],
+            'jobDescription': data['jobDescription'],
+            'level': data['seniorityLevel'],
+            'date': data['startDate'],
+            'startDate': data['startDate'],
+            'endDate': data['endDate'],
+            'creatorId': data['creator_id'],
+            'employmentType': data['contractType'],
+            'employer': data['hiringOrg'],
+            'country': data['country'],
+            'state': data['state'],
+            'city': data['city'],
+            'required_skills': []
+        }
+        if job_skills:
+            for skill in job_skills:
+                payload['required_skills'].append(skill['label'])
+        store_job_to_elk(**payload)
 
     def add_job_application(self, **kwargs):
         """This function is used to store user job applications to Qualichain DB"""

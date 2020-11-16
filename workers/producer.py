@@ -189,8 +189,8 @@ if __name__ == "__main__":
             "Angular",
             "Blockchain"
         ],
-        "uri": "saro:Job5",
-        "id": "Job5"
+        "uri": "saro:Job2",
+        "id": "Job2"
     }
 
     job_application = {
@@ -205,6 +205,6 @@ if __name__ == "__main__":
         "id": "app5"
     }
 
-    payload = {'job_application': job_application}
+    payload = {'job': job}
 
     rabbit_mq.producer(queue=APP_QUEUE, message=json.dumps(payload))
