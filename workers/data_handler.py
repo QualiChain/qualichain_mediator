@@ -28,11 +28,13 @@ class DataHandler(object):
         self.session = self.Session()
 
         self.cvs = self.Base.classes.CVs
+        self.users = self.Base.classes.users
         self.skills = self.Base.classes.skills
         self.cv_skills = self.Base.classes.cv_skills
         self.jobs = self.Base.classes.jobs
         self.job_skills = self.Base.classes.job_skills
         self.specialization = self.Base.classes.specialization
+        self.user_applications = self.Base.classes.user_applications
 
     def receive_data(self, ch, method, properties, body):
         """This function is enabled when a message is received from CV Consumer"""
@@ -54,6 +56,10 @@ class DataHandler(object):
                 self.add_job(**instance)
             else:
                 log.info("The Job instance is not valid -- Abort!")
+        elif 'job_application' in data_payload.keys():
+            instance = data_payload['job_application']
+            is_valid = self.validator.evaluate(instance, instance_category='job_application')
+            self.add_job_application(**instance)
         else:
             log.info("Not valid payload send")
 
@@ -155,7 +161,8 @@ class DataHandler(object):
                         start_date=data['startDate'],
                         end_date=data['endDate'],
                         employment_value=data['contractType'],  # this field should me aligned with our data model
-                        specialization_id=specialization_id  # sector value should be aligned with our specialization info
+                        specialization_id=specialization_id
+                        # sector value should be aligned with our specialization info
                     )
                     self.session.add(new_job)
                     self.session.commit()
@@ -166,5 +173,30 @@ class DataHandler(object):
                     log.info("Specialization : {} does not exists".format(job_sector))
             else:
                 log.info("Job with ID: {} already exists".format(job_id))
+        except Exception as ex:
+            log.error(ex)
+
+    def add_job_application(self, **kwargs):
+        """This function is used to store user job applications to Qualichain DB"""
+        try:
+            data = kwargs
+            user_id = int(data['personURI'].replace('qc:', ''))
+            job_id = int(data['jobURI'].replace('saro:Job', ''))
+
+            user_obj = self.session.query(self.users).filter_by(id=id)
+            job_obj = self.session.query(self.jobs).filter(id=id)
+
+            if not user_obj.scalar() and not job_obj.scalar():
+                new_application = self.user_applications(
+                    user_id=user_id,
+                    job_id=job_id,
+                    available=data['availability'],
+                    exp_salary=data['expectedSalary']
+                )
+                self.session.add(new_application)
+                self.session.commit()
+            else:
+                log.info("User or Job object not exist")
+
         except Exception as ex:
             log.error(ex)
