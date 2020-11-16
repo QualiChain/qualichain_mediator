@@ -183,10 +183,10 @@ class DataHandler(object):
             user_id = int(data['personURI'].replace('qc:', ''))
             job_id = int(data['jobURI'].replace('saro:Job', ''))
 
-            user_obj = self.session.query(self.users).filter_by(id=id)
-            job_obj = self.session.query(self.jobs).filter(id=id)
+            user_obj = self.session.query(self.users).filter_by(id=user_id)
+            job_obj = self.session.query(self.jobs).filter_by(id=job_id)
 
-            if not user_obj.scalar() and not job_obj.scalar():
+            if user_obj.scalar() and job_obj.scalar():
                 new_application = self.user_applications(
                     user_id=user_id,
                     job_id=job_id,

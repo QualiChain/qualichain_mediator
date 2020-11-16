@@ -193,8 +193,18 @@ if __name__ == "__main__":
         "id": "Job5"
     }
 
+    job_application = {
+        "label": None,
+        "comment": None,
+        "personURI": "qc:5",
+        "jobURI": "saro:Job5",
+        "expectedSalary": "1200",
+        "salaryCurrency": "Euro",
+        "availability": "01/01/21",
+        "uri": "qc:app5",
+        "id": "app5"
+    }
 
-
-    payload = {'job': job}
+    payload = {'job_application': job_application}
 
     rabbit_mq.producer(queue=APP_QUEUE, message=json.dumps(payload))
