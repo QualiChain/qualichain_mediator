@@ -93,6 +93,108 @@ if __name__ == "__main__":
         "uri": "cv:id5",
         "id": "id5"
     }
-    payload = {'cv': cv_payload}
+
+    job = {
+        "label": "Data Scientist",
+        "comment": "JobPosting Comment 5",
+        "creator_id": "5",
+        "jobDescription": "Job Description 5",
+        "contractType": "full_time",
+        "sector": "Backend Developer",
+        "occupation": "Blockchain Engineer",
+        "country": "Greece",
+        "state": "Attica",
+        "city": "Athens",
+        "startDate": "2020-01-01",
+        "endDate": "2022-01-01",
+        "seniorityLevel": "intermediate",
+        "expectedSalary": None,
+        "salaryCurrency": None,
+        "skillReqURIs": [
+            "cv:Skill_10",
+            "cv:Skill_6",
+            "cv:Skill_8"
+        ],
+        "skillReq": [
+            {
+                "label": "C#",
+                "comment": "Skill comment 10",
+                "proficiencyLevel": "basic",
+                "priorityLevel": "high",
+                "coreTo": None,
+                "isFrom": None,
+                "skillType": None,
+                "reuseLevel": None,
+                "synonyms": [],
+                "superClasses": [
+                    "<http://rdfs.org/resume-rdf/cv.rdfs#Skill_4>"
+                ],
+                "subClasses": [],
+                "uri": "cv:Skill_10",
+                "id": "Skill_10"
+            },
+            {
+                "label": "Angular",
+                "comment": "Skill comment 6",
+                "proficiencyLevel": "basic",
+                "priorityLevel": "high",
+                "coreTo": None,
+                "isFrom": None,
+                "skillType": None,
+                "reuseLevel": None,
+                "synonyms": [],
+                "superClasses": [
+                    "<http://rdfs.org/resume-rdf/cv.rdfs#Skill_4>"
+                ],
+                "subClasses": [],
+                "uri": "cv:Skill_6",
+                "id": "Skill_6"
+            },
+            {
+                "label": "Blockchain",
+                "comment": "Skill comment 8",
+                "proficiencyLevel": "basic",
+                "priorityLevel": "high",
+                "coreTo": None,
+                "isFrom": None,
+                "skillType": None,
+                "reuseLevel": None,
+                "synonyms": [],
+                "superClasses": [],
+                "subClasses": [],
+                "uri": "cv:Skill_8",
+                "id": "Skill_8"
+            }
+        ],
+        "workExperienceReq": [],
+        "educationReq": [],
+        "applications": [
+            {
+                "label": None,
+                "comment": None,
+                "personURI": "qc:5",
+                "jobURI": "saro:Job5",
+                "expectedSalary": "1200",
+                "salaryCurrency": "Euro",
+                "availability": "01/01/21",
+                "uri": "qc:app5",
+                "id": "app5"
+            }
+        ],
+        "hiringOrg": "Hiring Organization 2",
+        "listingOrg": "Listing Organization 2",
+        "capabilityReq": [],
+        "jobSkillReqLabels": [
+            "C#",
+            "Angular",
+            "Blockchain"
+        ],
+        "uri": "saro:Job5",
+        "id": "Job5"
+    }
+
+
+
+    payload = {'job': job}
 
     rabbit_mq.producer(queue=APP_QUEUE, message=json.dumps(payload))

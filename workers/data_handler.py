@@ -32,6 +32,7 @@ class DataHandler(object):
         self.cv_skills = self.Base.classes.cv_skills
         self.jobs = self.Base.classes.jobs
         self.job_skills = self.Base.classes.job_skills
+        self.specialization = self.Base.classes.specialization
 
     def receive_data(self, ch, method, properties, body):
         """This function is enabled when a message is received from CV Consumer"""
@@ -130,33 +131,39 @@ class DataHandler(object):
         """This function is used to add a new job to QualiChain DB"""
         try:
             data = kwargs
-            job_id = int(data['id'].replace('saro:Job', ''))
+            job_id = int(data['id'].replace('Job', ''))
             job_skills = data['skillReq']
+            job_sector = data['sector']
 
             check_if_job_exists = self.session.query(self.jobs).filter_by(id=job_id)
-            if not check_if_job_exists.scalar():
-                log.info("Insert job")
-                new_job = self.jobs(
-                    id=job_id,
-                    title=data['label'],
-                    creator_id=int(data['creator_id']),  # kbiz use user ids that already exist in QC DB
-                    job_description=data['jobDescription'],
-                    level_value=data['seniorityLevel'],  # seniority level in QC DB is different
-                    country=data['jobLocation'],  # add country to Job schema
-                    state=data['jobLocation'],  # add stare to Job schema
-                    city=data['jobLocation'],  # add city to job schema
-                    employer="is missing",  # add employer to job schema
-                    date=data['startDate'],
-                    start_date=data['startDate'],
-                    end_date=data['endDate'],
-                    employment_value=data['contractType'],  # this field should me aligned with our data model
-                    specialization_id=1  # sector value should be aligned with our specialization info
-                )
-                self.session.add(new_job)
-                self.session.commit()
+            check_specialization = self.session.query(self.specialization).filter_by(title=job_sector)
 
-                if job_skills:
-                    self.store_job_skills(job_skills, job_id)
+            if not check_if_job_exists.scalar():
+                if check_specialization.scalar():
+                    specialization_id = check_specialization.first().id
+                    new_job = self.jobs(
+                        id=job_id,
+                        title=data['label'],
+                        creator_id=int(data['creator_id']),  # kbiz use user ids that already exist in QC DB
+                        job_description=data['jobDescription'],
+                        level_value=data['seniorityLevel'],  # seniority level in QC DB is different
+                        country=data['country'],  # add country to Job schema
+                        state=data['state'],  # add stare to Job schema
+                        city=data['city'],  # add city to job schema
+                        employer=data['hiringOrg'],
+                        date=data['startDate'],
+                        start_date=data['startDate'],
+                        end_date=data['endDate'],
+                        employment_value=data['contractType'],  # this field should me aligned with our data model
+                        specialization_id=specialization_id  # sector value should be aligned with our specialization info
+                    )
+                    self.session.add(new_job)
+                    self.session.commit()
+
+                    if job_skills:
+                        self.store_job_skills(job_skills, job_id)
+                else:
+                    log.info("Specialization : {} does not exists".format(job_sector))
             else:
                 log.info("Job with ID: {} already exists".format(job_id))
         except Exception as ex:
