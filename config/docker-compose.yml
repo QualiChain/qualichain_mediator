@@ -37,6 +37,7 @@ services:
             DOBIE_HOST: ${DOBIE_HOST}
             FUSEKI_SERVER_HOST: ${FUSEKI_SERVER_HOST}
             ANALEYEZER_HOST: ${ANALEYEZER_HOST}
+            ANALEYEZER_PORT: ${ANALEYEZER_PORT}
             POSTGRES_HOST: ${POSTGRES_HOST}
             POSTGRES_PORT: ${POSTGRES_PORT}
         depends_on:

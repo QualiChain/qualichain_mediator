@@ -5,6 +5,8 @@ import sys
 
 from jsonschema import RefResolver, validate
 
+from settings import WORKER_JSON_SCHEMAS
+
 logging.basicConfig(stream=sys.stdout, level=logging.INFO,
                     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 log = logging.getLogger(__name__)
@@ -14,9 +16,9 @@ class CValidator(object):
     """This class is used to validate CV jsons"""
 
     def __init__(self):
-        self.cv_schema_json = 'workers/schemas/cv-schema.json'
-        self.job_schema_json = 'workers/schemas/job-schema.json'
-        self.job_application_schema_json = 'workers/schemas/application-schema.json'
+        self.cv_schema_json = WORKER_JSON_SCHEMAS['cv']
+        self.job_schema_json = WORKER_JSON_SCHEMAS['job']
+        self.job_application_schema_json = WORKER_JSON_SCHEMAS['job_application']
 
         self.schema_dir = 'file:///{0}/'.format(
             os.path.dirname(os.path.realpath(self.cv_schema_json)).replace("\\", "/")
