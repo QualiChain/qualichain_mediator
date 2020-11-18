@@ -1,9 +1,10 @@
+import os
 import sys
 import time
 
 from decorators import retry
 
-sys.path.append('../')
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from clients.postgres_client import PostgresClient
 from extraction_pipeline.job_posts.execute_pipeline import Executor

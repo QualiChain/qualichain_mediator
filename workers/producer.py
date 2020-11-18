@@ -1,7 +1,8 @@
+import os
 import sys
 import json
 
-sys.path.append('../')
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from clients.rabbitmq_client import RabbitMQClient
 
 from settings import APP_QUEUE

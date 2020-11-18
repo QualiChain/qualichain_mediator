@@ -1,7 +1,8 @@
 import logging
+import os
 import sys
 
-sys.path.append('../')
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from clients.rabbitmq_client import RabbitMQClient
 from settings import RABBITMQ_HOST, RABBITMQ_PORT, RABBITMQ_USER, RABBITMQ_PASSWORD, RABBITMQ_VHOST, APP_QUEUE

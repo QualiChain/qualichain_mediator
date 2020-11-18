@@ -10,5 +10,4 @@ while ! nc -z ${RABBITMQ_HOST} 5672; do
 
 done
 echo 'RabbitMQ Initialization completed'
-
 python workers/consume.py

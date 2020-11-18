@@ -1,7 +1,8 @@
+import os
 import sys
 import time
 
-sys.path.append('../')
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from extraction_pipeline.courses.execute_courses_extraction_pipeline import CourseSkillExtractionExecutor
 
 from settings import SAVE_IN_FILE, TIME_BETWEEN_REQUESTS
@@ -14,4 +15,3 @@ if __name__ == "__main__":
     for execution in range(0, courses_length - 1):
         executor.iterate(execution)
         time.sleep(TIME_BETWEEN_REQUESTS)
-
