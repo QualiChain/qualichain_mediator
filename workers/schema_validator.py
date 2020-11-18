@@ -14,9 +14,9 @@ class CValidator(object):
     """This class is used to validate CV jsons"""
 
     def __init__(self):
-        self.cv_schema_json = 'schemas/cv-schema.json'
-        self.job_schema_json = 'schemas/job-schema.json'
-        self.job_application_schema_json = 'schemas/application-schema.json'
+        self.cv_schema_json = 'workers/schemas/cv-schema.json'
+        self.job_schema_json = 'workers/schemas/job-schema.json'
+        self.job_application_schema_json = 'workers/schemas/application-schema.json'
 
         self.schema_dir = 'file:///{0}/'.format(
             os.path.dirname(os.path.realpath(self.cv_schema_json)).replace("\\", "/")
