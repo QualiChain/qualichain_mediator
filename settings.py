@@ -79,7 +79,7 @@ QUALICHAIN_DB_ENGINE_STRING = 'postgresql+psycopg2://{username}:{password}@{host
 # =================================
 #   APPLICATION SETTINGS
 # =================================
-APP_QUEUE = os.environ.get('APP_QUEUE', "hahas")
+APP_QUEUE = os.environ.get('APP_QUEUE', "analytics_consumer")
 BATCH_SIZE = 100
 TIME_BETWEEN_REQUESTS = 20  # in seconds
 TIME_BETWEEN_CHUNKS = 5
