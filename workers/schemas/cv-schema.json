@@ -21,6 +21,9 @@
     "personURI": {
       "type": "string"
     },
+    "userID": {
+      "type": ["integer","string"]
+    },
     "targetSector": {
       "type": ["string", "null"]
     },
@@ -36,5 +39,5 @@
       "items": {"$ref": "workHistory-schema.json#/definitions/workHistory"}
     }
   },
-  "required": ["personURI", "uri", "id"]
+  "required": ["personURI", "uri", "id", "userID"]
 }

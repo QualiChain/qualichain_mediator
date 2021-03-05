@@ -90,7 +90,7 @@ class DataHandler(object):
         try:
             data = kwargs
             personURI = data['personURI']
-            user_id = int(personURI.replace('qc:', ''))
+            user_id = int(data['userID'])
             cv_skills = data['skills']
 
             check_is_cv_exists = self.session.query(self.cvs).filter_by(user_id=user_id)
