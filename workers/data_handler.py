@@ -100,8 +100,8 @@ class DataHandler(object):
                     user_id=user_id,
                     target_sector=data['targetSector'] if 'targetSector' in data.keys() else None,
                     description=data['description'] if 'description' in data.keys() else None,
-                    work_history=data['workHistory'],
-                    education=data['education']
+                    work_history=data['workHistory'] if 'workHistory' in data.keys() else [],
+                    education=data['education'] if 'education' in data.keys() else []
                 )
                 self.session.add(new_cv)
                 self.session.commit()
