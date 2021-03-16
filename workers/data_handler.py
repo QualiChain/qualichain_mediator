@@ -66,24 +66,28 @@ class DataHandler(object):
 
     def store_cv_skills(self, skills, cv_id):
         """This function is used to store the provided as params skills to Qualichain DB"""
-        for skill_obj in skills:
-            skill_name = skill_obj['label']
-            proficiency_level = skill_obj['proficiencyLevel']
-            skill_level = SKILL_LEVEl_MAPPING[proficiency_level]
+        try:
+            for skill_obj in skills:
+                skill_name = skill_obj['label']
+                proficiency_level = skill_obj['proficiencyLevel']
+                skill_level = SKILL_LEVEl_MAPPING[proficiency_level]
 
-            if_skill_exists = self.session.query(self.skills).filter(
-                func.lower(self.skills.name) == skill_name.lower()
-            )
-            if if_skill_exists.scalar():
-                qualichain_skill = if_skill_exists.first()
-
-                new_cv_skill_relation = self.cv_skills(
-                    skill_id=qualichain_skill.id,
-                    cv_id=cv_id,
-                    skil_level=skill_level
+                if_skill_exists = self.session.query(self.skills).filter(
+                    func.lower(self.skills.name) == skill_name.lower()
                 )
-                self.session.add(new_cv_skill_relation)
-        self.session.commit()
+                if if_skill_exists.scalar():
+                    qualichain_skill = if_skill_exists.first()
+
+                    new_cv_skill_relation = self.cv_skills(
+                        skill_id=qualichain_skill.id,
+                        cv_id=cv_id,
+                        skil_level=skill_level
+                    )
+                    self.session.add(new_cv_skill_relation)
+            self.session.commit()
+        except Exception as cv_ex:
+            self.session.rollback()
+            log.error(cv_ex)
 
     def add_cv(self, **kwargs):
         """This function is used to add a new cv to Qualichain DB"""
@@ -114,25 +118,30 @@ class DataHandler(object):
             else:
                 log.info("CV for user with ID: {} already exists".format(user_id))
         except Exception as ex:
+            self.session.rollback()
             log.error(ex)
 
     def store_job_skills(self, skills, job_id):
         """This function is used to store skills job information"""
-        for skill_obj in skills:
-            skill_name = skill_obj['label']
+        try:
+            for skill_obj in skills:
+                skill_name = skill_obj['label']
 
-            if_skill_exists = self.session.query(self.skills).filter(
-                func.lower(self.skills.name) == skill_name.lower()
-            )
-            if if_skill_exists.scalar():
-                qualichain_skill = if_skill_exists.first()
-
-                new_job_skill_relation = self.job_skills(
-                    skill_id=qualichain_skill.id,
-                    job_id=job_id,
+                if_skill_exists = self.session.query(self.skills).filter(
+                    func.lower(self.skills.name) == skill_name.lower()
                 )
-                self.session.add(new_job_skill_relation)
-        self.session.commit()
+                if if_skill_exists.scalar():
+                    qualichain_skill = if_skill_exists.first()
+
+                    new_job_skill_relation = self.job_skills(
+                        skill_id=qualichain_skill.id,
+                        job_id=job_id,
+                    )
+                    self.session.add(new_job_skill_relation)
+            self.session.commit()
+        except Exception as job_ex:
+            self.session.rollback()
+            log.error(job_ex)
 
     def add_job(self, **kwargs):
         """This function is used to add a new job to QualiChain DB"""
@@ -176,6 +185,7 @@ class DataHandler(object):
             else:
                 log.info("Job with ID: {} already exists".format(job_id))
         except Exception as ex:
+            self.session.rollback()
             log.error(ex)
 
     @staticmethod
@@ -225,4 +235,5 @@ class DataHandler(object):
                 log.info("User or Job object not exist")
 
         except Exception as ex:
+            self.session.rollback()
             log.error(ex)
