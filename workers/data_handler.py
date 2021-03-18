@@ -135,7 +135,7 @@ class DataHandler(object):
                 func.lower(self.skills.name) == skill_name.lower()
             )
             if if_skill_exists.first() is not None:
-                qualichain_skill = if_skill_exists.one()
+                qualichain_skill = if_skill_exists.first()
 
                 new_job_skill_relation = self.job_skills(
                     skill_id=qualichain_skill.id,
