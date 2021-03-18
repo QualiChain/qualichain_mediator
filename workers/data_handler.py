@@ -135,7 +135,7 @@ class DataHandler(object):
                 func.lower(self.skills.name) == skill_name.lower()
             )
             print(if_skill_exists, flush=True)
-            print(if_skill_exists.scalar(), flush=True)
+            print(if_skill_exists[0] is None is None, flush=True)
             print(if_skill_exists[0], flush=True)
             if if_skill_exists.scalar():
                 qualichain_skill = if_skill_exists.one()
