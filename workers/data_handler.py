@@ -136,7 +136,7 @@ class DataHandler(object):
             )
             print(if_skill_exists, flush=True)
             print(if_skill_exists.scalar(), flush=True)
-            print(if_skill_exists.one(), flush=True)
+            print(if_skill_exists[0], flush=True)
             if if_skill_exists.scalar():
                 qualichain_skill = if_skill_exists.one()
 
