@@ -136,9 +136,9 @@ class DataHandler(object):
             )
             print(if_skill_exists, flush=True)
             print(if_skill_exists.scalar(), flush=True)
-            print(if_skill_exists.first(), flush=True)
+            print(if_skill_exists.one(), flush=True)
             if if_skill_exists.scalar():
-                qualichain_skill = if_skill_exists.first()
+                qualichain_skill = if_skill_exists.one()
 
                 new_job_skill_relation = self.job_skills(
                     skill_id=qualichain_skill.id,
