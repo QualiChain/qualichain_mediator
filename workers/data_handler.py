@@ -88,6 +88,8 @@ class DataHandler(object):
         except Exception as cv_ex:
             self.session.rollback()
             log.error(cv_ex)
+        finally:
+            self.session.close()
 
     def add_cv(self, **kwargs):
         """This function is used to add a new cv to Qualichain DB"""
@@ -120,6 +122,8 @@ class DataHandler(object):
         except Exception as ex:
             self.session.rollback()
             log.error(ex)
+        finally:
+            self.session.close()
 
     def store_job_skills(self, skills, job_id):
         """This function is used to store skills job information"""
@@ -142,6 +146,8 @@ class DataHandler(object):
         except Exception as job_ex:
             self.session.rollback()
             log.error(job_ex)
+        finally:
+            self.session.close()
 
     def add_job(self, **kwargs):
         """This function is used to add a new job to QualiChain DB"""
@@ -187,6 +193,8 @@ class DataHandler(object):
         except Exception as ex:
             self.session.rollback()
             log.error(ex)
+        finally:
+            self.session.close()
 
     @staticmethod
     def transform_job_data(data):
@@ -237,3 +245,5 @@ class DataHandler(object):
         except Exception as ex:
             self.session.rollback()
             log.error(ex)
+        finally:
+            self.session.close()
