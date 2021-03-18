@@ -158,7 +158,9 @@ class DataHandler(object):
             job_sector = data['sector']
 
             check_if_job_exists = self.session.query(self.jobs).filter_by(id=job_id)
+            print(check_if_job_exists, flush=True)
             check_specialization = self.session.query(self.specialization).filter_by(title=job_sector)
+            print(check_specialization, flush=True)
 
             if not check_if_job_exists.scalar():
                 if check_specialization.scalar():
