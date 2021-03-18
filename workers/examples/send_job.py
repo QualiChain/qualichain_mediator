@@ -22,7 +22,7 @@ job = {
     "expectedSalary": None,
     "salaryCurrency": None,
     "uri": ":3995",
-    "id": "5993",
+    "id": "5992",
     "skillReq": [
         {
             "label": "PHP",
