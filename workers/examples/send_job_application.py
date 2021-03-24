@@ -2,17 +2,17 @@ import json
 
 import pika
 
-job_application = {
-    "label": None,
-    "comment": None,
-    "personURI": "qc:1",
-    "jobURI": "saro:Job1",
-    "expectedSalary": "1200",
-    "salaryCurrency": "Euro",
-    "availability": "01/01/21",
-    "uri": "qc:app5",
-    "id": "app5"
-}
+# job_application = {
+#     "label": None,
+#     "comment": None,
+#     "personURI": "qc:1",
+#     "jobURI": "saro:Job1",
+#     "expectedSalary": "1200",
+#     "salaryCurrency": "Euro",
+#     "availability": "01/01/21",
+#     "uri": "qc:app5",
+#     "id": "app5"
+# }
 
 job_application = {
     "label": "RabbitMQ test application",

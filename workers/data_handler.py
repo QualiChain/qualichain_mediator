@@ -241,7 +241,7 @@ class DataHandler(object):
                 new_application = self.user_applications(
                     user_id=user_id,
                     job_id=job_id,
-                    available=data['availability'],
+                    available=data['availableAt'],
                     exp_salary=data['expectedSalary']
                 )
                 self.session.add(new_application)
