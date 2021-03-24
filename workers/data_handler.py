@@ -224,8 +224,15 @@ class DataHandler(object):
         """This function is used to store user job applications to Qualichain DB"""
         try:
             data = kwargs
-            user_id = int(data['personURI'].replace('qc:', ''))
-            job_id = int(data['jobURI'].replace('saro:Job', ''))
+            user_id = int(data['personURI'].
+                          replace('qc', '').
+                          replace(':', '')
+                          )
+            job_id = int(data['jobURI'].
+                         replace('saro', '').
+                         replace('Job', '').
+                         replace(':', '')
+                         )
 
             user_obj = self.session.query(self.users).filter_by(id=user_id)
             job_obj = self.session.query(self.jobs).filter_by(id=job_id)

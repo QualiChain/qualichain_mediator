@@ -14,6 +14,18 @@ job_application = {
     "id": "app5"
 }
 
+job_application = {
+    "label": "RabbitMQ test application",
+    "comment": "test",
+    "personURI": ":20",
+    "jobURI": ":2602",
+    "expectedSalary": "1200",
+    "salaryCurrency": "Euro",
+    "availableAt": "20/02/2021",
+    "uri": ":20000",
+    "id": "20000"
+}
+
 job_application_payload = {'job_application': job_application}
 job_application_json_obj = json.dumps(job_application_payload)
 
