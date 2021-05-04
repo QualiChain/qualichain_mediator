@@ -175,7 +175,7 @@ class DataHandler(object):
                         country=data['country'],  # add country to Job schema
                         state=data['state'],  # add stare to Job schema
                         city=data['city'],  # add city to job schema
-                        employer=data['hiringOrganization'],
+                        # employer=data['hiringOrganization'],
                         date=data['startDate'],
                         start_date=data['startDate'],
                         end_date=data['endDate'],
