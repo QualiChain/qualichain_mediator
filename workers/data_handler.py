@@ -154,7 +154,7 @@ class DataHandler(object):
         try:
             data = kwargs
             job_id = int(data['id'].replace('Job', ''))
-            job_skills = data['skillReq']
+            job_skills = data['skillReq'] if 'skillReq' in data.keys() else None
             job_sector = data['sector']
 
             check_if_job_exists = self.session.query(self.jobs).filter_by(id=job_id)
