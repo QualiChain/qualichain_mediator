@@ -160,6 +160,9 @@ class DataHandler(object):
             check_if_job_exists = self.session.query(self.jobs).filter_by(id=job_id)
             check_specialization = self.session.query(self.specialization).filter_by(title=job_sector)
 
+            # changes should be done here
+            employer_id = None
+
             if not check_if_job_exists.scalar():
                 if check_specialization.scalar():
                     specialization_id = check_specialization.first().id
@@ -180,6 +183,9 @@ class DataHandler(object):
                         specialization_id=specialization_id
                         # sector value should be aligned with our specialization info
                     )
+                    if employer_id:
+                        new_job['employer_id'] = employer_id
+
                     self.session.add(new_job)
                     self.session.commit()
 
