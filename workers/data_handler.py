@@ -199,7 +199,7 @@ class DataHandler(object):
     @staticmethod
     def transform_job_data(data):
         """This function is used to transform job data for elk storage"""
-        job_skills = data['skillReq']
+        job_skills = data['skillReq'] if 'skillReq' in data.keys() else None
         payload = {
             'title': data['label'],
             'jobDescription': data['jobDescription'],
