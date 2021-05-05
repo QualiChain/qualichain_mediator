@@ -8,7 +8,7 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import sessionmaker
 
 from settings import ENGINE_STRING, SKILL_LEVEl_MAPPING
-from utils import store_job_to_elk
+from utils import store_job_to_elk, get_skills_from_payload
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO,
                     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -155,7 +155,7 @@ class DataHandler(object):
         try:
             data = kwargs
             job_id = int(data['id'].replace('Job', ''))
-            job_skills = data['skillReq'] if 'skillReq' in data.keys() else None
+            job_skills = get_skills_from_payload(data)
             job_sector = data['specialization']
 
             check_if_job_exists = self.session.query(self.jobs).filter_by(id=job_id)
@@ -207,7 +207,7 @@ class DataHandler(object):
     @staticmethod
     def transform_job_data(data):
         """This function is used to transform job data for elk storage"""
-        job_skills = data['skillReq'] if 'skillReq' in data.keys() else None
+        job_skills = get_skills_from_payload(data)
         payload = {
             'title': data['label'],
             'jobDescription': data['jobDescription'],

@@ -336,3 +336,14 @@ def store_job_to_elk(**kwargs):
         headers=headers
     )
     return response
+
+
+def get_skills_from_payload(data):
+    """This function grabs skills"""
+    if 'skills' in data.keys():
+        job_skills = data['skills']
+    elif 'skillReq' in data.keys():
+        job_skills = data['skillReq']
+    else:
+        job_skills = None
+    return job_skills
