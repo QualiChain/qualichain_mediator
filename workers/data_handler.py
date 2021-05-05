@@ -75,7 +75,8 @@ class DataHandler(object):
                 if_skill_exists = self.session.query(self.skills).filter(
                     func.lower(self.skills.name) == skill_name.lower()
                 )
-                if if_skill_exists.scalar():
+
+                if if_skill_exists.first() is not None:
                     qualichain_skill = if_skill_exists.first()
 
                     new_cv_skill_relation = self.cv_skills(
