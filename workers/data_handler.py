@@ -217,7 +217,7 @@ class DataHandler(object):
             'endDate': data['endDate'],
             'creatorId': data['creator_id'],
             'employmentType': data['contractType'],
-            'employer': data['hiringOrganization'],
+            'employer': data['hiringOrg'],
             'country': data['country'],
             'state': data['state'],
             'city': data['city'],
