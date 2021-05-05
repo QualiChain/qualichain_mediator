@@ -11,7 +11,7 @@ cv = {
     "targetSector": "Sector 2",
     "otherInfo": None,
     "currentJob": None,
-    "userID": 2,
+    "userID": 1,
     "workHistory": [],
     "courses": [],
     "skills": [

@@ -194,6 +194,7 @@ class DataHandler(object):
                         self.store_job_skills(job_skills, job_id)
                     self.transform_job_data(data)
                 else:
+                    log.info(data)
                     log.info("Specialization : {} does not exists".format(job_sector))
             else:
                 log.info("Job with ID: {} already exists".format(job_id))
