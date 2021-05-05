@@ -156,7 +156,7 @@ class DataHandler(object):
             data = kwargs
             job_id = int(data['id'].replace('Job', ''))
             job_skills = data['skillReq'] if 'skillReq' in data.keys() else None
-            job_sector = data['sector']
+            job_sector = data['specialization']
 
             check_if_job_exists = self.session.query(self.jobs).filter_by(id=job_id)
             check_specialization = self.session.query(self.specialization).filter_by(title=job_sector)
@@ -194,8 +194,8 @@ class DataHandler(object):
                         self.store_job_skills(job_skills, job_id)
                     self.transform_job_data(data)
                 else:
-                    log.info(data)
                     log.info("Specialization : {} does not exists".format(job_sector))
+                    log.info(data)
             else:
                 log.info("Job with ID: {} already exists".format(job_id))
         except Exception as ex:
