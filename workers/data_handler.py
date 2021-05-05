@@ -170,7 +170,7 @@ class DataHandler(object):
                     new_job = self.jobs(
                         id=job_id,
                         title=data['label'],
-                        creator_id=int(data['creator_id']),  # kbiz use user ids that already exist in QC DB
+                        creator_id=int(data['creator_id'].replace(":", '')),  # kbiz use user ids that already exist in QC DB
                         job_description=data['jobDescription'],
                         level_value=data['seniorityLevel'],  # seniority level in QC DB is different
                         country=data['country'],  # add country to Job schema
