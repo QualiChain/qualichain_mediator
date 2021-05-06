@@ -1,6 +1,8 @@
 import json
 
-{"label":"Testing Sheet 2366","comment":null,"jobDescription":"Testing Sheet 2366","contractType":"full_time","specialization":"Business Analyst","sector":null,"country":"gr","state":"attica","hiringOrg":"ASEP","city":"athens","creator_id":":43","occupation":null,"startDate":"2021-05-21T21:00:00.000Z","endDate":"2021-12-27T22:00:00.000Z","seniorityLevel":"expert","expectedSalary":null,"salaryCurrency":null,"uri":":90","id":"90","skills":[{"label":null,"comment":null,"uri":"saro:Skill_8","id":"Skill_8","proficiencyLevel":"intermediate","priorityLevel":"medium","coreTo":null,"isFrom":null,"skillType":null}]}
+# {"label":"Testing Sheet 2366","comment":null,"jobDescription":"Testing Sheet 2366","contractType":"full_time","specialization":"Business Analyst","sector":null,"country":"gr","state":"attica","hiringOrg":"ASEP","city":"athens","creator_id":":43","occupation":null,"startDate":"2021-05-21T21:00:00.000Z","endDate":"2021-12-27T22:00:00.000Z","seniorityLevel":"expert","expectedSalary":null,"salaryCurrency":null,"uri":":90","id":"90","skills":[{"label":null,"comment":null,"uri":"saro:Skill_8","id":"Skill_8","proficiencyLevel":"intermediate","priorityLevel":"medium","coreTo":null,"isFrom":null,"skillType":null}]}
+#
+# {"label":"Testing Sheet 23777","comment":null,"jobDescription":"Testing Sheet 23777","contractType":"part_time","specialization":"Business Analyst","sector":null,"country":"gr","state":"attica","hiringOrg":"ASEP","city":"athens","creator_id":":43","occupation":null,"startDate":"2021-05-16T21:00:00.000Z","endDate":"2021-12-29T22:00:00.000Z","seniorityLevel":"expert","expectedSalary":null,"salaryCurrency":null,"uri":":91","id":"91","skills":[{"label":null,"comment":null,"uri":"saro:Skill_20","id":"Skill_20","proficiencyLevel":"intermediate","priorityLevel":"medium","coreTo":null,"isFrom":null,"skillType":null}]}
 
 import pika
 

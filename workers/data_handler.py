@@ -87,6 +87,7 @@ class DataHandler(object):
                     self.session.add(new_cv_skill_relation)
             self.session.commit()
         except Exception as cv_ex:
+            log.info(skills)
             self.session.rollback()
             log.error(cv_ex)
         finally:
@@ -145,6 +146,7 @@ class DataHandler(object):
                     self.session.add(new_job_skill_relation)
             self.session.commit()
         except Exception as job_ex:
+            log.info(skills)
             self.session.rollback()
             log.error(job_ex)
         finally:
