@@ -260,6 +260,7 @@ class DataHandler(object):
                 log.info("User or Job object not exist")
 
         except Exception as ex:
+            log.info(kwargs)
             self.session.rollback()
             log.error(ex)
         finally:
