@@ -182,7 +182,7 @@ class DataHandler(object):
                         date=data['startDate'],
                         start_date=data['startDate'],
                         end_date=data['endDate'],
-                        employment=data['contractType'],  # this field should me aligned with our data model
+                        employment_type=data['contractType'],  # this field should me aligned with our data model
                         specialization_id=specialization_id
                         # sector value should be aligned with our specialization info
                     )
