@@ -174,7 +174,7 @@ class DataHandler(object):
                         title=data['label'],
                         creator_id=int(data['creator_id'].replace(":", '')),  # kbiz use user ids that already exist in QC DB
                         job_description=data['jobDescription'],
-                        level_value=data['seniorityLevel'],  # seniority level in QC DB is different
+                        level=data['seniorityLevel'],  # seniority level in QC DB is different
                         country=data['country'],  # add country to Job schema
                         state=data['state'],  # add stare to Job schema
                         city=data['city'],  # add city to job schema
@@ -182,7 +182,7 @@ class DataHandler(object):
                         date=data['startDate'],
                         start_date=data['startDate'],
                         end_date=data['endDate'],
-                        employment_value=data['contractType'],  # this field should me aligned with our data model
+                        employment=data['contractType'],  # this field should me aligned with our data model
                         specialization_id=specialization_id
                         # sector value should be aligned with our specialization info
                     )
