@@ -197,14 +197,14 @@ class DataHandler(object):
                     log.info("No skills for current CV")
             else:
                 log.info("Abort incoming CV")
-            log.info("this is hell")
+            log.info("Successfully updated CV for userID: {}".format(user_id))
         except Exception as ex:
             self.session.rollback()
             log.error(ex)
         finally:
             self.session.close()
 
-    def store_job_skills(self, skills, job_id):
+    def store_job_skills(self, skills, job_id, status='create'):
         """This function is used to store skills job information"""
         try:
             for skill_obj in skills:
@@ -215,12 +215,23 @@ class DataHandler(object):
                 )
                 if if_skill_exists.first() is not None:
                     qualichain_skill = if_skill_exists.first()
-
-                    new_job_skill_relation = self.job_skills(
-                        skill_id=qualichain_skill.id,
-                        job_id=job_id,
-                    )
-                    self.session.add(new_job_skill_relation)
+                    if status == 'update':
+                        job_skill_relation = self.session.query(self.job_skills).filter(
+                            skill_id=qualichain_skill.id,
+                            job_id=job_id
+                        )
+                        if job_skill_relation.first() is None:
+                            new_job_skill_relation = self.job_skills(
+                                skill_id=qualichain_skill.id,
+                                job_id=job_id,
+                            )
+                            self.session.add(new_job_skill_relation)
+                    else:
+                        new_job_skill_relation = self.job_skills(
+                            skill_id=qualichain_skill.id,
+                            job_id=job_id,
+                        )
+                        self.session.add(new_job_skill_relation)
             self.session.commit()
         except Exception as job_ex:
             log.info(skills)
@@ -283,6 +294,40 @@ class DataHandler(object):
             log.error(ex)
         finally:
             self.session.close()
+
+    def update_job(self, **kwargs):
+        """This function is used to update to the database consumed Jobs"""
+        data = kwargs
+        job_id = int(data['id'].replace('Job', ''))
+        job_skills = get_skills_from_payload(data)
+        job_sector = data['specialization']
+
+        check_specialization = self.session.query(self.specialization).filter_by(title=job_sector)
+
+        # changes should be done here
+        employer_id = None
+        if check_specialization.first() is not None:
+            specialization_id = check_specialization.first().id
+            job = self.session.query(self.jobs).filter(id == job_id)
+            if job.first() is not None:
+                log.info("Successfully updated job with ID:{}".format(job_id))
+                job.update({
+                    'id': job_id,
+                    'title': data['label'],
+                    'creator_id': int(data['creator_id'].replace(":", '')),
+                    'job_description': data['jobDescription'],
+                    'level': data['seniorityLevel'],
+                    'country': data['country'],
+                    'state': data['state'],
+                    'city': data['city'],
+                    'date': data['startDate'],
+                    'start_date': data['startDate'],
+                    'end_date': data['endDate'],
+                    'employment_type': data['contractType'],  # this field should me aligned with our data model
+                    'specialization_id': specialization_id
+                })
+        else:
+            log.info("Abort")
 
     @staticmethod
     def transform_job_data(data):
