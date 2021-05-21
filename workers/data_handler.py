@@ -175,30 +175,30 @@ class DataHandler(object):
 
     def update_cv(self, **kwargs):
         """This method is used to update an existing CV to the DB"""
-        try:
-            data = kwargs
-            user_id = int(data['userID'])
-            cv_skills = data['skills']
+        # try:
+        data = kwargs
+        user_id = int(data['userID'])
+        cv_skills = data['skills']
 
-            cv = self.session.query(self.cvs).filter_by(user_id=user_id)
-            check_is_cv_exists = cv.scalar()
-            if check_is_cv_exists:
-                cv.update(
-                    user_id=user_id,
-                    target_sector=data['targetSector'] if 'targetSector' in data.keys() else None,
-                    description=data['description'] if 'description' in data.keys() else None,
-                    work_history=data['workHistory'] if 'workHistory' in data.keys() else None,
-                    education=data['education'] if 'education' in data.keys() else None
-                )
-                self.session.commit()
-            else:
-                log.info("Abort incoming CV")
-            log.info("this is hell")
-        except Exception as ex:
-            self.session.rollback()
-            log.error(ex)
-        finally:
-            self.session.close()
+        cv = self.session.query(self.cvs).filter_by(user_id=user_id)
+        check_is_cv_exists = cv.scalar()
+        if check_is_cv_exists:
+            cv.update(
+                user_id=user_id,
+                target_sector=data['targetSector'] if 'targetSector' in data.keys() else None,
+                description=data['description'] if 'description' in data.keys() else None,
+                work_history=data['workHistory'] if 'workHistory' in data.keys() else None,
+                education=data['education'] if 'education' in data.keys() else None
+            )
+            self.session.commit()
+        else:
+            log.info("Abort incoming CV")
+        log.info("this is hell")
+        # except Exception as ex:
+        #     self.session.rollback()
+        #     log.error(ex)
+        # finally:
+        #     self.session.close()
 
     def store_job_skills(self, skills, job_id):
         """This function is used to store skills job information"""
