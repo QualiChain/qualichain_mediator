@@ -306,6 +306,7 @@ class DataHandler(object):
 
         # changes should be done here
         employer_id = None
+
         if check_specialization.first() is not None:
             specialization_id = check_specialization.first().id
             job = self.session.query(self.jobs).filter(id == job_id)
@@ -326,6 +327,10 @@ class DataHandler(object):
                     'employment_type': data['contractType'],  # this field should me aligned with our data model
                     'specialization_id': specialization_id
                 })
+            self.session.commit()
+            if job_skills:
+                self.store_job_skills(job_skills, job_id, status='update')
+            log.info("Successfully updated job with ID:{}".format(job_id))
         else:
             log.info("Abort")
 
