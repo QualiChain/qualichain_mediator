@@ -181,6 +181,7 @@ class DataHandler(object):
             cv_skills = data['skills']
 
             cv = self.session.query(self.cvs).filter(user_id == user_id)
+            cv_id = cv.first()
             if cv.first() is not None:
                 cv.update({
                     'target_sector': data['targetSector'] if 'targetSector' in data.keys() else None,
@@ -191,7 +192,7 @@ class DataHandler(object):
                 self.session.commit()
                 if cv_skills:
                     log.info("Create cv - skills relations")
-                    self.store_cv_skills(cv_skills, cv.id)
+                    self.store_cv_skills(cv_skills, cv_id, status='update')
                 else:
                     log.info("No skills for current CV")
             else:
