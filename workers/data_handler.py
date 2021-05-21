@@ -180,9 +180,8 @@ class DataHandler(object):
         user_id = int(data['userID'])
         cv_skills = data['skills']
 
-        cv = self.session.query(self.cvs).filter_by(user_id=user_id)
-        check_is_cv_exists = cv.scalar()
-        if check_is_cv_exists:
+        cv = self.session.query(self.cvs).filter(user_id == user_id)
+        if cv.first() is not None:
             cv.update(
                 user_id=user_id,
                 target_sector=data['targetSector'] if 'targetSector' in data.keys() else None,
