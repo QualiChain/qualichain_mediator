@@ -183,7 +183,6 @@ class DataHandler(object):
         cv = self.session.query(self.cvs).filter(user_id == user_id)
         if cv.first() is not None:
             cv.update(
-                user_id=user_id,
                 target_sector=data['targetSector'] if 'targetSector' in data.keys() else None,
                 description=data['description'] if 'description' in data.keys() else None,
                 work_history=data['workHistory'] if 'workHistory' in data.keys() else None,
