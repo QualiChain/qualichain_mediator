@@ -31,6 +31,8 @@ class DataHandler(object):
         his is the method that stores job-skills relations
     add_job(**kwargs):
         This method is for adding a new Job instance
+    update_job(**kwargs):
+        This method is used for updating Job instanses stored to the DB
     transform_job_data(**kwargs):
         This method is for preparing the job data for elasticsearch insertion
     add_job_application(**kwargs):
@@ -75,12 +77,17 @@ class DataHandler(object):
                         log.info("The CV instance is not valid -- Abort!")
         elif 'job' in data_payload.keys():
             instance = data_payload['job']
-            is_valid = self.validator.evaluate(instance, instance_category='job')
-            if is_valid:
-                log.info("The Job instance is valid")
-                self.add_job(**instance)
-            else:
-                log.info("The Job instance is not valid -- Abort!")
+            if "status" in data_payload.keys():
+                status = data_payload['status']
+                if status == 'update':
+                    self.update_job(**instance)
+                else:
+                    is_valid = self.validator.evaluate(instance, instance_category='job')
+                    if is_valid:
+                        log.info("The Job instance is valid")
+                        self.add_job(**instance)
+                    else:
+                        log.info("The Job instance is not valid -- Abort!")
         elif 'job_application' in data_payload.keys():
             instance = data_payload['job_application']
             is_valid = self.validator.evaluate(instance, instance_category='job_application')

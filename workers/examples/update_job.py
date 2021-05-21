@@ -8,7 +8,7 @@ job_payload = {"job":
         "comment": None,
         "jobDescription": "Job Description N",
         "contractType": "Full-time",
-        "specialization": "Something something created",
+        "specialization": "Backend Developer",
         "sector": "Backend Developer",
         "country": "Greece",
         "state": "Attica",
