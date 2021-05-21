@@ -304,42 +304,48 @@ class DataHandler(object):
 
     def update_job(self, **kwargs):
         """This function is used to update to the database consumed Jobs"""
-        data = kwargs
-        job_id = int(data['id'].replace('Job', ''))
-        job_skills = get_skills_from_payload(data)
-        job_sector = data['specialization']
+        try:
+            data = kwargs
+            job_id = int(data['id'].replace('Job', ''))
+            job_skills = get_skills_from_payload(data)
+            job_sector = data['specialization']
 
-        check_specialization = self.session.query(self.specialization).filter_by(title=job_sector)
+            check_specialization = self.session.query(self.specialization).filter_by(title=job_sector)
 
-        # changes should be done here
-        employer_id = None
+            # changes should be done here
+            employer_id = None
 
-        if check_specialization.first() is not None:
-            specialization_id = check_specialization.first().id
-            job = self.session.query(self.jobs).filter(id == job_id)
-            if job.first() is not None:
+            if check_specialization.first() is not None:
+                specialization_id = check_specialization.first().id
+                job = self.session.query(self.jobs).filter(id == job_id)
+                if job.first() is not None:
+                    log.info("Successfully updated job with ID:{}".format(job_id))
+                    job.update({
+                        'id': job_id,
+                        'title': data['label'],
+                        'creator_id': int(data['creator_id'].replace(":", '')),
+                        'job_description': data['jobDescription'],
+                        'level': data['seniorityLevel'],
+                        'country': data['country'],
+                        'state': data['state'],
+                        'city': data['city'],
+                        'date': data['startDate'],
+                        'start_date': data['startDate'],
+                        'end_date': data['endDate'],
+                        'employment_type': data['contractType'],  # this field should me aligned with our data model
+                        'specialization_id': specialization_id
+                    })
+                self.session.commit()
+                if job_skills:
+                    self.store_job_skills(job_skills, job_id, status='update')
                 log.info("Successfully updated job with ID:{}".format(job_id))
-                job.update({
-                    'id': job_id,
-                    'title': data['label'],
-                    'creator_id': int(data['creator_id'].replace(":", '')),
-                    'job_description': data['jobDescription'],
-                    'level': data['seniorityLevel'],
-                    'country': data['country'],
-                    'state': data['state'],
-                    'city': data['city'],
-                    'date': data['startDate'],
-                    'start_date': data['startDate'],
-                    'end_date': data['endDate'],
-                    'employment_type': data['contractType'],  # this field should me aligned with our data model
-                    'specialization_id': specialization_id
-                })
-            self.session.commit()
-            if job_skills:
-                self.store_job_skills(job_skills, job_id, status='update')
-            log.info("Successfully updated job with ID:{}".format(job_id))
-        else:
-            log.info("Abort")
+            else:
+                log.info("Abort")
+        except Exception as ex:
+            self.session.rollback()
+            log.error(ex)
+        finally:
+            self.session.close()
 
     @staticmethod
     def transform_job_data(data):
