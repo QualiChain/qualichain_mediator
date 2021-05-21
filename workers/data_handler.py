@@ -223,7 +223,7 @@ class DataHandler(object):
                 if if_skill_exists.first() is not None:
                     qualichain_skill = if_skill_exists.first()
                     if status == 'update':
-                        job_skill_relation = self.session.query(self.job_skills).filter(
+                        job_skill_relation = self.session.query(self.job_skills).filter_by(
                             skill_id=qualichain_skill.id,
                             job_id=job_id
                         )
