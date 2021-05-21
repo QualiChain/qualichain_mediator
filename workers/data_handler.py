@@ -37,6 +37,21 @@ class DataHandler(object):
         This method is for preparing the job data for elasticsearch insertion
     add_job_application(**kwargs):
         This function is for adding a new Job application instance
+
+    Examples
+    --------
+    >>> data_handler = DataHandler()
+
+    `Send CV data`
+    >>> payload = {'cv': ${cv}, 'status': 'create/update'}
+
+    `Send Job data`
+    >>> payload = {'job': ${job}, 'status': 'create/update'}
+
+    `Send Job-application data`
+    >>> payload = {'job-application': ${job-application}, 'status': 'create/update'}
+
+    >>> data_handler.receive_data(payload)
     """
 
     def __init__(self):
