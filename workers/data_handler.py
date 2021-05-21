@@ -16,7 +16,26 @@ log = logging.getLogger(__name__)
 
 
 class DataHandler(object):
-    """This object is used to receive CVs from rabbitMQ Consumer"""
+    """DataHandler Object class
+    This object is used to receive CVs from rabbitMQ Consumer
+
+    Methods
+    -------
+    receive_date(ch, method, properties, body):
+        This is the first method that distributes the incoming payloads to the other object methods
+    store_cv_skills(skills, cv_id):
+        This is the method that stores cv-skills relations
+    add_cv(*kwargs):
+        This function is used for adding a new CV
+    store_job_skills(**kwargs):
+        his is the method that stores job-skills relations
+    add_job(**kwargs):
+        This method is for adding a new Job instance
+    transform_job_data(**kwargs):
+        This method is for preparing the job data for elasticsearch insertion
+    add_job_application(**kwargs):
+        This function is for adding a new Job application instance
+    """
 
     def __init__(self):
         self.validator = CValidator()
@@ -43,12 +62,17 @@ class DataHandler(object):
         if 'cv' in data_payload.keys():
 
             instance = data_payload['cv']
-            is_valid = self.validator.evaluate(instance, instance_category='cv')
-            if is_valid:
-                log.info("The CV instance is valid")
-                self.add_cv(**instance)
-            else:
-                log.info("The CV instance is not valid -- Abort!")
+            if "status" in data_payload.keys():
+                status = data_payload['status']
+                if status == 'update':
+                    self.update_cv(**instance)
+                else:
+                    is_valid = self.validator.evaluate(instance, instance_category='cv')
+                    if is_valid:
+                        log.info("The CV instance is valid")
+                        self.add_cv(**instance)
+                    else:
+                        log.info("The CV instance is not valid -- Abort!")
         elif 'job' in data_payload.keys():
             instance = data_payload['job']
             is_valid = self.validator.evaluate(instance, instance_category='job')
@@ -64,7 +88,16 @@ class DataHandler(object):
         else:
             log.info("Not valid payload send")
 
-    def store_cv_skills(self, skills, cv_id):
+    def _create_cv_skill_relation(self, skill_id, cv_id, skill_level):
+        """This function is used for storing cv-skill relation"""
+        new_cv_skill_relation = self.cv_skills(
+            skill_id=skill_id,
+            cv_id=cv_id,
+            skil_level=skill_level
+        )
+        return new_cv_skill_relation
+
+    def store_cv_skills(self, skills, cv_id, status='create'):
         """This function is used to store the provided as params skills to Qualichain DB"""
         try:
             for skill_obj in skills:
@@ -79,12 +112,25 @@ class DataHandler(object):
                 if if_skill_exists.first() is not None:
                     qualichain_skill = if_skill_exists.first()
 
-                    new_cv_skill_relation = self.cv_skills(
-                        skill_id=qualichain_skill.id,
-                        cv_id=cv_id,
-                        skil_level=skill_level
-                    )
-                    self.session.add(new_cv_skill_relation)
+                    if status == 'update':
+                        cv_skill_relation = self.session.query(self.cv_skills).filter_by(
+                            skill_id=qualichain_skill.id,
+                            cv_id=cv_id
+                        )
+                        if cv_skill_relation.first() is not None:
+                            cv_skill_relation.update(
+                                skil_level=skill_level
+                            )
+                        else:
+                            new_cv_skill_relation = self._create_cv_skill_relation(skill_id=qualichain_skill.id,
+                                                                                   cv_id=cv_id,
+                                                                                   skill_level=skill_level)
+                            self.session.add(new_cv_skill_relation)
+                    else:
+                        new_cv_skill_relation = self._create_cv_skill_relation(skill_id=qualichain_skill.id,
+                                                                               cv_id=cv_id,
+                                                                               skill_level=skill_level)
+                        self.session.add(new_cv_skill_relation)
             self.session.commit()
         except Exception as cv_ex:
             log.info(skills)
@@ -121,6 +167,33 @@ class DataHandler(object):
                     log.info("No skills for current CV")
             else:
                 log.info("CV for user with ID: {} already exists".format(user_id))
+        except Exception as ex:
+            self.session.rollback()
+            log.error(ex)
+        finally:
+            self.session.close()
+
+    def update_cv(self, **kwargs):
+        """This method is used to update an existing CV to the DB"""
+        try:
+            data = kwargs
+            user_id = int(data['userID'])
+            cv_skills = data['skills']
+
+            cv = self.session.query(self.cvs).filter_by(user_id=user_id)
+            check_is_cv_exists = cv.scalar()
+            if check_is_cv_exists:
+                cv.update(
+                    user_id=user_id,
+                    target_sector=data['targetSector'] if 'targetSector' in data.keys() else None,
+                    description=data['description'] if 'description' in data.keys() else None,
+                    work_history=data['workHistory'] if 'workHistory' in data.keys() else None,
+                    education=data['education'] if 'education' in data.keys() else None
+                )
+                self.session.commit()
+            else:
+                log.info("Abort incoming CV")
+            log.info("this is hell")
         except Exception as ex:
             self.session.rollback()
             log.error(ex)
@@ -172,7 +245,8 @@ class DataHandler(object):
                     new_job = self.jobs(
                         id=job_id,
                         title=data['label'],
-                        creator_id=int(data['creator_id'].replace(":", '')),  # kbiz use user ids that already exist in QC DB
+                        creator_id=int(data['creator_id'].replace(":", '')),
+                        # kbiz use user ids that already exist in QC DB
                         job_description=data['jobDescription'],
                         level=data['seniorityLevel'],  # seniority level in QC DB is different
                         country=data['country'],  # add country to Job schema
