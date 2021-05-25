@@ -27,16 +27,24 @@ class DataHandler(object):
         This is the method that stores cv-skills relations
     add_cv(*kwargs):
         This function is used for adding a new CV
+    update_cv(**kwargs):
+        This function is used to update a user's CV
+    delete_cv(**kwargs):
+        This function is used to delete a specific CV
     store_job_skills(**kwargs):
         his is the method that stores job-skills relations
     add_job(**kwargs):
         This method is for adding a new Job instance
     update_job(**kwargs):
         This method is used for updating Job instanses stored to the DB
+    delete_job(**kwargs):
+        This method is used for deleting Job instances stored in Qualichain RDBMS
     transform_job_data(**kwargs):
         This method is for preparing the job data for elasticsearch insertion
     add_job_application(**kwargs):
         This function is for adding a new Job application instance
+    delete_job_application(**kwargs):
+        This function is for deleting Job application instances stored in Qualichain RDBMS
 
     Examples
     --------
@@ -83,6 +91,8 @@ class DataHandler(object):
                 status = data_payload['status']
                 if status == 'update':
                     self.update_cv(**instance)
+                elif status == 'delete':
+                    self.delete_cv(**instance)
                 else:
                     is_valid = self.validator.evaluate(instance, instance_category='cv')
                     if is_valid:
@@ -96,6 +106,8 @@ class DataHandler(object):
                 status = data_payload['status']
                 if status == 'update':
                     self.update_job(**instance)
+                elif status == 'delete':
+                    self.delete_job(**instance)
                 else:
                     is_valid = self.validator.evaluate(instance, instance_category='job')
                     if is_valid:
@@ -105,6 +117,10 @@ class DataHandler(object):
                         log.info("The Job instance is not valid -- Abort!")
         elif 'job_application' in data_payload.keys():
             instance = data_payload['job_application']
+            if "status" in data_payload.keys():
+                status = data_payload['status']
+                if status == 'delete':
+                    self.delete_job_application(**instance)
             is_valid = self.validator.evaluate(instance, instance_category='job_application')
             self.add_job_application(**instance)
         else:
@@ -223,6 +239,25 @@ class DataHandler(object):
         except Exception as ex:
             self.session.rollback()
             log.error(ex)
+        finally:
+            self.session.close()
+
+    def delete_cv(self, **kwargs):
+        """This function is used to delete cv instances stored in Qualichain RDBMS"""
+        try:
+            data = kwargs
+            cv_instance = self.session.query(self.cvs).filter_by(
+                user_id=data['user_id']
+            )
+            cv_skills = self.session.query(self.cv_skills).filter_by(
+                cv_id=cv_instance[0].id
+            )
+            cv_skills.delete()
+            cv_instance.delete()
+            self.session.commit()
+        except Exception as ex:
+            log.error(ex)
+            self.session.rollback()
         finally:
             self.session.close()
 
@@ -362,6 +397,27 @@ class DataHandler(object):
         finally:
             self.session.close()
 
+    def delete_job(self, **kwargs):
+        """This function is used to delete stored Job objects"""
+        data = kwargs
+        try:
+            job_instance = self.session.query(self.jobs).filter_by(
+                id=data['job_id']
+            )
+            job_skills = self.session.query(self.job_skills).filter_by(
+                job_id=job_instance[0].id
+            )
+
+            job_skills.delete()
+            job_instance.delete()
+
+            self.session.commit()
+        except Exception as ex:
+            log.error(ex)
+            self.session.rollback()
+        finally:
+            self.session.close()
+
     @staticmethod
     def transform_job_data(data):
         """This function is used to transform job data for elk storage"""
@@ -419,5 +475,22 @@ class DataHandler(object):
             log.info(kwargs)
             self.session.rollback()
             log.error(ex)
+        finally:
+            self.session.close()
+
+    def delete_job_application(self, **kwargs):
+        """This function is used to remove job applications stored to QualiChain DB"""
+        try:
+            data = kwargs
+            user_application = self.session.query(self.user_applications).filter_by(
+                user_id=data['user_id'],
+                job_id=data['job_id']
+            )
+            user_application.delete()
+            self.session.commit()
+        except Exception as ex:
+            log.error(ex)
+            log.info(kwargs)
+            self.session.rollback()
         finally:
             self.session.close()
