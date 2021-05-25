@@ -84,6 +84,7 @@ class DataHandler(object):
     def receive_data(self, ch, method, properties, body):
         """This function is enabled when a message is received from CV Consumer"""
         data_payload = json.loads(body)
+        log.info(data_payload)
         if 'cv' in data_payload.keys():
 
             instance = data_payload['cv']
