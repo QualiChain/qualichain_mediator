@@ -84,7 +84,6 @@ class DataHandler(object):
     def receive_data(self, ch, method, properties, body):
         """This function is enabled when a message is received from CV Consumer"""
         data_payload = json.loads(body)
-        log.info(data_payload)
         if 'cv' in data_payload.keys():
 
             instance = data_payload['cv']
@@ -94,13 +93,15 @@ class DataHandler(object):
                     self.update_cv(**instance)
                 elif status == 'delete':
                     self.delete_cv(**instance)
+                elif status == 'create':
+                    is_valid = self.validator.evaluate(instance, instance_category='cv')
+                    if is_valid:
+                        log.info("The CV instance is valid")
+                        self.add_cv(**instance)
+                    else:
+                        log.info("The CV instance is not valid -- Abort!")
             else:
-                is_valid = self.validator.evaluate(instance, instance_category='cv')
-                if is_valid:
-                    log.info("The CV instance is valid")
-                    self.add_cv(**instance)
-                else:
-                    log.info("The CV instance is not valid -- Abort!")
+                log.info("No correct status -- Abort!")
         elif 'job' in data_payload.keys():
             instance = data_payload['job']
             if "status" in data_payload.keys():
@@ -109,25 +110,29 @@ class DataHandler(object):
                     self.update_job(**instance)
                 elif status == 'delete':
                     self.delete_job(**instance)
+                elif status == 'create':
+                    is_valid = self.validator.evaluate(instance, instance_category='job')
+                    if is_valid:
+                        log.info("The Job instance is valid")
+                        self.add_job(**instance)
+                    else:
+                        log.info("The Job instance is not valid -- Abort!")
             else:
-                is_valid = self.validator.evaluate(instance, instance_category='job')
-                if is_valid:
-                    log.info("The Job instance is valid")
-                    self.add_job(**instance)
-                else:
-                    log.info("The Job instance is not valid -- Abort!")
+                log.info("No valid status key -- Abort!")
         elif 'job_application' in data_payload.keys():
             instance = data_payload['job_application']
             if "status" in data_payload.keys():
                 status = data_payload['status']
                 if status == 'delete':
                     self.delete_job_application(**instance)
+                elif status == 'create':
+                    is_valid = self.validator.evaluate(instance, instance_category='job_application')
+                    if is_valid:
+                        self.add_job_application(**instance)
+                    else:
+                        log.info("Not valid payload send")
             else:
-                is_valid = self.validator.evaluate(instance, instance_category='job_application')
-                if is_valid:
-                    self.add_job_application(**instance)
-                else:
-                    log.info("Not valid payload send")
+                log.info("No valid status key -- Abort!")
 
     def _create_cv_skill_relation(self, skill_id, cv_id, skill_level):
         """This function is used for storing cv-skill relation"""
