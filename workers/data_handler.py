@@ -3,7 +3,7 @@ import logging
 import sys
 
 from schema_validator import CValidator
-from sqlalchemy import create_engine, func
+from sqlalchemy import create_engine, func, or_
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import sessionmaker
 
@@ -80,6 +80,8 @@ class DataHandler(object):
         self.job_skills = self.Base.classes.job_skills
         self.specialization = self.Base.classes.specialization
         self.user_applications = self.Base.classes.user_applications
+        self.notification = self.Base.classes.notifications
+        self.user_notification_preference = self.Base.classes.user_notification_preference
 
     def receive_data(self, ch, method, properties, body):
         """This function is enabled when a message is received from CV Consumer"""
@@ -305,6 +307,34 @@ class DataHandler(object):
         finally:
             self.session.close()
 
+    def create_user_job_notification(self, **kwargs):
+        """This function is used to create a notification when a new job is consumed from Mediator"""
+        country = kwargs['country']
+        city = kwargs['city']
+        state = kwargs['state']
+        specialization_name = kwargs['specialization_name']
+        job_title = kwargs['job_title']
+
+        message = "There is a new job opening that may interest you. Job title: {} ". \
+            format(job_title)
+
+        user_notification_preferences_obj = self.session.query(self.user_notification_preference).filter(
+            or_(
+                self.user_notification_preference.locations.contains(country),
+                self.user_notification_preference.locations.contains(city),
+                self.user_notification_preference.locations.contains(state)
+            )).filter(self.user_notification_preference.specializations == specialization_name).all()
+        user_ids = [user_notification_preference.user_id for user_notification_preference in
+                    user_notification_preferences_obj]
+        for user_id in user_ids:
+            new_notification = self.notification(
+                message=message,
+                read=False,
+                user_id=user_id
+            )
+            self.session.add(new_notification)
+        # self.session.commit()
+
     def add_job(self, **kwargs):
         """This function is used to add a new job to QualiChain DB"""
         try:
@@ -344,6 +374,13 @@ class DataHandler(object):
                         new_job['employer_id'] = employer_id
 
                     self.session.add(new_job)
+                    self.create_user_job_notification(
+                        country=data['country'],
+                        city=data['city'],
+                        state=data['state'],
+                        specialization_name=check_specialization.first().title,
+                        job_title=data['label']
+                    )
                     self.session.commit()
 
                     if job_skills:
