@@ -74,8 +74,8 @@ user_ids = [user_notification_preference.user_id for user_notification_preferenc
 # for user_id in user_ids:
 #     d.notification(
 #         message=message,
-#         read=False,
-#         user_id=user_id
+#         user_id=user_id,
+#             read= False
 #     )
 
 print(user_ids)
