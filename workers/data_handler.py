@@ -329,7 +329,6 @@ class DataHandler(object):
         for user_id in user_ids:
             new_notification = self.notification(
                 message=message,
-                read=False,
                 user_id=user_id
             )
             self.session.add(new_notification)
