@@ -58,9 +58,9 @@ class DataHandler(object):
 d = DataHandler()
 
 country = 'Greece'
-city = 'Athens'
-state = 'Attica'
-specialization = 'Software Engineering'
+city = 'Athina'
+state = 'Attiki'
+specialization = 'Backend Developer'
 job_title = "Software Engineer"
 message = "There is a new job opening that may interest you. Job title: {} ".format(job_title)
 user_notification_preferences_obj = d.session.query(d.user_notification_preference).filter(
@@ -68,15 +68,15 @@ user_notification_preferences_obj = d.session.query(d.user_notification_preferen
         d.user_notification_preference.locations.contains(country),
         d.user_notification_preference.locations.contains(city),
         d.user_notification_preference.locations.contains(state)
-    )).filter(d.user_notification_preference.specializations == specialization).all()
+    )).filter(d.user_notification_preference.specializations.contains(specialization)).all()
 user_ids = [user_notification_preference.user_id for user_notification_preference in user_notification_preferences_obj]
 
-for user_id in user_ids:
-    d.notification(
-        message=message,
-        read=False,
-        user_id=user_id
-    )
+# for user_id in user_ids:
+#     d.notification(
+#         message=message,
+#         read=False,
+#         user_id=user_id
+#     )
 
 print(user_ids)
 

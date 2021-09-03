@@ -323,7 +323,7 @@ class DataHandler(object):
                 self.user_notification_preference.locations.contains(country),
                 self.user_notification_preference.locations.contains(city),
                 self.user_notification_preference.locations.contains(state)
-            )).filter(self.user_notification_preference.specializations == specialization_name).all()
+            )).filter(self.user_notification_preference.specializations.contains(specialization_name)).all()
         user_ids = [user_notification_preference.user_id for user_notification_preference in
                     user_notification_preferences_obj]
         for user_id in user_ids:
