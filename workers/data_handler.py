@@ -106,6 +106,7 @@ class DataHandler(object):
                 log.info("No correct status -- Abort!")
         elif 'job' in data_payload.keys():
             instance = data_payload['job']
+            log.info(instance)
             if "status" in data_payload.keys():
                 status = data_payload['status']
                 if status == 'update':
@@ -313,6 +314,7 @@ class DataHandler(object):
         city = kwargs['city']
         state = kwargs['state']
         specialization_name = kwargs['specialization_name']
+        # organisation = kwargs['organisation']
         job_title = kwargs['job_title']
 
         message = "There is a new job opening that may interest you. Job title: {} ". \
@@ -373,13 +375,15 @@ class DataHandler(object):
                     if employer_id:
                         new_job['employer_id'] = employer_id
 
+
                     self.session.add(new_job)
                     self.create_user_job_notification(
                         country=data['country'],
                         city=data['city'],
                         state=data['state'],
                         specialization_name=check_specialization.first().title,
-                        job_title=data['label']
+                        job_title=data['label'],
+                        # organisation=employer_id
                     )
                     self.session.commit()
 

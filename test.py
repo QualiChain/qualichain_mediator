@@ -61,6 +61,7 @@ country = 'Greece'
 city = 'Athina'
 state = 'Attiki'
 specialization = 'Backend Developer'
+organisation = 1
 job_title = "Software Engineer"
 message = "There is a new job opening that may interest you. Job title: {} ".format(job_title)
 user_notification_preferences_obj = d.session.query(d.user_notification_preference).filter(
@@ -68,7 +69,8 @@ user_notification_preferences_obj = d.session.query(d.user_notification_preferen
         d.user_notification_preference.locations.contains(country),
         d.user_notification_preference.locations.contains(city),
         d.user_notification_preference.locations.contains(state)
-    )).filter(d.user_notification_preference.specializations.contains(specialization)).all()
+    )).filter(d.user_notification_preference.specializations.contains(specialization)).filter(
+    d.user_notification_preference.organisation == organisation).all()
 user_ids = [user_notification_preference.user_id for user_notification_preference in user_notification_preferences_obj]
 
 # for user_id in user_ids:
@@ -80,14 +82,8 @@ user_ids = [user_notification_preference.user_id for user_notification_preferenc
 
 print(user_ids)
 
-
-
-
 # job = d.jobs
 # job_skills = d.job_skills
 # user_applications = d.user_applications
 # user_application = d.session.query(d.user_applications).filter_by(user_id=39, job_id=113)
 # user_application.delete()
-
-
-
