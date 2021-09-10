@@ -82,6 +82,7 @@ class DataHandler(object):
         self.user_applications = self.Base.classes.user_applications
         self.notification = self.Base.classes.notifications
         self.user_notification_preference = self.Base.classes.user_notification_preference
+        self.recruitment_organisations = self.Base.classes.recruitment_organisation
 
     def receive_data(self, ch, method, properties, body):
         """This function is enabled when a message is received from CV Consumer"""
@@ -314,7 +315,7 @@ class DataHandler(object):
         city = kwargs['city']
         state = kwargs['state']
         specialization_name = kwargs['specialization_name']
-        # organisation = kwargs['organisation']
+        organisation = kwargs['organisation']
         job_title = kwargs['job_title']
 
         message = "There is a new job opening that may interest you. Job title: {} ". \
@@ -325,7 +326,8 @@ class DataHandler(object):
                 self.user_notification_preference.locations.contains(country),
                 self.user_notification_preference.locations.contains(city),
                 self.user_notification_preference.locations.contains(state)
-            )).filter(self.user_notification_preference.specializations.contains(specialization_name)).all()
+            )).filter(self.user_notification_preference.specializations.contains(specialization_name)).filter(
+            self.user_notification_preference.organisation == organisation).all()
         user_ids = [user_notification_preference.user_id for user_notification_preference in
                     user_notification_preferences_obj]
         for user_id in user_ids:
@@ -348,8 +350,12 @@ class DataHandler(object):
             check_if_job_exists = self.session.query(self.jobs).filter_by(id=job_id)
             check_specialization = self.session.query(self.specialization).filter_by(title=job_sector)
 
-            # changes should be done here
-            employer_id = None
+            if 'hiringOrg' in data.keys():
+                employer_id = self.session.query(self.recruitment_organisations).filter_by(
+                    title=data['hiringOrg']).first().id
+            else:
+                employer_id = None
+
 
             if not check_if_job_exists.scalar():
                 if check_specialization.scalar():
@@ -364,7 +370,7 @@ class DataHandler(object):
                         country=data['country'],  # add country to Job schema
                         state=data['state'],  # add stare to Job schema
                         city=data['city'],  # add city to job schema
-                        # employer=data['hiringOrganization'],
+                        employer_id=employer_id,
                         date=data['startDate'],
                         start_date=data['startDate'],
                         end_date=data['endDate'],
@@ -375,7 +381,6 @@ class DataHandler(object):
                     if employer_id:
                         new_job['employer_id'] = employer_id
 
-
                     self.session.add(new_job)
                     self.create_user_job_notification(
                         country=data['country'],
@@ -383,7 +388,7 @@ class DataHandler(object):
                         state=data['state'],
                         specialization_name=check_specialization.first().title,
                         job_title=data['label'],
-                        # organisation=employer_id
+                        organisation=employer_id
                     )
                     self.session.commit()
 
