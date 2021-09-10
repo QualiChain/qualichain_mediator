@@ -83,6 +83,7 @@ class DataHandler(object):
         self.notification = self.Base.classes.notifications
         self.user_notification_preference = self.Base.classes.user_notification_preference
         self.recruitment_organisations = self.Base.classes.recruitment_organisation
+        self.user_recruitment_organisation = self.Base.classes.user_recruitment_organisations
 
     def receive_data(self, ch, method, properties, body):
         """This function is enabled when a message is received from CV Consumer"""
@@ -309,6 +310,42 @@ class DataHandler(object):
         finally:
             self.session.close()
 
+    def create_internal_mobility_notification(self, **kwargs):
+        """This function is used to create a notification when a new position inside an organisation is create (internal reallocation)"""
+        # country = kwargs['country']
+        # city = kwargs['city']
+        # state = kwargs['state']
+        # specialization_name = kwargs['specialization_name']
+        try:
+            organisation = kwargs['organisation']
+            job_title = kwargs['job_title']
+
+            message = "There is a new job position opening inside your organisation. Title: {} ". \
+                format(job_title)
+
+            user_notification_preferences_obj = self.session.query(self.user_notification_preference).filter(
+                self.user_notification_preference.internal_reallocation_availability == True).all()
+            notif_user_ids = [user_notification_preference.user_id for user_notification_preference in
+                              user_notification_preferences_obj]
+
+            user_rec_org_obj = self.session.query(self.user_recruitment_organisation).filter(
+                self.user_recruitment_organisation.organisation_id == organisation).all()
+            org_user_ids = [user_organisation.user_id for user_organisation in
+                            user_rec_org_obj]
+
+            user_ids = list(set(notif_user_ids).intersection(org_user_ids))
+
+            for user_id in user_ids:
+                new_notification = self.notification(
+                    message=message,
+                    user_id=user_id,
+                    read=False
+                )
+                self.session.add(new_notification)
+            # self.session.commit()
+        except Exception as ex:
+            log.info("Error in the creation of an internal mobility notification")
+
     def create_user_job_notification(self, **kwargs):
         """This function is used to create a notification when a new job is consumed from Mediator"""
         country = kwargs['country']
@@ -318,7 +355,7 @@ class DataHandler(object):
         organisation = kwargs['organisation']
         job_title = kwargs['job_title']
 
-        message = "There is a new job opening that may interest you. Job title: {} ". \
+        message = "There is a new job opening that may interest you. Title: {} ". \
             format(job_title)
 
         user_notification_preferences_obj = self.session.query(self.user_notification_preference).filter(
@@ -356,7 +393,6 @@ class DataHandler(object):
             else:
                 employer_id = None
 
-
             if not check_if_job_exists.scalar():
                 if check_specialization.scalar():
                     specialization_id = check_specialization.first().id
@@ -387,6 +423,10 @@ class DataHandler(object):
                         city=data['city'],
                         state=data['state'],
                         specialization_name=check_specialization.first().title,
+                        job_title=data['label'],
+                        organisation=employer_id
+                    )
+                    self.create_internal_mobility_notification(
                         job_title=data['label'],
                         organisation=employer_id
                     )
