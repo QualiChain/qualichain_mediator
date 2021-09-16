@@ -387,7 +387,7 @@ class DataHandler(object):
             check_if_job_exists = self.session.query(self.jobs).filter_by(id=job_id)
             check_specialization = self.session.query(self.specialization).filter_by(title=job_sector)
 
-            if 'hiringOrg' in data.keys():
+            if 'hiringOrg' in data.keys() and data['hiringOrg'] is not None:
                 employer_id = self.session.query(self.recruitment_organisations).filter_by(
                     title=data['hiringOrg']).first().id
             else:
@@ -414,8 +414,6 @@ class DataHandler(object):
                         specialization_id=specialization_id
                         # sector value should be aligned with our specialization info
                     )
-                    if employer_id:
-                        new_job['employer_id'] = employer_id
 
                     self.session.add(new_job)
                     self.create_user_job_notification(
