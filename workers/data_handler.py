@@ -538,6 +538,7 @@ class DataHandler(object):
         """This function is used to store user job applications to Qualichain DB"""
         try:
             data = kwargs
+            log.info(data)
             user_id = int(data['personURI'].
                           replace('qc', '').
                           replace(':', '')
