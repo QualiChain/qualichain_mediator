@@ -88,8 +88,8 @@ class DataHandler(object):
     def receive_data(self, ch, method, properties, body):
         """This function is enabled when a message is received from CV Consumer"""
         data_payload = json.loads(body)
+        log.info(data_payload)
         if 'cv' in data_payload.keys():
-
             instance = data_payload['cv']
             if "status" in data_payload.keys():
                 status = data_payload['status']
@@ -108,7 +108,6 @@ class DataHandler(object):
                 log.info("No correct status -- Abort!")
         elif 'job' in data_payload.keys():
             instance = data_payload['job']
-            log.info(instance)
             if "status" in data_payload.keys():
                 status = data_payload['status']
                 if status == 'update':
@@ -309,6 +308,26 @@ class DataHandler(object):
             log.error(job_ex)
         finally:
             self.session.close()
+
+    def create_internal_new_job_application_notification(self, **kwargs):
+        """This function is used to create a notification for the job creator when a new application is created for that job"""
+        try:
+            job_title = kwargs['job_title']
+            user_name = kwargs['user_name']
+            creator_id = kwargs['creator_id']
+            message = "The user '{}' has applied for the job '{}' ". \
+                format(user_name, job_title)
+
+            new_notification = self.notification(
+                message=message,
+                user_id=creator_id,
+                read=False
+            )
+            self.session.add(new_notification)
+            # self.session.commit()
+        except Exception as ex:
+            log.info("Error in the creation of an new job application notification")
+
 
     def create_internal_mobility_notification(self, **kwargs):
         """This function is used to create a notification when a new position inside an organisation is create (internal reallocation)"""
@@ -551,6 +570,7 @@ class DataHandler(object):
 
             user_obj = self.session.query(self.users).filter_by(id=user_id)
             job_obj = self.session.query(self.jobs).filter_by(id=job_id)
+            job_creator_id = job_obj.first().creator_id
 
             if user_obj.scalar() and job_obj.scalar():
                 new_application = self.user_applications(
@@ -560,6 +580,11 @@ class DataHandler(object):
                     exp_salary=data['expectedSalary']
                 )
                 self.session.add(new_application)
+                self.create_internal_new_job_application_notification(
+                    job_title=data['label'],
+                    user_name=user_obj.first().fullName,
+                    creator_id=job_creator_id
+                )
                 self.session.commit()
             else:
                 log.info("User or Job object not exist")
