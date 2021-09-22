@@ -581,7 +581,7 @@ class DataHandler(object):
                 )
                 self.session.add(new_application)
                 self.create_internal_new_job_application_notification(
-                    job_title=data['label'],
+                    job_title=job_obj.first().title,
                     user_name=user_obj.first().fullName,
                     creator_id=job_creator_id
                 )
