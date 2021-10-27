@@ -53,41 +53,55 @@ class DataHandler(object):
         self.user_applications = self.Base.classes.user_applications
         self.notification = self.Base.classes.notifications
         self.user_notification_preference = self.Base.classes.user_notification_preference
+        self.recruitment_organisations = self.Base.classes.recruitment_organisation
+        self.user_recruitment_organisation = self.Base.classes.user_recruitment_organisations
 
 
 d = DataHandler()
 
 country = 'Greece'
-city = 'Athens'
-state = 'Attica'
-specialization = 'Software Engineering'
+city = 'Athina'
+state = 'Attiki'
+specialization = 'Backend Developer'
+organisation = 2
 job_title = "Software Engineer"
 message = "There is a new job opening that may interest you. Job title: {} ".format(job_title)
+
+# test for new job opening notification
 user_notification_preferences_obj = d.session.query(d.user_notification_preference).filter(
     or_(
         d.user_notification_preference.locations.contains(country),
         d.user_notification_preference.locations.contains(city),
         d.user_notification_preference.locations.contains(state)
-    )).filter(d.user_notification_preference.specializations == specialization).all()
+    )).filter(d.user_notification_preference.specializations.contains(specialization)).filter(
+    d.user_notification_preference.organisation == organisation).all()
 user_ids = [user_notification_preference.user_id for user_notification_preference in user_notification_preferences_obj]
-
-for user_id in user_ids:
-    d.notification(
-        message=message,
-        read=False,
-        user_id=user_id
-    )
 
 print(user_ids)
 
+# test for internal allocation notification
 
+# message_i = "There is a new position opening inside your organisation. Job title: {} ".format(job_title)
+# user_notification_preferences_obj = d.session.query(d.user_notification_preference).filter(
+#     d.user_notification_preference.organisation == organisation).filter(d.user_notification_preference.internal_reallocation_availability == True).all()
+# user_ids = [user_notification_preference.user_id for user_notification_preference in user_notification_preferences_obj]
 
+user_notification_preferences_obj = d.session.query(d.user_notification_preference).filter(
+    d.user_notification_preference.internal_reallocation_availability == True).all()
+notif_user_ids = [user_notification_preference.user_id for user_notification_preference in
+                  user_notification_preferences_obj]
+
+user_rec_org_obj = d.session.query(d.user_recruitment_organisation).filter(
+    d.user_recruitment_organisation.organisation_id == organisation).all()
+org_user_ids = [user_organisation.user_id for user_organisation in
+                user_rec_org_obj]
+
+user_ids = list(set(notif_user_ids).intersection(org_user_ids))
+
+print(user_ids)
 
 # job = d.jobs
 # job_skills = d.job_skills
 # user_applications = d.user_applications
 # user_application = d.session.query(d.user_applications).filter_by(user_id=39, job_id=113)
 # user_application.delete()
-
-
-

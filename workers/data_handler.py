@@ -82,12 +82,14 @@ class DataHandler(object):
         self.user_applications = self.Base.classes.user_applications
         self.notification = self.Base.classes.notifications
         self.user_notification_preference = self.Base.classes.user_notification_preference
+        self.recruitment_organisations = self.Base.classes.recruitment_organisation
+        self.user_recruitment_organisation = self.Base.classes.user_recruitment_organisations
 
     def receive_data(self, ch, method, properties, body):
         """This function is enabled when a message is received from CV Consumer"""
         data_payload = json.loads(body)
+        log.info(data_payload)
         if 'cv' in data_payload.keys():
-
             instance = data_payload['cv']
             if "status" in data_payload.keys():
                 status = data_payload['status']
@@ -307,15 +309,72 @@ class DataHandler(object):
         finally:
             self.session.close()
 
+    def create_internal_new_job_application_notification(self, **kwargs):
+        """This function is used to create a notification for the job creator when a new application is created for that job"""
+        try:
+            job_title = kwargs['job_title']
+            user_name = kwargs['user_name']
+            creator_id = kwargs['creator_id']
+            message = "The user '{}' has applied for the job '{}' ". \
+                format(user_name, job_title)
+
+            new_notification = self.notification(
+                message=message,
+                user_id=creator_id,
+                read=False
+            )
+            self.session.add(new_notification)
+            # self.session.commit()
+        except Exception as ex:
+            log.info("Error in the creation of an new job application notification")
+
+
+    def create_internal_mobility_notification(self, **kwargs):
+        """This function is used to create a notification when a new position inside an organisation is create (internal reallocation)"""
+        # country = kwargs['country']
+        # city = kwargs['city']
+        # state = kwargs['state']
+        # specialization_name = kwargs['specialization_name']
+        try:
+            organisation = kwargs['organisation']
+            job_title = kwargs['job_title']
+
+            message = "There is a new job position opening inside your organisation. Title: {} ". \
+                format(job_title)
+
+            user_notification_preferences_obj = self.session.query(self.user_notification_preference).filter(
+                self.user_notification_preference.internal_reallocation_availability == True).all()
+            notif_user_ids = [user_notification_preference.user_id for user_notification_preference in
+                              user_notification_preferences_obj]
+
+            user_rec_org_obj = self.session.query(self.user_recruitment_organisation).filter(
+                self.user_recruitment_organisation.organisation_id == organisation).all()
+            org_user_ids = [user_organisation.user_id for user_organisation in
+                            user_rec_org_obj]
+
+            user_ids = list(set(notif_user_ids).intersection(org_user_ids))
+
+            for user_id in user_ids:
+                new_notification = self.notification(
+                    message=message,
+                    user_id=user_id,
+                    read=False
+                )
+                self.session.add(new_notification)
+            # self.session.commit()
+        except Exception as ex:
+            log.info("Error in the creation of an internal mobility notification")
+
     def create_user_job_notification(self, **kwargs):
         """This function is used to create a notification when a new job is consumed from Mediator"""
         country = kwargs['country']
         city = kwargs['city']
         state = kwargs['state']
         specialization_name = kwargs['specialization_name']
+        organisation = kwargs['organisation']
         job_title = kwargs['job_title']
 
-        message = "There is a new job opening that may interest you. Job title: {} ". \
+        message = "There is a new job opening that may interest you. Title: {} ". \
             format(job_title)
 
         user_notification_preferences_obj = self.session.query(self.user_notification_preference).filter(
@@ -323,14 +382,15 @@ class DataHandler(object):
                 self.user_notification_preference.locations.contains(country),
                 self.user_notification_preference.locations.contains(city),
                 self.user_notification_preference.locations.contains(state)
-            )).filter(self.user_notification_preference.specializations == specialization_name).all()
+            )).filter(self.user_notification_preference.specializations.contains(specialization_name)).filter(
+            self.user_notification_preference.organisation == organisation).all()
         user_ids = [user_notification_preference.user_id for user_notification_preference in
                     user_notification_preferences_obj]
         for user_id in user_ids:
             new_notification = self.notification(
                 message=message,
-                read=False,
-                user_id=user_id
+                user_id=user_id,
+                read=False
             )
             self.session.add(new_notification)
         # self.session.commit()
@@ -346,8 +406,11 @@ class DataHandler(object):
             check_if_job_exists = self.session.query(self.jobs).filter_by(id=job_id)
             check_specialization = self.session.query(self.specialization).filter_by(title=job_sector)
 
-            # changes should be done here
-            employer_id = None
+            if 'hiringOrg' in data.keys() and data['hiringOrg'] is not None:
+                employer_id = self.session.query(self.recruitment_organisations).filter_by(
+                    title=data['hiringOrg']).first().id
+            else:
+                employer_id = None
 
             if not check_if_job_exists.scalar():
                 if check_specialization.scalar():
@@ -362,7 +425,7 @@ class DataHandler(object):
                         country=data['country'],  # add country to Job schema
                         state=data['state'],  # add stare to Job schema
                         city=data['city'],  # add city to job schema
-                        # employer=data['hiringOrganization'],
+                        employer_id=employer_id,
                         date=data['startDate'],
                         start_date=data['startDate'],
                         end_date=data['endDate'],
@@ -370,8 +433,6 @@ class DataHandler(object):
                         specialization_id=specialization_id
                         # sector value should be aligned with our specialization info
                     )
-                    if employer_id:
-                        new_job['employer_id'] = employer_id
 
                     self.session.add(new_job)
                     self.create_user_job_notification(
@@ -379,7 +440,12 @@ class DataHandler(object):
                         city=data['city'],
                         state=data['state'],
                         specialization_name=check_specialization.first().title,
-                        job_title=data['label']
+                        job_title=data['label'],
+                        organisation=employer_id
+                    )
+                    self.create_internal_mobility_notification(
+                        job_title=data['label'],
+                        organisation=employer_id
                     )
                     self.session.commit()
 
@@ -491,6 +557,7 @@ class DataHandler(object):
         """This function is used to store user job applications to Qualichain DB"""
         try:
             data = kwargs
+            log.info(data)
             user_id = int(data['personURI'].
                           replace('qc', '').
                           replace(':', '')
@@ -503,6 +570,7 @@ class DataHandler(object):
 
             user_obj = self.session.query(self.users).filter_by(id=user_id)
             job_obj = self.session.query(self.jobs).filter_by(id=job_id)
+            job_creator_id = job_obj.first().creator_id
 
             if user_obj.scalar() and job_obj.scalar():
                 new_application = self.user_applications(
@@ -512,6 +580,11 @@ class DataHandler(object):
                     exp_salary=data['expectedSalary']
                 )
                 self.session.add(new_application)
+                self.create_internal_new_job_application_notification(
+                    job_title=job_obj.first().title,
+                    user_name=user_obj.first().fullName,
+                    creator_id=job_creator_id
+                )
                 self.session.commit()
             else:
                 log.info("User or Job object not exist")
