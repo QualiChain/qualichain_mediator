@@ -192,14 +192,14 @@ class DataHandler(object):
         try:
             data = kwargs
             personURI = data['personURI']
-            user_id = int(data['userID'])
+            user_id_ = int(data['userID'])
             cv_skills = data['skills']
 
-            check_is_cv_exists = self.session.query(self.cvs).filter_by(user_id=user_id)
+            check_is_cv_exists = self.session.query(self.cvs).filter_by(user_id=user_id_)
 
             if not check_is_cv_exists.scalar():
                 new_cv = self.cvs(
-                    user_id=user_id,
+                    user_id=user_id_,
                     target_sector=data['targetSector'] if 'targetSector' in data.keys() else None,
                     description=data['description'] if 'description' in data.keys() else None,
                     work_history=data['workHistory'] if 'workHistory' in data.keys() else None,
@@ -214,7 +214,7 @@ class DataHandler(object):
                 else:
                     log.info("No skills for current CV")
             else:
-                log.info("CV for user with ID: {} already exists".format(user_id))
+                log.info("CV for user with ID: {} already exists".format(user_id_))
         except Exception as ex:
             self.session.rollback()
             log.error(ex)
@@ -225,10 +225,10 @@ class DataHandler(object):
         """This method is used to update an existing CV to the DB"""
         try:
             data = kwargs
-            user_id = int(data['userID'])
+            user_id_ = int(data['userID'])
             cv_skills = data['skills']
 
-            cv = self.session.query(self.cvs).filter(user_id == user_id)
+            cv = self.session.query(self.cvs).filter(self.cvs.user_id == user_id_)
             if cv.first() is not None:
                 cv.update({
                     'target_sector': data['targetSector'] if 'targetSector' in data.keys() else None,
@@ -245,7 +245,7 @@ class DataHandler(object):
                     log.info("No skills for current CV")
             else:
                 log.info("Abort incoming CV")
-            log.info("Successfully updated CV for userID: {}".format(user_id))
+            log.info("Successfully updated CV for userID: {}".format(user_id_))
         except Exception as ex:
             self.session.rollback()
             log.error(ex)
