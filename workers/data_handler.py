@@ -338,29 +338,29 @@ class DataHandler(object):
         try:
             organisation = kwargs['organisation']
             job_title = kwargs['job_title']
+            if organisation is not None:
+                message = "There is a new job position opening inside your organisation. Title: {} ". \
+                    format(job_title)
 
-            message = "There is a new job position opening inside your organisation. Title: {} ". \
-                format(job_title)
+                user_notification_preferences_obj = self.session.query(self.user_notification_preference).filter(
+                    self.user_notification_preference.internal_reallocation_availability == True).all()
+                notif_user_ids = [user_notification_preference.user_id for user_notification_preference in
+                                  user_notification_preferences_obj]
 
-            user_notification_preferences_obj = self.session.query(self.user_notification_preference).filter(
-                self.user_notification_preference.internal_reallocation_availability == True).all()
-            notif_user_ids = [user_notification_preference.user_id for user_notification_preference in
-                              user_notification_preferences_obj]
+                user_rec_org_obj = self.session.query(self.user_recruitment_organisation).filter(
+                    self.user_recruitment_organisation.organisation_id == organisation).all()
+                org_user_ids = [user_organisation.user_id for user_organisation in
+                                user_rec_org_obj]
 
-            user_rec_org_obj = self.session.query(self.user_recruitment_organisation).filter(
-                self.user_recruitment_organisation.organisation_id == organisation).all()
-            org_user_ids = [user_organisation.user_id for user_organisation in
-                            user_rec_org_obj]
+                user_ids = list(set(notif_user_ids).intersection(org_user_ids))
 
-            user_ids = list(set(notif_user_ids).intersection(org_user_ids))
-
-            for user_id in user_ids:
-                new_notification = self.notification(
-                    message=message,
-                    user_id=user_id,
-                    read=False
-                )
-                self.session.add(new_notification)
+                for user_id in user_ids:
+                    new_notification = self.notification(
+                        message=message,
+                        user_id=user_id,
+                        read=False
+                    )
+                    self.session.add(new_notification)
             # self.session.commit()
         except Exception as ex:
             log.info("Error in the creation of an internal mobility notification")
@@ -373,27 +373,33 @@ class DataHandler(object):
         specialization_name = kwargs['specialization_name']
         organisation = kwargs['organisation']
         job_title = kwargs['job_title']
+        if organisation is not None:
+            message = "There is a new job opening that may interest you. Title: {} ". \
+                format(job_title)
+            if (city is None) or (city == ''):
+                city = 'No city selected'
+            if (state is None) or (state == ''):
+                state = 'No state selected'
+            if (country is None) or (country == ''):
+                country = 'No country selected'
 
-        message = "There is a new job opening that may interest you. Title: {} ". \
-            format(job_title)
-
-        user_notification_preferences_obj = self.session.query(self.user_notification_preference).filter(
-            or_(
-                self.user_notification_preference.locations.contains(country),
-                self.user_notification_preference.locations.contains(city),
-                self.user_notification_preference.locations.contains(state)
-            )).filter(self.user_notification_preference.specializations.contains(specialization_name)).filter(
-            self.user_notification_preference.organisation == organisation).all()
-        user_ids = [user_notification_preference.user_id for user_notification_preference in
-                    user_notification_preferences_obj]
-        for user_id in user_ids:
-            new_notification = self.notification(
-                message=message,
-                user_id=user_id,
-                read=False
-            )
-            self.session.add(new_notification)
-        # self.session.commit()
+            user_notification_preferences_obj = self.session.query(self.user_notification_preference).filter(
+                or_(
+                    self.user_notification_preference.locations.contains(country),
+                    self.user_notification_preference.locations.contains(city),
+                    self.user_notification_preference.locations.contains(state)
+                )).filter(self.user_notification_preference.specializations.contains(specialization_name)).filter(
+                self.user_notification_preference.organisation == organisation).all()
+            user_ids = [user_notification_preference.user_id for user_notification_preference in
+                        user_notification_preferences_obj]
+            for user_id in user_ids:
+                new_notification = self.notification(
+                    message=message,
+                    user_id=user_id,
+                    read=False
+                )
+                self.session.add(new_notification)
+            # self.session.commit()
 
     def add_job(self, **kwargs):
         """This function is used to add a new job to QualiChain DB"""
@@ -518,7 +524,8 @@ class DataHandler(object):
             job_skills = self.session.query(self.job_skills).filter_by(
                 job_id=job_instance[0].id
             )
-
+            job_apps = self.session.query(self.user_applications).filter_by(job_id=job_instance[0].id)
+            job_apps.delete()
             job_skills.delete()
             job_instance.delete()
 

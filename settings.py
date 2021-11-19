@@ -94,8 +94,9 @@ WORKER_JSON_SCHEMAS = {
 
 SKILL_LEVEl_MAPPING = {
     'basic': 5,
-    'medium': 8,
-    'advanced': 10,
+    'intermediate': 7,
+    'advanced': 9,
+    'expert':10
 }
 
 JOB_NAMES = {
